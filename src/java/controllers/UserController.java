@@ -42,6 +42,9 @@ public class UserController extends HttpServlet {
                 //Xu ly
                 login(request, response);
                 break;
+            case "register":
+                register(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -54,6 +57,9 @@ public class UserController extends HttpServlet {
     }
     
     private void login(HttpServletRequest request, HttpServletResponse response) {
+        
+    }
+    private void register(HttpServletRequest request, HttpServletResponse response) {
         
     }
 

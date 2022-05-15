@@ -40,8 +40,9 @@
                         </div>
 
                         <div>
-                            <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+                            <p class="mb-0">Don't have an account? <a href="${pageContext.request.contextPath}/user/register.do" class="text-white-50 fw-bold">Sign Up</a>
                             </p>
+                          
                         </div>
 
                     </div>
