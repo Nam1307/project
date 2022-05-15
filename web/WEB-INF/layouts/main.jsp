@@ -31,7 +31,7 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/home/index.do">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">About</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do">Booking</a>

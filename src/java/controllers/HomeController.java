@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.ServiceUIFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,15 +45,18 @@ public class HomeController extends HttpServlet {
                 //Xu ly
                 index(request, response);
                 break;
+            case "about":
+                about(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
         //Chon view de hien ket qua
         request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
     }
-    
+
     private void index(HttpServletRequest request, HttpServletResponse response) {
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -93,4 +97,8 @@ public class HomeController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void about(HttpServletRequest request, HttpServletResponse response) {
+
+    }
 }
