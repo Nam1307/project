@@ -11,7 +11,7 @@
             <div class="col-lg-5 col-10">
                 <div id="circle"></div>
                 <div class="pb-5">
-                    <img src="https://img.freepik.com/free-vector/authentication-concept-illustration_114360-2168.jpg?size=338&ext=jpg&ga=GA1.2.777073396.1599399655" alt="">
+                    <img src="https://img.freepik.com/free-vector/authentication-concept-illustration_114360-2168.jpg?size=338&ext=jpg&ga=GA1.2.777073396.1599399655" alt="" class="img-login">
                 </div>
             </div>
             <div class="col-lg-4 offset-lg-2 col-md-6 offset-md-3">
@@ -29,15 +29,9 @@
                             <label for="password">Password</label>
                             <input type="password" name="passwrd" id="pwd" class="border-bottom border-primary">
                         </div>
-                        <div class="d-flex jusity-content-end pb-4">
-                            <div class="ml-auto">
-                                <a href="#" class="text-danger text-decoration-none">Forgot password?</a>
-                            </div>
-                        </div>
-                        <input type="button" value="Log in" class="btn btn-primary btn-block mb-3">
-                        
+                        <button type="submit" value="Log in" class="btn btn-primary btn-block mb-3">Log in</button>
                         <div class="register">
-                            <p>Don't have an account? <a href="#">Create an account</a></p>
+                            <p>Don't have an account? <a href="${pageContext.request.contextPath}/user/register.do">Create an account</a></p>
                         </div>
                     </form>
                 </div>

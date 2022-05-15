@@ -1,11 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 15, 2022, 4:18:16 PM
+    Author     : SE150853 Nguyen Huynh Minh Khoi
+*/
+
 .carousel-item {
-  height: 100vh;
-  min-height: 350px;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+    height: 100vh;
+    min-height: 350px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 body{
@@ -14,14 +24,14 @@ body{
 }
 
 .gradient-custom {
-/* fallback for old browsers */
-background: #6a11cb;
+    /* fallback for old browsers */
+    background: #6a11cb;
 
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
 
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
 
 
@@ -35,16 +45,6 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
     font-size: 0.9rem;
     letter-spacing: 0.05rem;
     padding: 0.75rem 1rem;
-}
-
-.btn-google {
-    color: white !important;
-    background-color: #ea4335;
-}
-
-.btn-facebook {
-    color: white !important;
-    background-color: #3b5998;
 }
 
 .khanhlq{
@@ -61,7 +61,7 @@ input{
     border-radius: 15px;
 }
 @media(min-width:992px){
-    img{
+    .img-login{
         width:500px;
         height: 500px;
     }
@@ -77,7 +77,7 @@ input{
 
 }
 @media(max-width:991px){
-    img{
+    .img-login{
         display: none;
     }
     #circle{
@@ -92,7 +92,7 @@ input{
 
 }
 @media(max-width:768px){
-    img{
+    .img-login{
         display: none;
     }
     #circle{
@@ -106,20 +106,20 @@ input{
     }
 }
 @media(max-width:567px){
-  img{
-      display: none;
-  }
-  .container{
-      margin-left: 0px;
-      margin-top: 30px;
-  }
-  #circle{
-    border: 10px solid rgba(255, 0, 234, 0.945);
-    border-radius: 50%;
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    left: 202px;
-    top: -29px;
-}
+    .img-login{
+        display: none;
+    }
+    .container{
+        margin-left: 0px;
+        margin-top: 30px;
+    }
+    #circle{
+        border: 10px solid rgba(255, 0, 234, 0.945);
+        border-radius: 50%;
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        left: 202px;
+        top: -29px;
+    }
 }

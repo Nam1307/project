@@ -42,22 +42,9 @@
                             <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Register</button>
                         </div>
 
-                        <a class="d-block text-center mt-2 small" href="#">Have an account? / Sign In</a>
+                        <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/login.do">Have an account? / Sign In</a>
 
                         <hr class="my-4">
-
-                        <div class="d-grid mb-2">
-                            <button class="btn btn-lg btn-google btn-login fw-bold text-uppercase" type="submit">
-                                <i class="fab fa-google me-2"></i> Sign up with Google
-                            </button>
-                        </div>
-
-                        <div class="d-grid">
-                            <button class="btn btn-lg btn-facebook btn-login fw-bold text-uppercase" type="submit">
-                                <i class="fab fa-facebook-f me-2"></i> Sign up with Facebook
-                            </button>
-                        </div>
-
                     </form>
                 </div>
             </div>
