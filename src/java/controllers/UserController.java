@@ -38,6 +38,10 @@ public class UserController extends HttpServlet {
                 //Xu ly
                 bookingList(request, response);
                 break;
+            case "login":
+                //Xu ly
+                login(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -46,6 +50,10 @@ public class UserController extends HttpServlet {
     }
     
     private void bookingList(HttpServletRequest request, HttpServletResponse response) {
+        
+    }
+    
+    private void login(HttpServletRequest request, HttpServletResponse response) {
         
     }
 

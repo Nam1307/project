@@ -37,7 +37,7 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do">Booking</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/user/login.do">Login</a>
                         </li>
                     </ul>
                 </div>
