@@ -53,7 +53,7 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active" style="background-image: url('${pageContext.request.contextPath}/images/banner1.jpg')">
                     </div>
-                    <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner2.jpg')">
+                    <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/pic7.jpg')">
                     </div>
                     <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner3.jpg')">
                     </div>
