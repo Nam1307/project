@@ -5,9 +5,33 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <div class="row">
     <div class="col-3 px-4 px-lg-5 mt-5 py-5 ">
+        <div class="mb-3">
+            <label for="district" class="form-label">Quận:</label>
+            <div class="box">
+                <select id="selectBox" name="district" onchange="ward()" class="form-control">
+                    <option selected="" disabled="">Quận</option>
+                    <c:forEach var="d" items="${listD}" >
+                        <option value="${d.districtID}">${d.districtName}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <form action="${pageContext.request.contextPath}/home/search.do" method="post">
+                <label for="ward" class="form-label">Phường:</label>
+                <div id="test"></div>
+                <div class="box">
+                    <select id="ward" name="ward" class="form-control">
+                        <option selected="" disabled="">Phường</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check-circle"></i> Search</button> 
+            </form>
+        </div>
         <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
                 The current link item
@@ -142,3 +166,23 @@
         </section>
     </div>
 </div>
+
+<script>
+    function ward() {
+        var selectBox = document.getElementById("selectBox");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        $.ajax({
+            url: "${pageContext.request.contextPath}/home/ward.do",
+            type: 'get',
+            data: {
+                districtID: selectedValue
+            },
+            success: function (responseData) {
+                document.getElementById("ward").innerHTML
+                        = responseData;
+                document.getElementById("test").innerHTML
+                        = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
+            }
+        });
+    }
+</script>
