@@ -12,35 +12,40 @@
 <div class="row">
     <div class="col-3 px-4 px-lg-5 mt-5 py-5 ">
         <div class="mb-3">
-            <label for="district" class="form-label">Quận:</label>
-            <div class="box">
-                <select id="selectBox" name="district" onchange="ward()" class="form-control">
-                    <option selected="" disabled="">Quận</option>
+            <div class="form-floating">
+                <select id="selectBox" name="district" onchange="ward()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                    <option selected disabled value="">Quận</option>
                     <c:forEach var="d" items="${listD}" >
-                        <option value="${d.districtID}">${d.districtName}</option>
+                        <option ${district == d.districtID?"selected":""} value="${d.districtID}">${d.districtName}</option>
                     </c:forEach>
                 </select>
+                <label for="floatingSelect">Quận:</label>
             </div>
-            <form action="${pageContext.request.contextPath}/home/search.do" method="post">
-                <label for="ward" class="form-label">Phường:</label>
-                <div id="test"></div>
-                <div class="box">
-                    <select id="ward" name="ward" class="form-control">
-                        <option selected="" disabled="">Phường</option>
+            <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-5">
+                <div id="districtID">
+                    <input type="hidden" name="districtID" value="${district}">
+                </div>
+                <div class="form-floating mb-3">
+                    <select id="ward" name="ward" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                        <option selected disabled value="">Phường</option>
+                        <c:forEach var="w" items="${listW}" >
+                            <option ${ward == w.wardID?"selected":""} value="${w.wardID}">${w.wardName}</option>
+                        </c:forEach>
                     </select>
+                    <label for="floatingSelect">Phường:</label>
                 </div>
                 <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check-circle"></i> Search</button> 
             </form>
         </div>
-        <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                The current link item
-            </a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-light">A second link item</a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-light">A third link item</a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-light">A fourth link item</a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-light" tabindex="-1" aria-disabled="true">A disabled link item</a>
-        </div>
+        <!--        <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        The current link item
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action list-group-item-light">A second link item</a>
+                    <a href="#" class="list-group-item list-group-item-action list-group-item-light">A third link item</a>
+                    <a href="#" class="list-group-item list-group-item-action list-group-item-light">A fourth link item</a>
+                    <a href="#" class="list-group-item list-group-item-action list-group-item-light" tabindex="-1" aria-disabled="true">A disabled link item</a>
+                </div>-->
     </div>
     <div class="col-9">
         <section class="py-5">
@@ -180,7 +185,7 @@
             success: function (responseData) {
                 document.getElementById("ward").innerHTML
                         = responseData;
-                document.getElementById("test").innerHTML
+                document.getElementById("districtID").innerHTML
                         = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
             }
         });

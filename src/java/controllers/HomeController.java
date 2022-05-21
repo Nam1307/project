@@ -60,6 +60,7 @@ public class HomeController extends HttpServlet {
                 break;
             case "search":
                 search(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -120,7 +121,7 @@ public class HomeController extends HttpServlet {
     private void about(HttpServletRequest request, HttpServletResponse response) {
 
     }
-    
+
     private void ward(HttpServletRequest request, HttpServletResponse response) {
         try {
             PitchDAO pd = new PitchDAO();
@@ -128,8 +129,8 @@ public class HomeController extends HttpServlet {
             List<Ward> listW = pd.getWard(districtID);
             PrintWriter out = response.getWriter();
             for (Ward ward : listW) {
-                out.println("<input type=\"hidden\" name=\"districtID\" value=\"" + ward.getDistrictID() +"\"/>\n" +
-"                            <option value=\"" + ward.getWardID() +"\">" + ward.getWardName()+"</option>");
+                out.println("<input type=\"hidden\" name=\"districtID\" value=\"" + ward.getDistrictID() + "\"/>\n"
+                        + "                            <option value=\"" + ward.getWardID() + "\">" + ward.getWardName() + "</option>");
             }
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,11 +138,23 @@ public class HomeController extends HttpServlet {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void search(HttpServletRequest request, HttpServletResponse response) {
-        String districtID = request.getParameter("districtID");
-        String wardID = request.getParameter("ward");
-        System.out.println(districtID);
-        System.out.println(wardID);
+        try {
+            PitchDAO pd = new PitchDAO();
+            String districtID = request.getParameter("districtID");
+            String wardID = request.getParameter("ward");
+            System.out.println(districtID);
+            System.out.println(wardID);
+            List<District> listD = pd.getDistrict();
+            List<Ward> listW = pd.getWard(districtID);
+            request.setAttribute("listD", listD);
+            request.setAttribute("listW", listW);
+            request.setAttribute("district", districtID);
+            request.setAttribute("ward", wardID);
+            request.setAttribute("action", "index");
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
