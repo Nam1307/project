@@ -39,6 +39,7 @@ body{
     width: 45%;
     background: scroll center url('https://swin2888.com/wp-content/uploads/2020/07/hinh-anh-ronaldo-an-mung-ban-thang.jpg');
     background-size: cover;
+    background-position: center center;
 }
 
 .btn-login {
@@ -48,81 +49,18 @@ body{
 }
 
 .khanhlq{
-    background-color: rgb(93, 28, 139);
+    background-color: #EEEEEE;
 }
 
+.minhph{
+    background-color: #EEEEEE;
+}
 
+.btn-google{
+    color: white !important;
+    background-color: #ea4335;
+}
 
-input{
-    border: none;
-    outline: none;
-}
-.container{
-    border-radius: 15px;
-}
-@media(min-width:992px){
-    .img-login{
-        width:500px;
-        height: 500px;
-    }
-    #circle{
-        border: 10px solid rgba(255, 0, 234, 0.945);
-        border-radius: 50%;
-        position: absolute;
-        height: 50px;
-        width: 50px;
-        left: 290px;
-        top: -25px;
-    }
-
-}
-@media(max-width:991px){
-    .img-login{
-        display: none;
-    }
-    #circle{
-        border: 10px solid rgba(255, 0, 234, 0.945);
-        border-radius: 50%;
-        position: absolute;
-        height: 50px;
-        width: 50px;
-        left: 100px;
-        top: -25px;
-    }
-
-}
-@media(max-width:768px){
-    .img-login{
-        display: none;
-    }
-    #circle{
-        border: 10px solid rgba(255, 0, 234, 0.945);
-        border-radius: 50%;
-        position: absolute;
-        height: 50px;
-        width: 50px;
-        left: 302px;
-        top: -29px;
-    }
-}
-@media(max-width:567px){
-    .img-login{
-        display: none;
-    }
-    .container{
-        margin-left: 0px;
-        margin-top: 30px;
-    }
-    #circle{
-        border: 10px solid rgba(255, 0, 234, 0.945);
-        border-radius: 50%;
-        position: absolute;
-        height: 50px;
-        width: 50px;
-        left: 202px;
-        top: -29px;
-    }
-}
 
 
 
