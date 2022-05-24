@@ -11,7 +11,7 @@
             <div class="col-lg-10 col-xl-9 mx-auto">
                 <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
                     <div class="card-img-left d-none d-md-flex">
-                        
+                        <img class='login-img' src="${pageContext.request.contextPath}/images/login.jpg"
                     </div>
                     <div class="card-body p-4 p-sm-5">
                         <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>

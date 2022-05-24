@@ -35,13 +35,17 @@ body{
 }
 
 
-.card-img-left {
+/*.card-img-left {
     width: 45%;
-    background: scroll center url('https://swin2888.com/wp-content/uploads/2020/07/hinh-anh-ronaldo-an-mung-ban-thang.jpg');
+    background: scroll center url('/images/login.jpg');
+    background-size: cover;
+    background-position: center center;
+}*/
+.login-img{
+    width: 45%;
     background-size: cover;
     background-position: center center;
 }
-
 .btn-login {
     font-size: 0.9rem;
     letter-spacing: 0.05rem;
