@@ -33,14 +33,12 @@ body{
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
-
-
-/*.card-img-left {
+.card-img-left {
     width: 45%;
-    background: scroll center url('/images/login.jpg');
+    background: scroll center url('https://swin2888.com/wp-content/uploads/2020/07/hinh-anh-ronaldo-an-mung-ban-thang.jpg');
     background-size: cover;
-    background-position: center center;
-}*/
+}
+
 .login-img{
     width: 45%;
     background-size: cover;
@@ -63,6 +61,7 @@ body{
 .btn-google{
     color: white !important;
     background-color: #ea4335;
+    width: 100%;
 }
 
 

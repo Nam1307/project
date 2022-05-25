@@ -17,7 +17,7 @@ public class DBUtils {
         Connection conn = null;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         String url = "jdbc:sqlserver://localhost:1433;databaseName=BookingPitch";
-        conn = DriverManager.getConnection(url, "sa", "1");
+        conn = DriverManager.getConnection(url, "sa", "110401");
         return conn;   
     }
 }

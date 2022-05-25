@@ -9,19 +9,17 @@ import daos.PitchDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.ServiceUIFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import models.District;
+import models.Pitch;
 import models.Ward;
 
 /**
@@ -47,10 +45,11 @@ public class HomeController extends HttpServlet {
         String action = request.getAttribute("action").toString();
         switch (action) {
             case "index":
-                //Xu ly
+                //Xử lý trang index
                 index(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
+                //Xử lý trang about
             case "about":
                 about(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
@@ -71,9 +70,68 @@ public class HomeController extends HttpServlet {
     private void index(HttpServletRequest request, HttpServletResponse response) {
         try {
             PitchDAO pd = new PitchDAO();
+            HttpSession session = request.getSession();
+
+            int pageSize = 8;//Kich thuoc trang                        
+
+            //Xac dinh so thu tu cua trang hien tai
+            Integer page = (Integer) session.getAttribute("page");
+            if (page == null) {
+                page = 1;
+            }
+
+            //Xac dinh tong so trang
+            Integer totalPage = (Integer) session.getAttribute("totalPage");
+            int count = pd.getNumberOfPitch();//Dem so luong records
+            totalPage = (int) Math.ceil((double) count / pageSize);//Tinh tong so trang
+
+            String op = request.getParameter("op");
+            if (op == null) {
+                op = "FirstPage";
+            }
+            switch (op) {
+                case "FirstPage":
+                    page = 1;
+                    break;
+                case "PreviousPage":
+                    if (page > 1) {
+                        page--;
+                    }
+                    break;
+                case "NextPage":
+                    if (page < totalPage) {
+                        page++;
+                    }
+                    break;
+                case "LastPage":
+                    page = totalPage;
+                    break;
+                case "GotoPage":
+                    page = Integer.parseInt(request.getParameter("gotoPage"));
+                    System.out.println(page);
+                    if (page <= 0) {
+                        page = 1;
+                    } else if (page > totalPage) {
+                        page = totalPage;
+                    }
+                    break;
+            }
+
+            //Lay trang du lieu duoc yeu cau
+            int n1 = (page - 1) * pageSize;//Vi tri mau tin dau trang
+            List<Pitch> listP = pd.getPitch(n1, pageSize);
+
+            //Luu thong tin vao session va request
+            session.setAttribute("page", page);
+            session.setAttribute("totalPage", totalPage);
             List<District> listD = pd.getDistrict();
+            List<Ward> listWard = pd.getAllWard();
+            List<Pitch> listHighRate = pd.getHighRatePitch();
+            request.setAttribute("listHR", listHighRate);
+            request.setAttribute("listWard", listWard);
+            request.setAttribute("listP", listP);
             request.setAttribute("listD", listD);
-            request.setAttribute("test", "aaa");
+            
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -141,18 +199,82 @@ public class HomeController extends HttpServlet {
 
     private void search(HttpServletRequest request, HttpServletResponse response) {
         try {
+            HttpSession session = request.getSession();
             PitchDAO pd = new PitchDAO();
             String districtID = request.getParameter("districtID");
             String wardID = request.getParameter("ward");
-            System.out.println(districtID);
-            System.out.println(wardID);
-            List<District> listD = pd.getDistrict();
-            List<Ward> listW = pd.getWard(districtID);
-            request.setAttribute("listD", listD);
-            request.setAttribute("listW", listW);
-            request.setAttribute("district", districtID);
-            request.setAttribute("ward", wardID);
-            request.setAttribute("action", "index");
+
+            if (districtID == null || wardID == null) {
+                index(request, response);
+                request.setAttribute("action", "index");
+            } else {
+                int pageSize = 8;//Kich thuoc trang                        
+
+                //Xac dinh so thu tu cua trang hien tai
+                Integer page = (Integer) session.getAttribute("page");
+                if (page == null) {
+                    page = 1;
+                }
+
+                //Xac dinh tong so trang
+                Integer totalPage = (Integer) session.getAttribute("totalPage");
+                int count = pd.getNumberOfPitchAterSearching(districtID, wardID);//Dem so luong records
+                totalPage = (int) Math.ceil((double) count / pageSize);//Tinh tong so trang
+
+                String op = request.getParameter("op");
+                if (op == null) {
+                    op = "FirstPage";
+                }
+                switch (op) {
+                    case "FirstPage":
+                        page = 1;
+                        break;
+                    case "PreviousPage":
+                        if (page > 1) {
+                            page--;
+                        }
+                        break;
+                    case "NextPage":
+                        if (page < totalPage) {
+                            page++;
+                        }
+                        break;
+                    case "LastPage":
+                        page = totalPage;
+                        break;
+                    case "GotoPage":
+                        page = Integer.parseInt(request.getParameter("gotoPage"));
+                        if (page <= 0) {
+                            page = 1;
+                        } else if (page > totalPage) {
+                            page = totalPage;
+                        }
+                        break;
+                }
+
+                //Lay trang du lieu duoc yeu cau
+                int n1 = (page - 1) * pageSize;//Vi tri mau tin dau trang
+                List<Pitch> listP = pd.getPitchAfterSearch(districtID, wardID, n1, pageSize);
+
+                //Luu thong tin vao session va request
+                session.setAttribute("page", page);
+                session.setAttribute("totalPage", totalPage);
+                request.setAttribute("listP", listP);
+                System.out.println(districtID);
+                System.out.println(wardID);
+                List<Ward> listWard = pd.getAllWard();
+                List<District> listD = pd.getDistrict();
+                List<Ward> listW = pd.getWard(districtID);
+                List<Pitch> listHighRate = pd.getHighRatePitch();
+                request.setAttribute("listD", listD);
+                request.setAttribute("listW", listW);
+                request.setAttribute("district", districtID);
+                request.setAttribute("ward", wardID);
+                request.setAttribute("listWard", listWard);
+                request.setAttribute("listHR", listHighRate);
+                request.setAttribute("action", "index");
+                System.out.println(listP);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }

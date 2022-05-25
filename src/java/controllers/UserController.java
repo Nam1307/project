@@ -5,13 +5,27 @@
  */
 package controllers;
 
+import daos.PitchDAO;
+import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.District;
+import static models.GoogleAccess.getToken;
+import static models.GoogleAccess.getUserInfo;
+import models.Pitch;
+import models.User;
+import models.UserGoogleDto;
+import models.Ward;
 
 /**
  *
@@ -37,30 +51,131 @@ public class UserController extends HttpServlet {
             case "bookingList":
                 //Xu ly
                 bookingList(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
             case "login":
                 //Xu ly
                 login(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
             case "register":
                 register(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "loginGoogle":
+                loginGoogle(request, response);
+                break;
+            case "logout":
+                logout(request, response);
+                break;
+            case "createAccount":
+                createAccount(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
         }
         //Chon view de hien ket qua
-        request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+
     }
-    
+
     private void bookingList(HttpServletRequest request, HttpServletResponse response) {
-        
+
+    }
+
+    private void login(HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+    private void loginGoogle(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession();
+            UserDAO dao = new UserDAO();
+            List<User> list = dao.getAllUser();
+            String userID = raiseProductId(list);
+            String code = request.getParameter("code");
+            String accessToken = getToken(code);
+            UserGoogleDto userGoogle = getUserInfo(accessToken);
+            System.out.println(userGoogle);
+            System.out.println(userID);
+            User user = dao.checkUserEmail(userGoogle.getEmail());
+            if (user != null) {
+                session.setAttribute("user", user);
+                response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+            } else {
+                User u = new User(userID, "US", null, null, userGoogle.getEmail(), "", userGoogle.getName(), "", "", userGoogle.getEmail(), userGoogle.getPicture());
+                if (dao.insertUser(u)) {
+                    session.setAttribute("user", u);
+                    response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                } else {
+                    response.sendRedirect("/WebsiteOrderStadium/user/login.do");
+                }
+            }
+            //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void register(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            PitchDAO pd = new PitchDAO();
+            List<District> listD = pd.getDistrict();
+            List<Ward> listWard = pd.getAllWard();
+            request.setAttribute("listWard", listWard);
+            request.setAttribute("listD", listD);
+            request.setAttribute("test", "aaa");
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession();
+            session.removeAttribute("user");
+            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    private void login(HttpServletRequest request, HttpServletResponse response) {
-        
+    private void createAccount(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String districtID = request.getParameter("districtID");
+            String wardID = request.getParameter("ward");
+            System.out.println(districtID + " , " + wardID);
+            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    private void register(HttpServletRequest request, HttpServletResponse response) {
-        
+
+    private String raiseProductId(List<User> arrayList) throws Exception {
+        try {
+            UserDAO dao = new UserDAO();
+            String result = "";
+            int maxIndex = 1;
+            if (arrayList == null) {
+                maxIndex = 1;
+                result = "U" + String.format("%02d", maxIndex);
+            } else {
+                maxIndex = arrayList.size() + 1;
+                result = "U" + String.format("%02d", maxIndex);
+                User temp = dao.getUser(result);
+                while (temp != null) {
+                    maxIndex += 1;
+                    result = "U" + String.format("%02d", maxIndex);
+                    temp = dao.getUser(result);;
+                }
+            }
+            return result;
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
