@@ -57,7 +57,6 @@
                 </div>
             </c:forEach> 
         </div>
-        <hr>
     </div>
 </section>
 <div class="px-4 px-lg-5 mb-3 container mx-auto" style="margin-top: -45px">
@@ -71,8 +70,8 @@
 </select>
 <label for="floatingSelect">Quận:</label>
 </div>-->
-    <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-5 row">
-        <div class="form-floating col-4">
+    <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
+        <div class="form-floating col-5" style="padding: 0px">
             <select id="selectBox" name="districtID" onchange="setWard()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
                 <option selected="selected" disabled value="">Quận</option>
                 <c:forEach var="d" items="${listD}" >
@@ -84,7 +83,7 @@
 <!--        <div id="districtID">
             <input type="hidden" name="districtID" value="${district}">
         </div>-->
-        <div class="form-floating mb-3 col-4">
+        <div class="form-floating mb-3 col-5">
             <select id="ward" name="ward" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
                 <option selected disabled value="">Phường</option>
                 <c:forEach var="w" items="${listW}" >
@@ -93,9 +92,9 @@
             </select>
             <label for="floatingSelect">Phường:</label>
         </div>
-        <button type="submit" class="btn btn-lg btn-outline-success col-4" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
+        <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
     </form>
-    <hr class="mt-5">
+    
 </div>
 <section class="py-5">
     <div class="container px-4 px-lg-5">

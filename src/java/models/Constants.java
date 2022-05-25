@@ -11,9 +11,9 @@ package models;
  * @author SE150853 Nguyen Huynh Minh Khoi
  */
 public class Constants {
-    public static String GOOGLE_CLIENT_ID = "192542612754-5jfceh4emnpkitavtni111euvf7ne569.apps.googleusercontent.com";
+    public static String GOOGLE_CLIENT_ID = "192542612754-a31982s55etlpeb7liogh8d3s66pms6e.apps.googleusercontent.com";
 
-	public static String GOOGLE_CLIENT_SECRET = "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";
+	public static String GOOGLE_CLIENT_SECRET = "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";
 
 	public static String GOOGLE_REDIRECT_URI = "http://localhost:8080/WebsiteOrderStadium/user/loginGoogle.do";
 

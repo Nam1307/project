@@ -35,6 +35,8 @@
                 </div>
             </div>
         </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.306654744652!2d106.69931121530254!3d10.787808861932195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4ac0282147%3A0x5e20fe3a05eb7bcf!2zVHJ1bmcgdMOibSBUaOG7gyBk4bulYyBUaOG7gyB0aGFvIEhvYSBMxrA!5e0!3m2!1svi!2s!4v1653484640330!5m2!1svi!2s" 
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="mt-5"></iframe>
     </div>
 </section>
 <!-- Related items section-->

@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +71,9 @@ public class UserController extends HttpServlet {
                 break;
             case "createAccount":
                 createAccount(request, response);
+                break;
+            case "checkLogin":
+                checkLogin(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -142,7 +146,7 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void createAccount(HttpServletRequest request, HttpServletResponse response) {
         try {
             String districtID = request.getParameter("districtID");
@@ -152,6 +156,60 @@ public class UserController extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void checkLogin(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String userName = request.getParameter("username");
+            String password = request.getParameter("password");
+            String remember = request.getParameter("remember");
+            UserDAO dao = new UserDAO();
+            User user = dao.checkLogin(userName, password);
+            if (user == null) {
+                request.setAttribute("username", userName);
+                request.setAttribute("password", password);
+                request.setAttribute("error", "failed");
+                request.setAttribute("action", "login");
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                if (remember == null) {
+                    Cookie[] cookies = request.getCookies();
+                    // Delete all the cookies
+                    if (cookies != null) {
+                        for (int i = 0; i < cookies.length; i++) {
+                            Cookie cookie = cookies[i];
+                            cookies[i].setValue(null);
+                            cookies[i].setMaxAge(0);
+                            response.addCookie(cookie);
+                        }
+                    }
+                    response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                } else {
+                    if (remember.equals("1")) {
+                        //Save in cookie
+                        Cookie cookieUname = new Cookie("cookUname", userName);
+                        cookieUname.setMaxAge(60 * 60 * 24 * 365 * 10);
+                        Cookie cookiePass = new Cookie("cookPass", password);
+                        cookiePass.setMaxAge(60 * 60 * 24 * 365 * 10);
+                        Cookie cookieRemember = new Cookie("cookRem", remember);
+                        cookieRemember.setMaxAge(60 * 60 * 24 * 365 * 10);
+                        response.addCookie(cookieUname);
+                        response.addCookie(cookiePass);
+                        response.addCookie(cookieRemember);
+                        response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServletException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     private String raiseProductId(List<User> arrayList) throws Exception {
