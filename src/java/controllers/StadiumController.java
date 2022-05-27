@@ -53,10 +53,6 @@ public class StadiumController extends HttpServlet {
                 detail(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
-            case "findNotDate":
-                //Xu ly
-                findNotDate(request, response);
-                break;
             case "findDate":
                 //Xu ly
                 findDate(request, response);
@@ -79,39 +75,30 @@ public class StadiumController extends HttpServlet {
         }
     }
 
-    private void findNotDate(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            PrintWriter out = response.getWriter();
-            BookingDAO bd = new BookingDAO();
-            String childrenPitchID = request.getParameter("childrenPitchID");
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
-            List<Booking> bookingTime = bd.findTime(childrenPitchID, date);
-            for (Booking booking : bookingTime) {
-                out.print("<a href=\"#\" style=\"pointer-events: none;cursor: default;opacity:50%\">\n" +
-"                            <button type=\"submit\" class=\"btn btn-outline-success btn-sm\" name=\"op\" value=\""+ booking.getTimeID() +"\"><i class=\"bi bi-check-circle\"></i> "+ booking.getTimeRent()+"</button>\n" +
-"                        </a>");
-            }
-            System.out.println(childrenPitchID);
-            System.out.println(bookingTime);
-        } catch (ParseException ex) {
-            Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     private void findDate(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
             BookingDAO bd = new BookingDAO();
             String childrenPitchID = request.getParameter("childrenPitchID");
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
+            List<Booking> bookingTime = bd.findTime(childrenPitchID, date);
             List<Time> time = bd.getFreeTime(childrenPitchID, date);
+            if(!bookingTime.isEmpty()){
+                out.print("<p class=\"lead mt-2 fst-italic\">Đã được đặt</p>");
+            }
+            for (Booking booking : bookingTime) {
+                out.print("<a href=\"#\" style=\"pointer-events: none;cursor: default;opacity:50%;text-decoration: none\">\n"
+                        + "                            <button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
+                        + "style=\"width: 150px\" name=\"op\" value=\"" + booking.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + booking.getTimeRent() + "h" +"</button>\n"
+                        + "                        </a>");
+            }
+            if(!time.isEmpty()){
+                out.print("<p class=\"lead mt-2 fst-italic\">Chưa được đặt</p>");
+            }
             for (Time time1 : time) {
-                out.print("<a href=\"#\">\n"
-                        + "<button type=\"submit\" class=\"btn btn-outline-success btn-sm\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-check-circle\"></i> " + time1.getTimeRent() + "</button>\n"
+                out.print("<a href=\"#\" style=\"text-decoration: none\">\n"
+                        + "<button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
+                        + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + time1.getTimeRent() + "h" + "</button>\n"
                         + "</a>");
             }
         } catch (ParseException ex) {
@@ -122,7 +109,6 @@ public class StadiumController extends HttpServlet {
             Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

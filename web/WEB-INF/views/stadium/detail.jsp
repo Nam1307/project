@@ -21,38 +21,38 @@
                     <span>$40.00</span>
                 </div>
                 <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
-                <div class="d-flex">
-                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Booking
-                    </button>
+            </div>
+            <hr class="mt-5">
+        </div>
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.306654744652!2d106.69931121530254!3d10.787808861932195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4ac0282147%3A0x5e20fe3a05eb7bcf!2zVHJ1bmcgdMOibSBUaOG7gyBk4bulYyBUaOG7gyB0aGFvIEhvYSBMxrA!5e0!3m2!1svi!2s!4v1653484640330!5m2!1svi!2s" 
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
-                <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post">
-                    <select id="selectBox" name="cpType" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                        <c:forEach var="cp" items="${listCP}" >
-                            <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
-                        </c:forEach>
-                    </select>
-                    <div class="d-flex mt-3">
-                        <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 10rem" />
-                        <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findNotHaveTime(); findHaveTime()">
-                            <i class="bi-cart-fill me-1"></i>
-                            Find date
-                        </button>
-                    </div>
-                    <div class="d-flex mt-3" id="nothavetime">
+                <div class="col-md-6">
+                    <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post">
+                        <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
+                        <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            <c:forEach var="cp" items="${listCP}" >
+                                <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
+                            </c:forEach>
+                        </select>
+                        <div class="d-flex mt-3">
+                            <label class="fs-5 me-1 lead fw-bold">Chọn ngày: </label>
+                            <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
+                            <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
+                                <i class="bi bi-search"></i>
+                                Find date
+                            </button>
+                        </div>
+                        <div class="mt-3" id="time">
 
-                    </div>
-                    <div class="d-flex mt-3" id="havetime">
-
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.306654744652!2d106.69931121530254!3d10.787808861932195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4ac0282147%3A0x5e20fe3a05eb7bcf!2zVHJ1bmcgdMOibSBUaOG7gyBk4bulYyBUaOG7gyB0aGFvIEhvYSBMxrA!5e0!3m2!1svi!2s!4v1653484640330!5m2!1svi!2s" 
-                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="mt-5"></iframe>
-    </div>
 </section>
 <!-- Related items section-->
 <section class="py-5 bg-light">
@@ -161,32 +161,10 @@
     </div>
 </section>
 <script>
-    function findNotHaveTime() {
+    function findDate() {
         var selectBox = document.getElementById("selectBox");
         var selectedValue = selectBox.options[selectBox.selectedIndex].value;
         var date = document.getElementById("inputDate").value;
-//        alert(selectedValue + date.typeof);
-        $.ajax({
-            url: "${pageContext.request.contextPath}/stadium/findNotDate.do",
-            type: 'post',
-            data: {
-                childrenPitchID: selectedValue,
-                date: date
-            },
-            success: function (responseData) {
-                document.getElementById("nothavetime").innerHTML
-                        = responseData;
-//                document.getElementById("districtID").innerHTML
-//                        = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
-            }
-        });
-    }
-
-    function findHaveTime() {
-        var selectBox = document.getElementById("selectBox");
-        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-        var date = document.getElementById("inputDate").value;
-//        alert(selectedValue + date.typeof);
         $.ajax({
             url: "${pageContext.request.contextPath}/stadium/findDate.do",
             type: 'post',
@@ -195,16 +173,14 @@
                 date: date
             },
             success: function (responseData) {
-                document.getElementById("havetime").innerHTML
+                document.getElementById("time").innerHTML
                         = responseData;
-//                document.getElementById("districtID").innerHTML
-//                        = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
-//                alert(responseData);
             }
         });
     }
-
     document.getElementById('inputDate').valueAsDate = new Date();
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("dateBooking")[0].setAttribute('min', today);
 </script>
 
 
