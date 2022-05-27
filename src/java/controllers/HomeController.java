@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.ChildrenPitch;
 import models.District;
 import models.Pitch;
 import models.Ward;
@@ -49,7 +51,7 @@ public class HomeController extends HttpServlet {
                 index(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
-                //Xử lý trang about
+            //Xử lý trang about
             case "about":
                 about(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
@@ -70,6 +72,7 @@ public class HomeController extends HttpServlet {
     private void index(HttpServletRequest request, HttpServletResponse response) {
         try {
             PitchDAO pd = new PitchDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             HttpSession session = request.getSession();
 
             int pageSize = 8;//Kich thuoc trang                        
@@ -127,11 +130,13 @@ public class HomeController extends HttpServlet {
             List<District> listD = pd.getDistrict();
             List<Ward> listWard = pd.getAllWard();
             List<Pitch> listHighRate = pd.getHighRatePitch();
+            List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+            request.setAttribute("listCP", listCP);
             request.setAttribute("listHR", listHighRate);
             request.setAttribute("listWard", listWard);
             request.setAttribute("listP", listP);
             request.setAttribute("listD", listD);
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -200,6 +205,7 @@ public class HomeController extends HttpServlet {
     private void search(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
             String districtID = request.getParameter("districtID");
             String wardID = request.getParameter("ward");
@@ -266,6 +272,8 @@ public class HomeController extends HttpServlet {
                 List<District> listD = pd.getDistrict();
                 List<Ward> listW = pd.getWard(districtID);
                 List<Pitch> listHighRate = pd.getHighRatePitch();
+                List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+                request.setAttribute("listCP", listCP);
                 request.setAttribute("listD", listD);
                 request.setAttribute("listW", listW);
                 request.setAttribute("district", districtID);

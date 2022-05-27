@@ -26,8 +26,10 @@
                                 <!-- Product name-->
                                 <h5 class="fw-bolder">${p.pitchName}</h5>
                                 <!-- Product price-->
-                                <!--                                    <span class="text-muted text-decoration-line-through">$50.00</span>-->
-                                <!--                                        <p>Price</p>-->
+                                <c:forEach var="cp" items="${listCP}" >
+                                    <c:if test="${cp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ -" /></span></c:if>
+                                </c:forEach>
+                                <p>Price</p>
                                 <p>
                                     ${p.pitchAddress},
                                     <c:forEach var="w" items="${listWard}" >
@@ -51,7 +53,7 @@
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do">View Detail</a></div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">View Detail</a></div>
                         </div>
                     </div>
                 </div>
@@ -80,9 +82,9 @@
             </select>
             <label for="floatingSelect">Quận:</label>
         </div>
-<!--        <div id="districtID">
-            <input type="hidden" name="districtID" value="${district}">
-        </div>-->
+        <!--        <div id="districtID">
+                    <input type="hidden" name="districtID" value="${district}">
+                </div>-->
         <div class="form-floating mb-3 col-5">
             <select id="ward" name="ward" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
                 <option selected disabled value="">Phường</option>
@@ -94,7 +96,7 @@
         </div>
         <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
     </form>
-    
+
 </div>
 <section class="py-5">
     <div class="container px-4 px-lg-5">
@@ -122,8 +124,10 @@
                                     <!-- Product name-->
                                     <h5 class="fw-bolder">${p.pitchName}</h5>
                                     <!-- Product price-->
-                                    <!--                                    <span class="text-muted text-decoration-line-through">$50.00</span>-->
-                                    <!--                                        <p>Price</p>-->
+                                    <c:forEach var="cp" items="${listCP}" >
+                                        <c:if test="${cp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ -" /></span></c:if>
+                                    </c:forEach>
+                                    <p>Price</p>
                                     <p>
                                         ${p.pitchAddress},
                                         <c:forEach var="w" items="${listWard}" >
@@ -147,7 +151,7 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do">View Detail</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">View Detail</a></div>
                             </div>
                         </div>
                     </div>

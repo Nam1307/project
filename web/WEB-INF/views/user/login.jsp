@@ -77,7 +77,7 @@
 
                     </div>
                     <div class="card-body p-4 p-sm-5">
-                        <h5 class="card-title text-center mb-5 fw-light fs-2">Login</h5>
+                        <h5 class="card-title text-center mb-5 fw-light fs-2">Đăng nhập</h5>
                         <form action="${pageContext.request.contextPath}/user/checkLogin.do" method="post" class="needs-validation" novalidate>
                             <c:if test="${error != null}">
                                 <div class="alert alert-danger alert-dismissible fade show mb-5" role="alert">
@@ -88,7 +88,7 @@
                             </c:if>
                             <div class="form-floating mb-3 mt-3">
                                 <input type="text" class="form-control" id="floatingInputUsername" value="<%=username%>" name="username" placeholder="myusername" required autofocus>
-                                    <label for="floatingInputUsername">Username</label>
+                                    <label for="floatingInputUsername">Tên đăng nhập</label>
                                     <div class="invalid-feedback">
                                         Vui lòng nhập tên đăng nhập.
                                     </div>
@@ -96,7 +96,7 @@
                             <hr>
                                 <div class="form-floating mb-3 mt-3">
                                     <input type="password" class="form-control" id="floatingPassword" value="<%=password%>" name="password" placeholder="Password" required="">
-                                        <label for="floatingPassword">Password</label>
+                                        <label for="floatingPassword">Mật khẩu</label>
                                         <div class="invalid-feedback">
                                             Vui lòng nhập mật khẩu.
                                         </div>
@@ -110,16 +110,16 @@
                                             </label>
                                             </div>
                                             <div class="d-grid mb-2">
-                                                <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Login</button>
+                                                <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Đăng nhập</button>
                                             </div>
-                                            <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/register.do">Don't have an account? / Register</a>
+                                            <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/register.do">Chưa có tài khoản? / Đăng ký</a>
                                             <hr class="my-4">
                                                 </form>
                                                 <div class="d-grid mb-2">
                                                     <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/WebsiteOrderStadium/user/loginGoogle.do&response_type=code
                                                        &client_id=192542612754-a31982s55etlpeb7liogh8d3s66pms6e.apps.googleusercontent.com&approval_prompt=force">
                                                         <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-                                                            <i class="fab fa-google me-2"></i> Sign in with Google
+                                                            <i class="fab fa-google me-2"></i> Đăng nhập bằng google
                                                         </button>
                                                     </a>
                                                 </div>

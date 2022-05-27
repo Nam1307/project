@@ -15,10 +15,17 @@
                     <!-- Background image for card set in CSS! -->
                 </div>
                 <div class="card-body p-4 p-sm-5">
+                    <c:if test="${error != null}">
+                        <div class="alert alert-danger alert-dismissible fade show mb-5" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                            <strong>Lỗi!</strong> ${error}.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
                     <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
                     <form action="${pageContext.request.contextPath}/user/createAccount.do" method="post" class="needs-validation" novalidate>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputUsername" placeholder="myusername" required autofocus>
+                            <input type="text" class="form-control" id="floatingInputUsername" name="username" placeholder="myusername" required autofocus>
                             <label for="floatingInputUsername">Username</label>
                             <div class="invalid-feedback">
                                 Please input a username.
@@ -26,7 +33,7 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInputEmail" placeholder="name@example.com" required>
+                            <input type="email" class="form-control" id="floatingInputEmail" name="email" placeholder="name@example.com" required>
                             <label for="floatingInputEmail">Email address</label>
                             <div class="invalid-feedback">
                                 Please input an email.
@@ -36,7 +43,7 @@
                         <hr>
 
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" required autofocus>
+                            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required autofocus>
                             <label for="floatingPassword">Password</label>
                             <div class="invalid-feedback">
                                 Please input a password.
@@ -44,10 +51,27 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="floatingPasswordConfirm" placeholder="Confirm Password" required autofocus>
+                            <input type="password" class="form-control" id="floatingPasswordConfirm" name="confirmPassword" placeholder="Confirm Password" required autofocus>
                             <label for="floatingPasswordConfirm">Confirm Password</label>
                             <div class="invalid-feedback">
                                 Please input a password.
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputUsername" name="fullname" placeholder="myusername" required autofocus>
+                            <label for="floatingInputUsername">Full Name</label>
+                            <div class="invalid-feedback">
+                                Please input a full name.
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputUsername" name="phone" placeholder="myusername" required autofocus>
+                            <label for="floatingInputUsername">Phone</label>
+                            <div class="invalid-feedback">
+                                Please input a phone.
                             </div>
                         </div>
                         <div class="form-floating mb-3">
@@ -73,6 +97,13 @@
                                 Please select a ward.
                             </div>
                             <label for="floatingSelect">Phường:</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInputUsername" placeholder="myusername" name="address" required autofocus>
+                            <label for="floatingInputUsername">Address</label>
+                            <div class="invalid-feedback">
+                                Please input a address.
+                            </div>
                         </div>
                         <div class="d-grid mb-2">
                             <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Register</button>

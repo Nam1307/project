@@ -24,6 +24,7 @@ import models.District;
 import static models.GoogleAccess.getToken;
 import static models.GoogleAccess.getUserInfo;
 import models.Pitch;
+import models.SendEmail;
 import models.User;
 import models.UserGoogleDto;
 import models.Ward;
@@ -74,6 +75,9 @@ public class UserController extends HttpServlet {
                 break;
             case "checkLogin":
                 checkLogin(request, response);
+                break;
+            case "verify":
+                verify(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -131,7 +135,6 @@ public class UserController extends HttpServlet {
             List<Ward> listWard = pd.getAllWard();
             request.setAttribute("listWard", listWard);
             request.setAttribute("listD", listD);
-            request.setAttribute("test", "aaa");
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -149,11 +152,43 @@ public class UserController extends HttpServlet {
 
     private void createAccount(HttpServletRequest request, HttpServletResponse response) {
         try {
+            UserDAO dao = new UserDAO();
+            String username = request.getParameter("username");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirmPassword");
+            String fullname = request.getParameter("fullname");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
             String districtID = request.getParameter("districtID");
             String wardID = request.getParameter("ward");
-            System.out.println(districtID + " , " + wardID);
-            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+            if (!password.equals(confirmPassword)) {
+                PitchDAO pd = new PitchDAO();
+                List<District> listD = pd.getDistrict();
+                List<Ward> listWard = pd.getAllWard();
+                request.setAttribute("listWard", listWard);
+                request.setAttribute("listD", listD);
+                request.setAttribute("action", "register");
+                request.setAttribute("error", "Xác nhận mật khẩu không đúng");
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            } else {
+                List<User> list = dao.getAllUser();
+                String userID = raiseProductId(list);
+                SendEmail sm = new SendEmail();
+                String code = sm.getRandom();
+                User user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg", code);
+                boolean sendEmail = sm.sendEmail(user);
+                System.out.println(districtID + " , " + wardID);
+                request.setAttribute("action", "verify");
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            }
         } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServletException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -209,6 +244,10 @@ public class UserController extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+    
+    private void verify(HttpServletRequest request, HttpServletResponse response) {
 
     }
 

@@ -21,6 +21,7 @@ public class User {
     private String userAddress;
     private String email;
     private String imgLink;
+    private String codeVerification;
 
     public User() {
     }
@@ -38,6 +39,22 @@ public class User {
         this.email = email;
         this.imgLink = imgLink;
     }
+
+    public User(String userID, String roleID, String wardID, String districtID, String userName, String pass, String fullName, String phone, String userAddress, String email, String imgLink, String codeVerification) {
+        this.userID = userID;
+        this.roleID = roleID;
+        this.wardID = wardID;
+        this.districtID = districtID;
+        this.userName = userName;
+        this.pass = pass;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.userAddress = userAddress;
+        this.email = email;
+        this.imgLink = imgLink;
+        this.codeVerification = codeVerification;
+    }
+    
 
     public String getUserID() {
         return userID;
@@ -126,5 +143,12 @@ public class User {
     public void setImgLink(String imgLink) {
         this.imgLink = imgLink;
     }
-    
+
+    public String getCodeVerification() {
+        return codeVerification;
+    }
+
+    public void setCodeVerification(String codeVerification) {
+        this.codeVerification = codeVerification;
+    }   
 }

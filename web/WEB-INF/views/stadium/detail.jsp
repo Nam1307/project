@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <!-- Product section-->
 <section class="py-5">
@@ -26,13 +28,26 @@
                         Booking
                     </button>
                 </div>
-                <div class="d-flex mt-3">
-                    <input class="form-control text-center me-3" id="inputDate" type="date" style="max-width: 10rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Find date
-                    </button>
-                </div>
+                <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post">
+                    <select id="selectBox" name="cpType" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                        <c:forEach var="cp" items="${listCP}" >
+                            <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
+                        </c:forEach>
+                    </select>
+                    <div class="d-flex mt-3">
+                        <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 10rem" />
+                        <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findNotHaveTime(); findHaveTime()">
+                            <i class="bi-cart-fill me-1"></i>
+                            Find date
+                        </button>
+                    </div>
+                    <div class="d-flex mt-3" id="nothavetime">
+
+                    </div>
+                    <div class="d-flex mt-3" id="havetime">
+
+                    </div>
+                </form>
             </div>
         </div>
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.306654744652!2d106.69931121530254!3d10.787808861932195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4ac0282147%3A0x5e20fe3a05eb7bcf!2zVHJ1bmcgdMOibSBUaOG7gyBk4bulYyBUaOG7gyB0aGFvIEhvYSBMxrA!5e0!3m2!1svi!2s!4v1653484640330!5m2!1svi!2s" 
@@ -145,5 +160,51 @@
         </div>
     </div>
 </section>
+<script>
+    function findNotHaveTime() {
+        var selectBox = document.getElementById("selectBox");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        var date = document.getElementById("inputDate").value;
+//        alert(selectedValue + date.typeof);
+        $.ajax({
+            url: "${pageContext.request.contextPath}/stadium/findNotDate.do",
+            type: 'post',
+            data: {
+                childrenPitchID: selectedValue,
+                date: date
+            },
+            success: function (responseData) {
+                document.getElementById("nothavetime").innerHTML
+                        = responseData;
+//                document.getElementById("districtID").innerHTML
+//                        = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
+            }
+        });
+    }
+
+    function findHaveTime() {
+        var selectBox = document.getElementById("selectBox");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        var date = document.getElementById("inputDate").value;
+//        alert(selectedValue + date.typeof);
+        $.ajax({
+            url: "${pageContext.request.contextPath}/stadium/findDate.do",
+            type: 'post',
+            data: {
+                childrenPitchID: selectedValue,
+                date: date
+            },
+            success: function (responseData) {
+                document.getElementById("havetime").innerHTML
+                        = responseData;
+//                document.getElementById("districtID").innerHTML
+//                        = "<input type=\"hidden\" name=\"districtID\" value=\"" + selectedValue + "\"/>";
+//                alert(responseData);
+            }
+        });
+    }
+
+    document.getElementById('inputDate').valueAsDate = new Date();
+</script>
 
 
