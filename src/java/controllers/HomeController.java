@@ -279,6 +279,10 @@ public class HomeController extends HttpServlet {
                 List<Ward> listW = pd.getWard(districtID);
                 List<Pitch> listHighRate = pd.getHighRatePitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+                List<ChildrenPitch> listMaxPrice = cpd.getMaxPrice();
+                List<ChildrenPitch> listMinPrice = cpd.getMinPrice();
+                request.setAttribute("listMinP", listMinPrice);
+                request.setAttribute("listMaxP", listMaxPrice);
                 request.setAttribute("listCP", listCP);
                 request.setAttribute("listD", listD);
                 request.setAttribute("listW", listW);
