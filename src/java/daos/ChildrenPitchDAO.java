@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import models.ChildrenPitch;
-import models.District;
 import utils.DBUtils;
 
 /**
@@ -23,6 +22,14 @@ public class ChildrenPitchDAO {
 
     private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch";
     private static final String GET_TYPE = "SELECT * FROM ChildrenPitch WHERE PitchID = ?";
+    private static final String GET_MAX_PRICE = "SELECT Pitch.PitchID , MAX(price) AS Price\n"
+            + "FROM ChildrenPitch, Pitch \n"
+            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID\n"
+            + "GROUP BY Pitch.PitchID;";
+    private static final String GET_MIN_PRICE = "SELECT Pitch.PitchID , MIN(price) AS Price\n"
+            + "FROM ChildrenPitch, Pitch \n"
+            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID\n"
+            + "GROUP BY Pitch.PitchID;";
 
     public List<ChildrenPitch> getChildrenPitch() throws SQLException {
         List<ChildrenPitch> list = new ArrayList<>();
@@ -95,10 +102,75 @@ public class ChildrenPitchDAO {
         return list;
     }
 
+    public List<ChildrenPitch> getMaxPrice() throws SQLException {
+        List<ChildrenPitch> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_MAX_PRICE);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String pitchID = rs.getString("PitchID");
+                    Double price = rs.getDouble("Price");
+                    list.add(new ChildrenPitch(pitchID, price));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+    
+    public List<ChildrenPitch> getMinPrice() throws SQLException {
+        List<ChildrenPitch> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_MIN_PRICE);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String pitchID = rs.getString("PitchID");
+                    Double price = rs.getDouble("Price");
+                    list.add(new ChildrenPitch(pitchID, price));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+
     public static void main(String[] args) throws SQLException {
         ChildrenPitchDAO dao = new ChildrenPitchDAO();
-        List<ChildrenPitch> list = dao.getType("P02");
+        List<ChildrenPitch> list = dao.getMaxPrice();
         for (ChildrenPitch childrenPitch : list) {
+            System.out.println(childrenPitch.getPitchID());
             System.out.println(childrenPitch.getPrice());
         }
     }

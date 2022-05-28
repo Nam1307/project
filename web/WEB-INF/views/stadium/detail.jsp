@@ -14,39 +14,51 @@
         <div class="row gx-4 gx-lg-5 align-items-center">
             <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://www.sgtiepthi.vn/wp-content/uploads/2016/06/DSC06119.jpg" alt="..." /></div>
             <div class="col-md-6">
-                <div class="small mb-1">SKU: BST-498</div>
-                <h1 class="display-5 fw-bolder">Shop item template</h1>
-                <div class="fs-5 mb-5">
-                    <span class="text-decoration-line-through">$45.00</span>
-                    <span>$40.00</span>
+                <div class="small mb-1">
+                    ${pitch.pitchAddress},
+                    <c:forEach var="w" items="${listW}" >
+                        <c:if test="${w.wardID == pitch.wardID}">${w.wardName}</c:if>
+                    </c:forEach>
+                    ,
+                    <c:forEach var="d" items="${listD}" >
+                        <c:if test="${d.districtID == pitch.districtID}">${d.districtName}</c:if>
+                    </c:forEach>
                 </div>
-                <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
+                <h1 class="display-5 fw-bolder">${pitch.pitchName}</h1>
+                <c:forEach var="cp" items="${listCP}" >
+                    <div class="fs-5 mt-3">
+                        <i class="bi bi-arrow-return-right"></i>
+                        <span>${cp.childrenPitchName}</span> - 
+                        Loại sân: <span>${cp.childrenPitchType}</span> người - 
+                        Giá: <span><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></span>
+                    </div>
+                </c:forEach>
+                <p class="lead mt-5">${pitch.pitchDescription}</p>
             </div>
             <hr class="mt-5">
         </div>
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.306654744652!2d106.69931121530254!3d10.787808861932195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4ac0282147%3A0x5e20fe3a05eb7bcf!2zVHJ1bmcgdMOibSBUaOG7gyBk4bulYyBUaOG7gyB0aGFvIEhvYSBMxrA!5e0!3m2!1svi!2s!4v1653484640330!5m2!1svi!2s" 
-                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-                <div class="col-md-6">
-                    <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post">
-                        <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
-                        <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                            <c:forEach var="cp" items="${listCP}" >
-                                <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
-                            </c:forEach>
-                        </select>
-                        <div class="d-flex mt-3">
-                            <label class="fs-5 me-1 lead fw-bold">Chọn ngày: </label>
-                            <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
-                            <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
-                                <i class="bi bi-search"></i>
-                                Find date
-                            </button>
+                ${pitch.pitchLocation}
+                <div class="mt-5">
+                    <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post" class="row">
+                        <div class="col-md-6">
+                            <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
+                            <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                <c:forEach var="cp" items="${listCP}" >
+                                    <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
+                                </c:forEach>
+                            </select>
+                            <div class="d-flex mt-3">
+                                <label class="fs-5 me-1 lead fw-bold">Chọn ngày: </label>
+                                <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
+                                <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
+                                    <i class="bi bi-search"></i>
+                                    Find date
+                                </button>
+                            </div>
                         </div>
-                        <div class="mt-3" id="time">
+                        <div class="mt-3 col-md-6" id="time">
 
                         </div>
                     </form>

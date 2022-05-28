@@ -26,8 +26,11 @@
                                 <!-- Product name-->
                                 <h5 class="fw-bolder">${p.pitchName}</h5>
                                 <!-- Product price-->
-                                <c:forEach var="cp" items="${listCP}" >
-                                    <c:if test="${cp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ -" /></span></c:if>
+                                <c:forEach var="lminp" items="${listMinP}" >
+                                    <c:if test="${lminp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lminp.price}" pattern="#,##0VNĐ - " /></span></c:if>
+                                </c:forEach>
+                                <c:forEach var="lmaxp" items="${listMaxP}" >
+                                    <c:if test="${lmaxp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lmaxp.price}" pattern="#,##0VNĐ" /></span></c:if>
                                 </c:forEach>
                                 <p>Price</p>
                                 <p>
@@ -124,8 +127,11 @@
                                     <!-- Product name-->
                                     <h5 class="fw-bolder">${p.pitchName}</h5>
                                     <!-- Product price-->
-                                    <c:forEach var="cp" items="${listCP}" >
-                                        <c:if test="${cp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ -" /></span></c:if>
+                                    <c:forEach var="lminp" items="${listMinP}" >
+                                        <c:if test="${lminp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lminp.price}" pattern="#,##0VNĐ - " /></span></c:if>
+                                    </c:forEach>
+                                    <c:forEach var="lmaxp" items="${listMaxP}" >
+                                        <c:if test="${lmaxp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lmaxp.price}" pattern="#,##0VNĐ" /></span></c:if>
                                     </c:forEach>
                                     <p>Price</p>
                                     <p>

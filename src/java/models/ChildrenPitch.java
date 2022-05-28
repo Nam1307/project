@@ -14,19 +14,24 @@ public class ChildrenPitch {
     private String pitchID;
     private String childrenPitchName;
     private String childrenPitchType;
-    private Double Price;
+    private Double price;
 
     public ChildrenPitch() {
     }
 
-    public ChildrenPitch(String childrenPitchID, String pitchID, String childrenPitchName, String childrenPitchType, Double Price) {
+    public ChildrenPitch(String childrenPitchID, String pitchID, String childrenPitchName, String childrenPitchType, Double price) {
         this.childrenPitchID = childrenPitchID;
         this.pitchID = pitchID;
         this.childrenPitchName = childrenPitchName;
         this.childrenPitchType = childrenPitchType;
-        this.Price = Price;
+        this.price = price;
     }
 
+    public ChildrenPitch(String pitchID, Double price) {
+        this.pitchID = pitchID;
+        this.price = price;
+    }
+    
     public String getChildrenPitchID() {
         return childrenPitchID;
     }
@@ -60,11 +65,11 @@ public class ChildrenPitch {
     }
 
     public Double getPrice() {
-        return Price;
+        return price;
     }
 
-    public void setPrice(Double Price) {
-        this.Price = Price;
+    public void setPrice(Double price) {
+        this.price = price;
     }
     
 }

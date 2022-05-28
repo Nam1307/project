@@ -8,6 +8,7 @@ package controllers;
 import com.google.gson.JsonObject;
 import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
+import daos.PitchDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -24,7 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import models.Booking;
 import models.ChildrenPitch;
+import models.District;
+import models.Pitch;
 import models.Time;
+import models.Ward;
 
 /**
  *
@@ -66,8 +70,15 @@ public class StadiumController extends HttpServlet {
     private void detail(HttpServletRequest request, HttpServletResponse response) {
         try {
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            PitchDAO pd = new PitchDAO();
             String pitchID = request.getParameter("pitchID");
             List<ChildrenPitch> listCP = cpd.getType(pitchID);
+            Pitch pitch = pd.getAPitch(pitchID);
+            List<District> listD = pd.getDistrict();
+            List<Ward> listW = pd.getAllWard();
+            request.setAttribute("listD", listD);
+            request.setAttribute("listW", listW);
+            request.setAttribute("pitch", pitch);
             request.setAttribute("listCP", listCP);
             System.out.println(pitchID);
         } catch (SQLException ex) {
