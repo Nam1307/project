@@ -24,6 +24,7 @@ public class UserDAO {
     private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=?";
     private static final String INSERT_USER = "INSERT INTO tblUser VALUES (?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_LOGIN = "SELECT * FROM tblUser where UserName=? AND Pass = ?";
+    private static final String CHECK_DUPLICATE_USERNAME = "SELECT * FROM tblUser where UserName=?";
     
     public User getUser(String UserID) throws SQLException {
         User user = null;
@@ -194,6 +195,48 @@ public class UserDAO {
                 stm = conn.prepareStatement(CHECK_LOGIN);
                 stm.setString(1, UserName);
                 stm.setString(2, password);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    String userID = rs.getString("UserID");
+                    String roleID = rs.getString("RoleID");
+                    String wardID = rs.getString("WardID");
+                    String districtID = rs.getString("DistrictID");
+                    String userName = rs.getString("UserName");
+                    String pass = rs.getString("Pass");
+                    String fullName = rs.getString("FullName");
+                    String phone = rs.getString("Phone");
+                    String userAddress = rs.getString("UserAddress");
+                    String email = rs.getString("Email");
+                    String imgLink = rs.getString("ImgLink");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return user;
+    }
+    
+    public User checkDuplicateUsername(String UserName) throws SQLException {
+        User user = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(CHECK_DUPLICATE_USERNAME);
+                stm.setString(1, UserName);
                 rs = stm.executeQuery();
                 if (rs.next()) {
                     String userID = rs.getString("UserID");

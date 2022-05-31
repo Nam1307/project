@@ -96,57 +96,69 @@
                             <hr>
                                 <div class="form-floating mb-3 mt-3">
                                     <input type="password" class="form-control" id="floatingPassword" value="<%=password%>" name="password" placeholder="Password" required="">
+                                        <i class="bi bi-eye-slash position-absolute fs-5" style="left: 90%; top: 25%" id="togglePassword"></i>
                                         <label for="floatingPassword">Mật khẩu</label>
                                         <div class="invalid-feedback">
                                             Vui lòng nhập mật khẩu.
                                         </div>
                                 </div>
                                 <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" name="remember" value="1" 
-                                               <%= "1".equals(remember) ? "checked='/checked'" : ""%>
-                                               >
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Ghi nhớ đăng nhập
-                                            </label>
-                                            </div>
-                                            <div class="d-grid mb-2">
-                                                <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Đăng nhập</button>
-                                            </div>
-                                            <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/register.do">Chưa có tài khoản? / Đăng ký</a>
-                                            <hr class="my-4">
-                                                </form>
-                                                <div class="d-grid mb-2">
-                                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/WebsiteOrderStadium/user/loginGoogle.do&response_type=code
-                                                       &client_id=192542612754-a31982s55etlpeb7liogh8d3s66pms6e.apps.googleusercontent.com&approval_prompt=force">
-                                                        <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-                                                            <i class="fab fa-google me-2"></i> Đăng nhập bằng google
-                                                        </button>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                                <script>
-                                                    (function () {
-                                                        'use strict'
+                                    <input class="form-check-input" type="checkbox" name="remember" value="1" 
+                                           <%= "1".equals(remember) ? "checked='/checked'" : ""%>
+                                           >
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                </div>
+                                <div class="d-grid mb-2">
+                                    <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Đăng nhập</button>
+                                </div>
+                                <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/register.do">Chưa có tài khoản? / Đăng ký</a>
+                                <hr class="my-4">
+                                    </form>
+                                    <div class="d-grid mb-2">
+                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/WebsiteOrderStadium/user/loginGoogle.do&response_type=code
+                                           &client_id=192542612754-a31982s55etlpeb7liogh8d3s66pms6e.apps.googleusercontent.com&approval_prompt=force">
+                                            <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+                                                <i class="fab fa-google me-2"></i> Đăng nhập bằng google
+                                            </button>
+                                        </a>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <script>
+                                        (function () {
+                                            'use strict'
 
-                                                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                        var forms = document.querySelectorAll('.needs-validation')
+                                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                            var forms = document.querySelectorAll('.needs-validation')
 
-                                                        // Loop over them and prevent submission
-                                                        Array.prototype.slice.call(forms)
-                                                                .forEach(function (form) {
-                                                                    form.addEventListener('submit', function (event) {
-                                                                        if (!form.checkValidity()) {
-                                                                            event.preventDefault()
-                                                                            event.stopPropagation()
-                                                                        }
+                                            // Loop over them and prevent submission
+                                            Array.prototype.slice.call(forms)
+                                                    .forEach(function (form) {
+                                                        form.addEventListener('submit', function (event) {
+                                                            if (!form.checkValidity()) {
+                                                                event.preventDefault()
+                                                                event.stopPropagation()
+                                                            }
 
-                                                                        form.classList.add('was-validated')
-                                                                    }, false)
-                                                                })
-                                                    })()
-                                                </script>
+                                                            form.classList.add('was-validated')
+                                                        }, false)
+                                                    })
+                                        })()
+                                        
+                                        const togglePassword = document.querySelector('#togglePassword');
+                                        const password = document.querySelector('#floatingPassword');
+
+                                        togglePassword.addEventListener('click', function (e) {
+                                            // toggle the type attribute
+                                            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                                            password.setAttribute('type', type);
+                                            // toggle the eye slash icon
+                                            this.classList.toggle('bi-eye');
+                                        });
+                                    </script>

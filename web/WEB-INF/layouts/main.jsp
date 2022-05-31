@@ -46,15 +46,27 @@
                             </li>
                         </c:if>
                         <c:if test="${user != null}">
-                            <li class="nav-item">
+<!--                            <li class="nav-item">
                                 ${user.fullName}
                             </li>
                             <li class="nav-item">
-                                <img class="img-thumbnail rounded-circle" src="${user.imgLink}" alt="..." width="50px" height="50px" />                          
+                                <img class="img-thumbnail rounded-circle" src="${user.imgLink}" alt="..." width="40px" height="40px" />                          
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/user/logout.do">Logout</a>
-                            </li>
+                            </li>-->
+                                <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img class="img-thumbnail rounded-circle" src="${user.imgLink}" alt="..." width="33px" height="33px" />  
+                                </a>
+                                <ul class="dropdown-menu" style="text-align: center" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <div>Xin chào: ${sessionScope.user.fullName}</div>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user/logout.do?"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
+                                </ul>
+                            </li>         
                         </c:if>
 
                     </ul>

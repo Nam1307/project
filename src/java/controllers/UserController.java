@@ -63,6 +63,7 @@ public class UserController extends HttpServlet {
             case "register":
                 register(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                //request.getRequestDispatcher("/WEB-INF/views/user/register.jsp").forward(request, response);
                 break;
             case "loginGoogle":
                 loginGoogle(request, response);
@@ -152,6 +153,9 @@ public class UserController extends HttpServlet {
 
     private void createAccount(HttpServletRequest request, HttpServletResponse response) {
         try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
             UserDAO dao = new UserDAO();
             String username = request.getParameter("username");
             String email = request.getParameter("email");
@@ -163,25 +167,50 @@ public class UserController extends HttpServlet {
             String districtID = request.getParameter("districtID");
             String wardID = request.getParameter("ward");
             if (!password.equals(confirmPassword)) {
-                PitchDAO pd = new PitchDAO();
-                List<District> listD = pd.getDistrict();
-                List<Ward> listWard = pd.getAllWard();
-                request.setAttribute("listWard", listWard);
-                request.setAttribute("listD", listD);
                 request.setAttribute("action", "register");
                 request.setAttribute("error", "Xác nhận mật khẩu không đúng");
-                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
             } else {
-                List<User> list = dao.getAllUser();
-                String userID = raiseProductId(list);
-                SendEmail sm = new SendEmail();
-                String code = sm.getRandom();
-                User user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg", code);
-                boolean sendEmail = sm.sendEmail(user);
-                System.out.println(districtID + " , " + wardID);
-                request.setAttribute("action", "verify");
-                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                User user = null;
+                user = dao.checkDuplicateUsername(username);
+                if (user != null) {
+                    request.setAttribute("action", "register");
+                    request.setAttribute("error", "Tên đăng nhập đã tồn tại");
+                } else {
+                    user = dao.checkUserEmail(email);
+                    if (user != null) {
+                        request.setAttribute("action", "register");
+                        request.setAttribute("error", "Email đã tồn tại");
+                    } else {
+                        HttpSession session = request.getSession();
+                        List<User> list = dao.getAllUser();
+                        String userID = raiseProductId(list);
+                        SendEmail sm = new SendEmail();
+                        String code = sm.getRandom();
+                        user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg");
+                        boolean sendEmail = sm.sendEmail(user, code);
+                        System.out.println(districtID + " , " + wardID);
+                        session.setAttribute("code", code);
+                        request.setAttribute("action", "verify");
+                    }
+                }
             }
+            PitchDAO pd = new PitchDAO();
+            List<District> listD = pd.getDistrict();
+            List<Ward> listWard = pd.getAllWard();
+            List<Ward> listW = pd.getWard(districtID);
+            request.setAttribute("listWard", listWard);
+            request.setAttribute("listD", listD);
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.setAttribute("password", password);
+            request.setAttribute("confirmPassword", confirmPassword);
+            request.setAttribute("fullname", fullname);
+            request.setAttribute("phone", phone);
+            request.setAttribute("address", address);
+            request.setAttribute("districtID", districtID);
+            request.setAttribute("ward", wardID);
+            request.setAttribute("listW", listW);
+            request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ServletException ex) {
@@ -246,9 +275,53 @@ public class UserController extends HttpServlet {
         }
 
     }
-    
-    private void verify(HttpServletRequest request, HttpServletResponse response) {
 
+    private void verify(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            UserDAO dao = new UserDAO();
+            List<User> list = dao.getAllUser();
+            HttpSession session = request.getSession();
+            String num1 = request.getParameter("num1");
+            String num2 = request.getParameter("num2");
+            String num3 = request.getParameter("num3");
+            String num4 = request.getParameter("num4");
+            String num5 = request.getParameter("num5");
+            String num6 = request.getParameter("num6");
+            String userID = raiseProductId(list);
+            String username = request.getParameter("username");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String fullname = request.getParameter("fullname");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String districtID = request.getParameter("districtID");
+            String wardID = request.getParameter("ward");
+            String finalNum = num1 + num2 + num3 + num4 + num5 + num6;
+            String code = (String) session.getAttribute("code");
+            if (finalNum.equals(code)) {
+                request.setAttribute("action", "login");
+                User user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg");
+                dao.insertUser(user);
+                session.removeAttribute("code");
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            } else {
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("password", password);
+                request.setAttribute("fullname", fullname);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("districtID", districtID);
+                request.setAttribute("ward", wardID);
+                request.setAttribute("action", "verify");
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
     private String raiseProductId(List<User> arrayList) throws Exception {

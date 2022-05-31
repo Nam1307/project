@@ -19,14 +19,22 @@
     .form-control:focus{box-shadow:none;border:2px solid red}
     .validate{border-radius:20px;height:40px;background-color:red;border:1px solid red;width:140px}
 </style>
-<form>
+<form action="${pageContext.request.contextPath}/user/verify.do" method="post">
     <div class="container height-100 d-flex justify-content-center align-items-center"> 
         <div class="position-relative"> 
             <div class="card p-2 text-center"> 
                 <h6>Please enter the one time password <br> to verify your account</h6> 
                 <div> 
-                    <span>A code has been sent to</span> <small>*******9897</small> 
+                    <span>A code has been sent to</span> <small>${email}</small> 
                 </div> 
+                <input type="hidden" value="${username}" name="username" />
+                <input type="hidden" value="${email}" name="email" />
+                <input type="hidden" value="${password}" name="password" />
+                <input type="hidden" value="${fullname}" name="fullname" />
+                <input type="hidden" value="${phone}" name="phone" />
+                <input type="hidden" value="${districtID}" name="districtID" />
+                <input type="hidden" value="${ward}" name="ward" />
+                <input type="hidden" value="${address}" name="address" />
                 <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2"> 
                     <input class="m-2 text-center form-control rounded" name="num1" type="text" id="first" maxlength="1" /> 
                     <input class="m-2 text-center form-control rounded" name="num2" type="text" id="second" maxlength="1" /> 
@@ -37,11 +45,6 @@
                 </div> 
                 <div class="mt-4"> 
                     <button class="btn btn-danger px-4 validate">Validate</button> 
-                </div> 
-            </div> 
-            <div class="card-2"> 
-                <div class="content d-flex justify-content-center align-items-center"> 
-                    <span>Didn't get the code</span> <a href="#" class="text-decoration-none ms-3">Resend(1/3)</a> 
                 </div> 
             </div> 
         </div>

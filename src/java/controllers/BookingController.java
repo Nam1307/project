@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.User;
 
 /**
  *
@@ -34,22 +36,31 @@ public class BookingController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getAttribute("action").toString();
         switch (action) {
-            case "goToBooking":
+            case "confirmBooking":
                 //Xu ly
-                goToBooking(request, response);
-                break; 
+                confirmBooking(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
     }
-    
-    private void goToBooking(HttpServletRequest request, HttpServletResponse response) {
-        String type = request.getParameter("cpType");
-        String dateBooking = request.getParameter("dateBooking");
-        String op = request.getParameter("op");
-        System.out.println(type);
-        System.out.println(dateBooking);
-        System.out.println(op);
+
+    private void confirmBooking(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            
+            request.setAttribute("controller", "user");
+            request.setAttribute("action", "login");
+        } else {
+            String type = request.getParameter("cpType");
+            String dateBooking = request.getParameter("dateBooking");
+            String op = request.getParameter("op");
+            System.out.println(type);
+            System.out.println(dateBooking);
+            System.out.println(op);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

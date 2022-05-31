@@ -12,7 +12,7 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://www.sgtiepthi.vn/wp-content/uploads/2016/06/DSC06119.jpg" alt="..." /></div>
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="${pageContext.request.contextPath}/images/${pitch.pitchID}.jpg" alt="..." /></div>
             <div class="col-md-6">
                 <div class="small mb-1">
                     ${pitch.pitchAddress},
@@ -41,8 +41,9 @@
             <div class="row gx-4 gx-lg-5 align-items-center">
                 ${pitch.pitchLocation}
                 <div class="mt-5">
-                    <form action="${pageContext.request.contextPath}/booking/goToBooking.do" method="post" class="row">
+                    <form action="${pageContext.request.contextPath}/booking/confirmBooking.do" method="post" class="row">
                         <div class="col-md-6">
+                            <input type="hidden" name="pitchID" value="${pitch.pitchID}" />
                             <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
                             <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
                                 <c:forEach var="cp" items="${listCP}" >
@@ -174,6 +175,7 @@
 </section>
 <script>
     function findDate() {
+        var delay = 1000;
         var selectBox = document.getElementById("selectBox");
         var selectedValue = selectBox.options[selectBox.selectedIndex].value;
         var date = document.getElementById("inputDate").value;
@@ -184,10 +186,21 @@
                 childrenPitchID: selectedValue,
                 date: date
             },
-            success: function (responseData) {
+            beforeSend: function () {
                 document.getElementById("time").innerHTML
-                        = responseData;
-            }
+                        = "<div class=\"d-flex justify-content-center\">\n" +
+                        "  <div class=\"spinner-border\" role=\"status\">\n" +
+                        "    <span class=\"visually-hidden\">Loading...</span>\n" +
+                        "  </div>\n" +
+                        "</div>";
+            },
+
+            success: function (responseData) {
+                setTimeout(function () {
+                    document.getElementById("time").innerHTML
+                            = responseData;
+                }, delay);
+            },
         });
     }
     document.getElementById('inputDate').valueAsDate = new Date();

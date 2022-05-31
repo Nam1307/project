@@ -135,7 +135,15 @@ public class HomeController extends HttpServlet {
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<ChildrenPitch> listMaxPrice = cpd.getMaxPrice();
             List<ChildrenPitch> listMinPrice = cpd.getMinPrice();
-            request.setAttribute("listMinP", listMinPrice);
+            List<ChildrenPitch> listFinalMinPrice = new ArrayList<>();
+            for (int i = 0; i < listMaxPrice.size(); i++) {
+                for (int j = 0; j < listMinPrice.size(); j++) {
+                    if (!Objects.equals(listMaxPrice.get(i).getPrice(), listMinPrice.get(j).getPrice()) && listMaxPrice.get(i).getPitchID().equals(listMinPrice.get(j).getPitchID())) {
+                        listFinalMinPrice.add(listMinPrice.get(j));
+                    }
+                }
+            }
+            request.setAttribute("listMinP", listFinalMinPrice);
             request.setAttribute("listMaxP", listMaxPrice);
             request.setAttribute("listCP", listCP);
             request.setAttribute("listHR", listHighRate);
@@ -281,7 +289,15 @@ public class HomeController extends HttpServlet {
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<ChildrenPitch> listMaxPrice = cpd.getMaxPrice();
                 List<ChildrenPitch> listMinPrice = cpd.getMinPrice();
-                request.setAttribute("listMinP", listMinPrice);
+                List<ChildrenPitch> listFinalMinPrice = new ArrayList<>();
+                for (int i = 0; i < listMaxPrice.size(); i++) {
+                    for (int j = 0; j < listMinPrice.size(); j++) {
+                        if (!Objects.equals(listMaxPrice.get(i).getPrice(), listMinPrice.get(j).getPrice()) && listMaxPrice.get(i).getPitchID().equals(listMinPrice.get(j).getPitchID())) {
+                            listFinalMinPrice.add(listMinPrice.get(j));
+                        }
+                    }
+                }
+                request.setAttribute("listMinP", listFinalMinPrice);
                 request.setAttribute("listMaxP", listMaxPrice);
                 request.setAttribute("listCP", listCP);
                 request.setAttribute("listD", listD);

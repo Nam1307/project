@@ -25,7 +25,7 @@ public class SendEmail {
         return String.format("%06d", number);
     }
     
-    public boolean sendEmail(User user) {
+    public boolean sendEmail(User user, String code) {
         boolean test = false;
 
         String toEmail = user.getEmail();
@@ -71,7 +71,7 @@ public class SendEmail {
                 + "\n"
                 + "<body>\n"
                 + "    <h3 style=\"color: blue;\">Xin chào " + user.getFullName() + " !</h3>\n"
-                + "    <div>Mã xác minh tài khoản của bạn là : "+ user.getCodeVerification() +"</div>\n"
+                + "    <div>Mã xác minh tài khoản của bạn là : "+ code +"</div>\n"
                 + "    <div>Thư này được tạo ra tự động.</div>\n"
                 + "    <div>Nếu bạn cần trợ giúp hoặc có câu hỏi, hãy gửi email đến minhkhoi11.04nhmk@gmail.com bất cứ lúc nào.</div>\n"
                 + "    <h3 style=\"color: blue;\">Trân trọng!</h3>\n"
