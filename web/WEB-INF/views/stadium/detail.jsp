@@ -41,7 +41,7 @@
             <div class="row gx-4 gx-lg-5 align-items-center">
                 ${pitch.pitchLocation}
                 <div class="mt-5">
-                    <form action="${pageContext.request.contextPath}/booking/confirmBooking.do" method="post" class="row">
+                    <form action="${pageContext.request.contextPath}/booking/goToConfirmBooking.do" method="post" class="row">
                         <div class="col-md-6">
                             <input type="hidden" name="pitchID" value="${pitch.pitchID}" />
                             <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>

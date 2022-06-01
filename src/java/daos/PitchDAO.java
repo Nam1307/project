@@ -31,6 +31,7 @@ public class PitchDAO {
     private static final String NUMBER_PITCH_SEARCH = "SELECT COUNT(*) AS total FROM Pitch WHERE DistrictID = ? AND WardID = ?";
     private static final String GET_HIGH_RATE_PITCH = "SELECT TOP(4) * FROM Pitch  WHERE Estimation = 5 order by NEWID() ;";
     private static final String GET_A_PITCH = "SELECT * FROM Pitch WHERE PitchID = ?";
+    private static final String GET_ALL_PITCH = "SELECT * FROM Pitch";
 
     public List<District> getDistrict() throws SQLException {
         List<District> list = new ArrayList<>();
@@ -354,6 +355,45 @@ public class PitchDAO {
             }
         }
         return pitch;
+    }
+    
+    public List<Pitch> getAllPitch() throws SQLException {
+        List<Pitch> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_ALL_PITCH);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String pitchID = rs.getString("PitchID");
+                    String wardID = rs.getString("WardID");
+                    String districtID = rs.getString("DistrictID");
+                    String userID = rs.getString("UserID");
+                    String pitchName = rs.getString("PitchName");
+                    String pitchAddress = rs.getString("PitchAddress");
+                    int estimation = rs.getInt("Estimation");
+                    String pitchLocation = rs.getString("PitchLocation");
+                    String pitchDescription = rs.getString("PitchDescription");
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
     }
 
     public static void main(String[] args) throws SQLException {

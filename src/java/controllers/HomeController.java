@@ -5,12 +5,14 @@
  */
 package controllers;
 
+import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -21,9 +23,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Booking;
 import models.ChildrenPitch;
 import models.District;
 import models.Pitch;
+import models.User;
 import models.Ward;
 
 /**
@@ -75,6 +79,7 @@ public class HomeController extends HttpServlet {
         try {
             PitchDAO pd = new PitchDAO();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            BookingDAO bd = new BookingDAO();
             HttpSession session = request.getSession();
 
             int pageSize = 8;//Kich thuoc trang                        
@@ -129,6 +134,14 @@ public class HomeController extends HttpServlet {
             //Luu thong tin vao session va request
             session.setAttribute("page", page);
             session.setAttribute("totalPage", totalPage);
+            User user = (User) session.getAttribute("user");
+            Date date = new Date();
+            List<Booking> listN = null;
+            if (user != null) {
+                listN = bd.getNotification(user.getUserID(), date);
+                session.setAttribute("listN", listN);
+                session.setAttribute("countNotify", listN.size());
+            }
             List<District> listD = pd.getDistrict();
             List<Ward> listWard = pd.getAllWard();
             List<Pitch> listHighRate = pd.getHighRatePitch();
@@ -150,7 +163,6 @@ public class HomeController extends HttpServlet {
             request.setAttribute("listWard", listWard);
             request.setAttribute("listP", listP);
             request.setAttribute("listD", listD);
-
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }

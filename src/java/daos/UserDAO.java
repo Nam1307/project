@@ -19,13 +19,15 @@ import utils.DBUtils;
  * @author SE150853 Nguyen Huynh Minh Khoi
  */
 public class UserDAO {
+
     private static final String GET_USER = "SELECT * FROM tblUser where UserID=?";
     private static final String GET_ALL_USER = "SELECT * FROM tblUser";
     private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=?";
     private static final String INSERT_USER = "INSERT INTO tblUser VALUES (?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_LOGIN = "SELECT * FROM tblUser where UserName=? AND Pass = ?";
     private static final String CHECK_DUPLICATE_USERNAME = "SELECT * FROM tblUser where UserName=?";
-    
+    private static final String UPDATE_USER_PHONE = "UPDATE tblUser SET Phone = ?  WHERE UserID = ?;";
+
     public User getUser(String UserID) throws SQLException {
         User user = null;
         Connection conn = null;
@@ -67,7 +69,7 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     public List<User> getAllUser() throws SQLException {
         List<User> list = new ArrayList<>();
         Connection conn = null;
@@ -108,7 +110,7 @@ public class UserDAO {
         }
         return list;
     }
-    
+
     public User checkUserEmail(String userEmail) throws SQLException {
         User user = null;
         Connection conn = null;
@@ -150,7 +152,7 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     public boolean insertUser(User user) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -183,7 +185,7 @@ public class UserDAO {
         }
         return check;
     }
-    
+
     public User checkLogin(String UserName, String password) throws SQLException {
         User user = null;
         Connection conn = null;
@@ -226,7 +228,7 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     public User checkDuplicateUsername(String UserName) throws SQLException {
         User user = null;
         Connection conn = null;
@@ -268,7 +270,31 @@ public class UserDAO {
         }
         return user;
     }
-    
+
+    public boolean updatetUserPhone(String userID, String phone) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_USER_PHONE);
+                stm.setString(1, phone);
+                stm.setString(2, userID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
+
     public static void main(String[] args) throws SQLException {
         UserDAO dao = new UserDAO();
         User u = new User("U05", "US", null, null, "", "", "Hu?nh Th? M? Hòa 1/9/1978", "", "", "myhoabibo67@gmail.com", "https://lh3.googleusercontent.com/a/AATXAJzraIIFB4zw6oRCECDGMMBEXWMmzf1mwqvmD84P=s96-cc");

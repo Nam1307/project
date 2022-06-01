@@ -5,11 +5,14 @@
  */
 package controllers;
 
+import daos.BookingDAO;
+import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +23,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Booking;
+import models.ChildrenPitch;
 import models.District;
 import static models.GoogleAccess.getToken;
 import static models.GoogleAccess.getUserInfo;
@@ -99,22 +104,46 @@ public class UserController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             UserDAO dao = new UserDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            PitchDAO pd = new PitchDAO();
+            BookingDAO bd = new BookingDAO();
             List<User> list = dao.getAllUser();
             String userID = raiseProductId(list);
+            String pitchID = (String) session.getAttribute("pitchID");
             String code = request.getParameter("code");
             String accessToken = getToken(code);
             UserGoogleDto userGoogle = getUserInfo(accessToken);
             System.out.println(userGoogle);
             System.out.println(userID);
             User user = dao.checkUserEmail(userGoogle.getEmail());
+            Date date = new Date();
+            List<Booking> listN = bd.getNotification(user.getUserID(), date);
+            List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+            List<Pitch> listP = pd.getAllPitch();
+            session.setAttribute("listP", listP);
+            session.setAttribute("listN", listN);
+            session.setAttribute("listCP1", listCP);
+            session.setAttribute("countNotify", listN.size());
             if (user != null) {
                 session.setAttribute("user", user);
-                response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                if (pitchID != null) {
+                    response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
+                } else {
+                    response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                }
+                session.removeAttribute("pitchID");
             } else {
                 User u = new User(userID, "US", null, null, userGoogle.getEmail(), "", userGoogle.getName(), "", "", userGoogle.getEmail(), userGoogle.getPicture());
                 if (dao.insertUser(u)) {
                     session.setAttribute("user", u);
-                    response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    if (pitchID != null) {
+                        response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
+                    } else {
+                        response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    }
+                    session.removeAttribute("pitchID");
                 } else {
                     response.sendRedirect("/WebsiteOrderStadium/user/login.do");
                 }
@@ -227,7 +256,12 @@ public class UserController extends HttpServlet {
             String userName = request.getParameter("username");
             String password = request.getParameter("password");
             String remember = request.getParameter("remember");
+            String pitchID = request.getParameter("pitchID");
+
             UserDAO dao = new UserDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            PitchDAO pd = new PitchDAO();
+            BookingDAO bd = new BookingDAO();
             User user = dao.checkLogin(userName, password);
             if (user == null) {
                 request.setAttribute("username", userName);
@@ -238,6 +272,14 @@ public class UserController extends HttpServlet {
             } else {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
+                Date date = new Date();
+                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+                List<Pitch> listP = pd.getAllPitch();
+                session.setAttribute("listP", listP);
+                session.setAttribute("listN", listN);
+                session.setAttribute("listCP1", listCP);
+                session.setAttribute("countNotify", listN.size());
                 if (remember == null) {
                     Cookie[] cookies = request.getCookies();
                     // Delete all the cookies
@@ -249,7 +291,11 @@ public class UserController extends HttpServlet {
                             response.addCookie(cookie);
                         }
                     }
-                    response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    if (pitchID != null) {
+                        response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
+                    } else {
+                        response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                    }
                 } else {
                     if (remember.equals("1")) {
                         //Save in cookie
@@ -262,7 +308,11 @@ public class UserController extends HttpServlet {
                         response.addCookie(cookieUname);
                         response.addCookie(cookiePass);
                         response.addCookie(cookieRemember);
-                        response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                        if (pitchID != null) {
+                            response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
+                        } else {
+                            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                        }
                     }
                 }
             }

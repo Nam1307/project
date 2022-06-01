@@ -20,6 +20,28 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link href="${pageContext.request.contextPath}/css/site.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <style>
+            .notification {
+                color: white;
+                text-decoration: none;
+                padding: 5px 26px;
+                position: relative;
+                display: inline-block;
+                border-radius: 2px;
+                /*                margin-left: 30px;
+                                margin-right: 30px;*/
+                margin-top: 3px;
+            }
+            .notification .badge {
+                position: absolute;
+                top: -8px;
+                right: 85px;
+                padding: 5px 10px;
+                border-radius: 50%;
+                background-color: red;
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <!-- Navigation -->
@@ -40,22 +62,40 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do">Booking</a>
                         </li>
+                        <c:if test="${user != null && user.roleID == 'US'}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countNotify}</span> 
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px">
+                                    <c:forEach var="n" items="${listN}">
+                                        <c:forEach var="cp" items="${listCP1}">
+                                            <c:forEach var="p" items="${listP}">
+                                                <c:if test="${n.childrenPitchID == cp.childrenPitchID && p.pitchID == cp.pitchID}">
+                                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do">
+                                                        <div class="form-check pt-4">
+                                                            <i class="bi bi-bell-fill"></i>
+                                                            <label class="form-check-label"><h6>${p.pitchName}</h6></label>
+                                                            <p class="justify fst-italic">${cp.childrenPitchName}</p>
+                                                            <p class="justify">Ngày: <span class="fw-bold">${n.bookingDate}</span></p>
+                                                            <p class="justify">Thời gian: <span class="fw-bold">${n.timeRent}h</span></p>
+                                                        </div>
+                                                    </a>
+                                                    <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </ul>
+                            </li>         
+                        </c:if>
                         <c:if test="${user == null}">
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/user/login.do">Login</a>
                             </li>
                         </c:if>
                         <c:if test="${user != null}">
-<!--                            <li class="nav-item">
-                                ${user.fullName}
-                            </li>
-                            <li class="nav-item">
-                                <img class="img-thumbnail rounded-circle" src="${user.imgLink}" alt="..." width="40px" height="40px" />                          
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/user/logout.do">Logout</a>
-                            </li>-->
-                                <li class="nav-item dropdown">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img class="img-thumbnail rounded-circle" src="${user.imgLink}" alt="..." width="33px" height="33px" />  
                                 </a>
