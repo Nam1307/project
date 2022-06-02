@@ -23,11 +23,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import models.Booking;
 import models.ChildrenPitch;
 import models.District;
 import models.Pitch;
 import models.Time;
+import models.User;
 import models.Ward;
 
 /**
@@ -69,17 +71,35 @@ public class StadiumController extends HttpServlet {
 
     private void detail(HttpServletRequest request, HttpServletResponse response) {
         try {
+            Date date = new Date();
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            session.removeAttribute("listN");
+            session.removeAttribute("countNotify");
+            session.removeAttribute("listP1");
+            session.removeAttribute("listCP1");
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
+            BookingDAO bd = new BookingDAO();
             String pitchID = request.getParameter("pitchID");
             List<ChildrenPitch> listCP = cpd.getType(pitchID);
             Pitch pitch = pd.getAPitch(pitchID);
             List<District> listD = pd.getDistrict();
             List<Ward> listW = pd.getAllWard();
+            List<Pitch> listP1 = pd.getAllPitch();
+            if(user != null){
+                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                request.setAttribute("listN", listN);
+                request.setAttribute("countNotify", listN.size());
+            }
+            
+            List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
             request.setAttribute("listD", listD);
             request.setAttribute("listW", listW);
             request.setAttribute("pitch", pitch);
             request.setAttribute("listCP", listCP);
+            request.setAttribute("listP1", listP1);
+            request.setAttribute("listCP1", listCP1);        
             System.out.println(pitchID);
         } catch (SQLException ex) {
             Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,16 +114,16 @@ public class StadiumController extends HttpServlet {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
             List<Booking> bookingTime = bd.findTime(childrenPitchID, date);
             List<Time> time = bd.getFreeTime(childrenPitchID, date);
-            if(!bookingTime.isEmpty()){
+            if (!bookingTime.isEmpty()) {
                 out.print("<p class=\"lead mt-2 fst-italic\">Đã được đặt</p>");
             }
             for (Booking booking : bookingTime) {
                 out.print("<a href=\"#\" style=\"pointer-events: none;cursor: default;opacity:50%;text-decoration: none\">\n"
                         + "                            <button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
-                        + "style=\"width: 150px\" name=\"op\" value=\"" + booking.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + booking.getTimeRent() + "h" +"</button>\n"
+                        + "style=\"width: 150px\" name=\"op\" value=\"" + booking.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + booking.getTimeRent() + "h" + "</button>\n"
                         + "                        </a>");
             }
-            if(!time.isEmpty()){
+            if (!time.isEmpty()) {
                 out.print("<p class=\"lead mt-2 fst-italic\">Chưa được đặt</p>");
             }
             for (Time time1 : time) {
@@ -120,6 +140,7 @@ public class StadiumController extends HttpServlet {
             Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

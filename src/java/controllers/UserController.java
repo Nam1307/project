@@ -12,6 +12,12 @@ import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,7 +64,7 @@ public class UserController extends HttpServlet {
             case "bookingList":
                 //Xu ly
                 bookingList(request, response);
-                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                
                 break;
             case "login":
                 //Xu ly
@@ -93,7 +99,81 @@ public class UserController extends HttpServlet {
     }
 
     private void bookingList(HttpServletRequest request, HttpServletResponse response) {
-
+        try {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                response.sendRedirect("/WebsiteOrderStadium/user/login.do");
+            } else {
+                Date dateNow = new Date();
+                BookingDAO bd = new BookingDAO();
+                PitchDAO pd = new PitchDAO();
+                ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+                String userID = request.getParameter("userID");
+                Date date = new Date();
+                session.removeAttribute("listN");
+                session.removeAttribute("countNotify");
+                session.removeAttribute("listP1");
+                session.removeAttribute("listCP1");
+                List<Pitch> listP1 = pd.getAllPitch();
+                List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+                List<Booking> listN = bd.getNotification(userID, date);
+                List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, dateNow);
+                List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, dateNow);
+                List<Booking> listPlayedEqual = bd.getUserBookingPlayedEqual(userID, dateNow);
+                request.setAttribute("listPlayedBefore", listPlayedBefore);
+                request.setAttribute("listPlayedAfter", listPlayedAfter);
+                request.setAttribute("listP1", listP1);
+                request.setAttribute("listCP1", listCP);
+                request.setAttribute("listN", listN);
+                request.setAttribute("countNotify", listN.size());
+                //Xử lý giờ thực tại so với giờ đá
+                LocalTime now = LocalTime.now();
+                Time time = Time.valueOf(now);
+                DateFormat formatter = new SimpleDateFormat("HH");
+                List<Booking> listPlayedEqualBefore = new ArrayList<>();
+                List<Booking> listPlayedEqualAfter = new ArrayList<>();
+                for (int i = 0; i < listPlayedEqual.size(); i++) {
+                    String timeBook = listPlayedEqual.get(i).getTimeRent().substring(0, listPlayedEqual.get(i).getTimeRent().lastIndexOf("-"));
+                    java.sql.Time timeValue = new java.sql.Time(formatter.parse(timeBook).getTime());
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+                    String time1 = format.format(time);
+                    String time2 = format.format(timeValue);
+                    Date date1 = format.parse(time1);
+                    Date date2 = format.parse(time2);
+                    long difference = date2.getTime() - date1.getTime();
+                    long diffMinutes = difference / (60 * 1000) % 60;
+                    long diffHours = difference / (60 * 60 * 1000) % 24;
+                    if (diffMinutes > 0 || diffHours > 0) {
+                        listPlayedEqualAfter.add(listPlayedEqual.get(i));
+                        request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
+                    } else {
+                        listPlayedEqualBefore.add(listPlayedEqual.get(i));
+                        request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
+                    }
+                }
+                for (Booking booking : listPlayedEqualAfter) {
+                    System.out.println(booking.getTimeRent());
+                }
+                System.out.println("----------------------------");
+                for (Booking booking : listPlayedEqualBefore) {
+                    System.out.println(booking.getTimeRent());
+                }
+                System.out.println("----------------------------");
+                for (Booking booking : listPlayedEqual) {
+                    System.out.println(booking.getTimeRent());
+                }
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServletException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) {
@@ -173,7 +253,8 @@ public class UserController extends HttpServlet {
     private void logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession();
-            session.removeAttribute("user");
+//            session.removeAttribute("user");
+            session.invalidate();
             response.sendRedirect("/WebsiteOrderStadium/home/index.do");
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -276,10 +357,29 @@ public class UserController extends HttpServlet {
                 List<Booking> listN = bd.getNotification(user.getUserID(), date);
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Pitch> listP = pd.getAllPitch();
-                session.setAttribute("listP", listP);
+                session.setAttribute("listP1", listP);
                 session.setAttribute("listN", listN);
                 session.setAttribute("listCP1", listCP);
                 session.setAttribute("countNotify", listN.size());
+//                for (int i = 0; i < listN.size(); i++) {
+//                    for (int j = 0; j < listCP.size(); j++) {
+//                        for (int k = 0; k < listP.size(); k++) {
+//                            if (listN.get(i).getChildrenPitchID().equals(listCP.get(j).getChildrenPitchID()) && listCP.get(j).getPitchID().equals(listP.get(k).getPitchID())) {
+//                                System.out.println(listN.get(i).getBookingID());
+//                            }
+//                        }
+//
+//                    }
+//                }
+//                for (Booking booking : listN) {
+//                    for (ChildrenPitch ChildrenPitch : listCP) {
+//                        for (Pitch pitch : listP) {
+//                            if (booking.getChildrenPitchID().equals(ChildrenPitch.getChildrenPitchID()) && ChildrenPitch.getPitchID().equals(pitch.getPitchID())) {
+//                                System.out.println(booking.getBookingID());
+//                            }
+//                        }
+//                    }
+//                }
                 if (remember == null) {
                     Cookie[] cookies = request.getCookies();
                     // Delete all the cookies

@@ -81,6 +81,10 @@ public class HomeController extends HttpServlet {
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             BookingDAO bd = new BookingDAO();
             HttpSession session = request.getSession();
+            session.removeAttribute("listN");
+            session.removeAttribute("countNotify");
+            session.removeAttribute("listP1");
+            session.removeAttribute("listCP1");
 
             int pageSize = 8;//Kich thuoc trang                        
 
@@ -139,12 +143,13 @@ public class HomeController extends HttpServlet {
             List<Booking> listN = null;
             if (user != null) {
                 listN = bd.getNotification(user.getUserID(), date);
-                session.setAttribute("listN", listN);
-                session.setAttribute("countNotify", listN.size());
+                request.setAttribute("listN", listN);
+                request.setAttribute("countNotify", listN.size());
             }
             List<District> listD = pd.getDistrict();
             List<Ward> listWard = pd.getAllWard();
             List<Pitch> listHighRate = pd.getHighRatePitch();
+            List<Pitch> listP1 = pd.getAllPitch();
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<ChildrenPitch> listMaxPrice = cpd.getMaxPrice();
             List<ChildrenPitch> listMinPrice = cpd.getMinPrice();
@@ -162,6 +167,8 @@ public class HomeController extends HttpServlet {
             request.setAttribute("listHR", listHighRate);
             request.setAttribute("listWard", listWard);
             request.setAttribute("listP", listP);
+            request.setAttribute("listP1", listP1);
+            request.setAttribute("listCP1", listCP);
             request.setAttribute("listD", listD);
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,8 +238,15 @@ public class HomeController extends HttpServlet {
     private void search(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            session.removeAttribute("listN");
+            session.removeAttribute("countNotify");
+            session.removeAttribute("listP1");
+            session.removeAttribute("listCP1");
+            Date date = new Date();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
+            BookingDAO bd = new BookingDAO();
             String districtID = request.getParameter("districtID");
             String wardID = request.getParameter("ward");
 
@@ -301,6 +315,7 @@ public class HomeController extends HttpServlet {
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<ChildrenPitch> listMaxPrice = cpd.getMaxPrice();
                 List<ChildrenPitch> listMinPrice = cpd.getMinPrice();
+                List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listFinalMinPrice = new ArrayList<>();
                 for (int i = 0; i < listMaxPrice.size(); i++) {
                     for (int j = 0; j < listMinPrice.size(); j++) {
@@ -308,6 +323,11 @@ public class HomeController extends HttpServlet {
                             listFinalMinPrice.add(listMinPrice.get(j));
                         }
                     }
+                }
+                if (user != null) {
+                    List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                    request.setAttribute("listN", listN);
+                    request.setAttribute("countNotify", listN.size());
                 }
                 request.setAttribute("listMinP", listFinalMinPrice);
                 request.setAttribute("listMaxP", listMaxPrice);
@@ -318,6 +338,8 @@ public class HomeController extends HttpServlet {
                 request.setAttribute("ward", wardID);
                 request.setAttribute("listWard", listWard);
                 request.setAttribute("listHR", listHighRate);
+                request.setAttribute("listP1", listP1);
+                request.setAttribute("listCP1", listCP);
                 request.setAttribute("action", "index");
                 System.out.println(listP);
             }

@@ -60,19 +60,19 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do">Booking</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Booking</a>
                         </li>
                         <c:if test="${user != null && user.roleID == 'US'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countNotify}</span> 
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px">
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px;">
                                     <c:forEach var="n" items="${listN}">
                                         <c:forEach var="cp" items="${listCP1}">
-                                            <c:forEach var="p" items="${listP}">
-                                                <c:if test="${n.childrenPitchID == cp.childrenPitchID && p.pitchID == cp.pitchID}">
-                                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do">
+                                            <c:forEach var="p" items="${listP1}">
+                                                <c:if test="${n.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
+                                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">
                                                         <div class="form-check pt-4">
                                                             <i class="bi bi-bell-fill"></i>
                                                             <label class="form-check-label"><h6>${p.pitchName}</h6></label>
@@ -85,9 +85,9 @@
                                                 </c:if>
                                             </c:forEach>
                                         </c:forEach>
-                                    </c:forEach>
+                                    </c:forEach>           
                                 </ul>
-                            </li>         
+                            </li> 
                         </c:if>
                         <c:if test="${user == null}">
                             <li class="nav-item">

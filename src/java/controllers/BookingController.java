@@ -7,12 +7,16 @@ package controllers;
 
 import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
+import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Booking;
 import models.ChildrenPitch;
+import models.Pitch;
 import models.Time;
 import models.User;
 
@@ -48,12 +53,15 @@ public class BookingController extends HttpServlet {
             case "goToConfirmBooking":
                 //Xu ly
                 goToConfirmBooking(request, response);
-                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
             case "confirmBooking":
                 //Xu ly
                 confirmBooking(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "deleteBooking":
+                //Xu ly
+                deleteBooking(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -64,20 +72,34 @@ public class BookingController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
+            Date date = new Date();
+            session.removeAttribute("listN");
+            session.removeAttribute("countNotify");
+            session.removeAttribute("listP1");
+            session.removeAttribute("listCP1");
             String pitchID = request.getParameter("pitchID");
             if (user == null) {
                 session.setAttribute("pitchID", pitchID);
                 request.setAttribute("pitchID", pitchID);
-                request.setAttribute("controller", "user");
-                request.setAttribute("action", "login");
+//                request.setAttribute("controller", "user");
+//                request.setAttribute("action", "login");
+                response.sendRedirect("/WebsiteOrderStadium/user/login.do");
             } else {
                 ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+                PitchDAO pd = new PitchDAO();
                 BookingDAO bd = new BookingDAO();
                 String type = request.getParameter("cpType");
                 String op = request.getParameter("op");
                 String dateBooking = request.getParameter("dateBooking");
                 List<ChildrenPitch> listCP = cpd.getType(pitchID);
                 List<Time> listT = bd.getTime();
+                List<Pitch> listP1 = pd.getAllPitch();
+                List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
+                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                request.setAttribute("listN", listN);
+                request.setAttribute("countNotify", listN.size());
+                request.setAttribute("listP1", listP1);
+                request.setAttribute("listCP1", listCP1);
                 request.setAttribute("listCP", listCP);
                 request.setAttribute("type", type);
                 request.setAttribute("time", op);
@@ -85,6 +107,7 @@ public class BookingController extends HttpServlet {
                 request.setAttribute("user", user);
                 request.setAttribute("listT", listT);
                 request.setAttribute("pitchID", pitchID);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
             }
         } catch (Exception ex) {
 
@@ -96,7 +119,12 @@ public class BookingController extends HttpServlet {
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             UserDAO ud = new UserDAO();
             BookingDAO bd = new BookingDAO();
+            PitchDAO pd = new PitchDAO();
             HttpSession session = request.getSession();
+            session.removeAttribute("listN");
+            session.removeAttribute("countNotify");
+            session.removeAttribute("listP1");
+            session.removeAttribute("listCP1");
             User user = (User) session.getAttribute("user");
             String phone = request.getParameter("phone");
             String childrenPitchID = request.getParameter("childrenPitchID");
@@ -118,8 +146,12 @@ public class BookingController extends HttpServlet {
                 List<Booking> listN = bd.getNotification(user.getUserID(), dateToNotify);
                 List<ChildrenPitch> listCP = cpd.getType(pitchID);
                 List<Time> listT = bd.getTime();
-                session.setAttribute("listN", listN);
-                session.setAttribute("countNotify", listN.size());
+                List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
+                List<Pitch> listP = pd.getAllPitch();
+                request.setAttribute("listCP1", listCP1);
+                request.setAttribute("listP1", listP);
+                request.setAttribute("listN", listN);
+                request.setAttribute("countNotify", listN.size());
                 request.setAttribute("listCP", listCP);
                 request.setAttribute("type", childrenPitchID);
                 request.setAttribute("time", timeRent);
@@ -138,6 +170,16 @@ public class BookingController extends HttpServlet {
             System.out.println(bookingID);
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    private void deleteBooking(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String bookingID = request.getParameter("Id");
+            BookingDAO bd = new BookingDAO();
+            bd.deleteBooking(bookingID);
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
