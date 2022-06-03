@@ -73,8 +73,8 @@ public class BookingController extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             Date date = new Date();
-            session.removeAttribute("listN");
-            session.removeAttribute("countNotify");
+            session.removeAttribute("listNo");
+            session.removeAttribute("countN");
             session.removeAttribute("listP1");
             session.removeAttribute("listCP1");
             String pitchID = request.getParameter("pitchID");
@@ -96,8 +96,8 @@ public class BookingController extends HttpServlet {
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
                 List<Booking> listN = bd.getNotification(user.getUserID(), date);
-                request.setAttribute("listN", listN);
-                request.setAttribute("countNotify", listN.size());
+                request.setAttribute("listNo", listN);
+                request.setAttribute("countN", listN.size());
                 request.setAttribute("listP1", listP1);
                 request.setAttribute("listCP1", listCP1);
                 request.setAttribute("listCP", listCP);
@@ -121,8 +121,8 @@ public class BookingController extends HttpServlet {
             BookingDAO bd = new BookingDAO();
             PitchDAO pd = new PitchDAO();
             HttpSession session = request.getSession();
-            session.removeAttribute("listN");
-            session.removeAttribute("countNotify");
+            session.removeAttribute("listNo");
+            session.removeAttribute("countN");
             session.removeAttribute("listP1");
             session.removeAttribute("listCP1");
             User user = (User) session.getAttribute("user");
@@ -150,8 +150,8 @@ public class BookingController extends HttpServlet {
                 List<Pitch> listP = pd.getAllPitch();
                 request.setAttribute("listCP1", listCP1);
                 request.setAttribute("listP1", listP);
-                request.setAttribute("listN", listN);
-                request.setAttribute("countNotify", listN.size());
+                request.setAttribute("listNo", listN);
+                request.setAttribute("countN", listN.size());
                 request.setAttribute("listCP", listCP);
                 request.setAttribute("type", childrenPitchID);
                 request.setAttribute("time", timeRent);
@@ -167,7 +167,7 @@ public class BookingController extends HttpServlet {
             System.out.println(childrenPitchID);
             System.out.println(dateBooking);
             System.out.println(timeRent);
-            System.out.println(bookingID);
+//            System.out.println(bookingID);
         } catch (Exception e) {
             System.out.println(e);
         }

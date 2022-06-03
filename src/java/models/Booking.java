@@ -17,7 +17,8 @@ public class Booking {
     private String userID;
     private Date bookingDate;
     private String timeID;
-    private String timeRent;
+    private java.sql.Time timeStart;
+    private java.sql.Time timeEnd;
 
     public Booking() {
     }
@@ -30,14 +31,16 @@ public class Booking {
         this.timeID = timeID;
     }
 
-    public Booking(String bookingID, String childrenPitchID, String userID, Date bookingDate, String timeID, String timeRent) {
+    public Booking(String bookingID, String childrenPitchID, String userID, Date bookingDate, String timeID, java.sql.Time timeStart, java.sql.Time timeEnd) {
         this.bookingID = bookingID;
         this.childrenPitchID = childrenPitchID;
         this.userID = userID;
         this.bookingDate = bookingDate;
         this.timeID = timeID;
-        this.timeRent = timeRent;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
     }
+
     
 
     public String getBookingID() {
@@ -80,12 +83,20 @@ public class Booking {
         this.timeID = timeID;
     }
 
-    public String getTimeRent() {
-        return timeRent;
+    public java.sql.Time getTimeStart() {
+        return timeStart;
     }
 
-    public void setTimeRent(String timeRent) {
-        this.timeRent = timeRent;
+    public void setTimeStart(java.sql.Time timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public java.sql.Time getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(java.sql.Time timeEnd) {
+        this.timeEnd = timeEnd;
     }
     
 }

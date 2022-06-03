@@ -73,7 +73,7 @@
                         <div class="form-floating mb-3">
                             <c:forEach var="t" items="${listT}" >
                                 <c:if test="${t.timeID == time}">
-                                    <input disabled="" type="text" class="form-control" id="floatingInputUsername" value="${t.timeRent}h" placeholder="myusername" required autofocus>
+                                    <input disabled="" type="text" class="form-control" id="floatingInputUsername" value="<fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h" placeholder="myusername" required autofocus>
                                     <input type="hidden" value="${time}" name="timeRent">
                                 </c:if>
                             </c:forEach>

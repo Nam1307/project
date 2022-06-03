@@ -81,8 +81,8 @@ public class HomeController extends HttpServlet {
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             BookingDAO bd = new BookingDAO();
             HttpSession session = request.getSession();
-            session.removeAttribute("listN");
-            session.removeAttribute("countNotify");
+            session.removeAttribute("listNo");
+            session.removeAttribute("countN");
             session.removeAttribute("listP1");
             session.removeAttribute("listCP1");
 
@@ -143,8 +143,8 @@ public class HomeController extends HttpServlet {
             List<Booking> listN = null;
             if (user != null) {
                 listN = bd.getNotification(user.getUserID(), date);
-                request.setAttribute("listN", listN);
-                request.setAttribute("countNotify", listN.size());
+                request.setAttribute("listNo", listN);
+                request.setAttribute("countN", listN.size());
             }
             List<District> listD = pd.getDistrict();
             List<Ward> listWard = pd.getAllWard();
@@ -239,8 +239,8 @@ public class HomeController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
-            session.removeAttribute("listN");
-            session.removeAttribute("countNotify");
+            session.removeAttribute("listNo");
+            session.removeAttribute("countN");
             session.removeAttribute("listP1");
             session.removeAttribute("listCP1");
             Date date = new Date();
@@ -326,8 +326,8 @@ public class HomeController extends HttpServlet {
                 }
                 if (user != null) {
                     List<Booking> listN = bd.getNotification(user.getUserID(), date);
-                    request.setAttribute("listN", listN);
-                    request.setAttribute("countNotify", listN.size());
+                    request.setAttribute("listNo", listN);
+                    request.setAttribute("countN", listN.size());
                 }
                 request.setAttribute("listMinP", listFinalMinPrice);
                 request.setAttribute("listMaxP", listMaxPrice);

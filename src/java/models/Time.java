@@ -11,14 +11,16 @@ package models;
  */
 public class Time {
     private String timeID;
-    private String timeRent;
+    private java.sql.Time timeStart;
+    private java.sql.Time timeEnd;
 
     public Time() {
     }
 
-    public Time(String timeID, String timeRent) {
+    public Time(String timeID, java.sql.Time timeStart, java.sql.Time timeEnd) {
         this.timeID = timeID;
-        this.timeRent = timeRent;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
     }
 
     public String getTimeID() {
@@ -29,12 +31,21 @@ public class Time {
         this.timeID = timeID;
     }
 
-    public String getTimeRent() {
-        return timeRent;
+    public java.sql.Time getTimeStart() {
+        return timeStart;
     }
 
-    public void setTimeRent(String timeRent) {
-        this.timeRent = timeRent;
+    public void setTimeStart(java.sql.Time timeStart) {
+        this.timeStart = timeStart;
     }
+
+    public java.sql.Time getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(java.sql.Time timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+
     
 }

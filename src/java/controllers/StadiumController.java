@@ -74,8 +74,8 @@ public class StadiumController extends HttpServlet {
             Date date = new Date();
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
-            session.removeAttribute("listN");
-            session.removeAttribute("countNotify");
+            session.removeAttribute("listNo");
+            session.removeAttribute("countN");
             session.removeAttribute("listP1");
             session.removeAttribute("listCP1");
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
@@ -89,8 +89,8 @@ public class StadiumController extends HttpServlet {
             List<Pitch> listP1 = pd.getAllPitch();
             if(user != null){
                 List<Booking> listN = bd.getNotification(user.getUserID(), date);
-                request.setAttribute("listN", listN);
-                request.setAttribute("countNotify", listN.size());
+                request.setAttribute("listNo", listN);
+                request.setAttribute("countN", listN.size());
             }
             
             List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
@@ -108,6 +108,7 @@ public class StadiumController extends HttpServlet {
 
     private void findDate(HttpServletRequest request, HttpServletResponse response) {
         try {
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm");
             PrintWriter out = response.getWriter();
             BookingDAO bd = new BookingDAO();
             String childrenPitchID = request.getParameter("childrenPitchID");
@@ -120,7 +121,7 @@ public class StadiumController extends HttpServlet {
             for (Booking booking : bookingTime) {
                 out.print("<a href=\"#\" style=\"pointer-events: none;cursor: default;opacity:50%;text-decoration: none\">\n"
                         + "                            <button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
-                        + "style=\"width: 150px\" name=\"op\" value=\"" + booking.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + booking.getTimeRent() + "h" + "</button>\n"
+                        + "style=\"width: 150px\" name=\"op\" value=\"" + booking.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + smt.format(booking.getTimeStart()) + "-" + smt.format(booking.getTimeEnd()) + "h" + "</button>\n"
                         + "                        </a>");
             }
             if (!time.isEmpty()) {
@@ -129,7 +130,7 @@ public class StadiumController extends HttpServlet {
             for (Time time1 : time) {
                 out.print("<a href=\"#\" style=\"text-decoration: none\">\n"
                         + "<button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
-                        + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + time1.getTimeRent() + "h" + "</button>\n"
+                        + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + smt.format(time1.getTimeStart()) + "-" + smt.format(time1.getTimeEnd()) + "h" + "</button>\n"
                         + "</a>");
             }
         } catch (ParseException ex) {

@@ -105,69 +105,30 @@ public class UserController extends HttpServlet {
             if (user == null) {
                 response.sendRedirect("/WebsiteOrderStadium/user/login.do");
             } else {
-                Date dateNow = new Date();
+                SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
                 BookingDAO bd = new BookingDAO();
                 PitchDAO pd = new PitchDAO();
                 ChildrenPitchDAO cpd = new ChildrenPitchDAO();
                 String userID = request.getParameter("userID");
                 Date date = new Date();
-                session.removeAttribute("listN");
-                session.removeAttribute("countNotify");
+                session.removeAttribute("listNo");
+                session.removeAttribute("countN");
                 session.removeAttribute("listP1");
                 session.removeAttribute("listCP1");
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Booking> listN = bd.getNotification(userID, date);
-                List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, dateNow);
-                List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, dateNow);
-                List<Booking> listPlayedEqual = bd.getUserBookingPlayedEqual(userID, dateNow);
+                List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, date, smt.format(date));
+                List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date, smt.format(date));
                 request.setAttribute("listPlayedBefore", listPlayedBefore);
                 request.setAttribute("listPlayedAfter", listPlayedAfter);
                 request.setAttribute("listP1", listP1);
                 request.setAttribute("listCP1", listCP);
-                request.setAttribute("listN", listN);
-                request.setAttribute("countNotify", listN.size());
-                //Xử lý giờ thực tại so với giờ đá
-                LocalTime now = LocalTime.now();
-                Time time = Time.valueOf(now);
-                DateFormat formatter = new SimpleDateFormat("HH");
-                List<Booking> listPlayedEqualBefore = new ArrayList<>();
-                List<Booking> listPlayedEqualAfter = new ArrayList<>();
-                for (int i = 0; i < listPlayedEqual.size(); i++) {
-                    String timeBook = listPlayedEqual.get(i).getTimeRent().substring(0, listPlayedEqual.get(i).getTimeRent().lastIndexOf("-"));
-                    java.sql.Time timeValue = new java.sql.Time(formatter.parse(timeBook).getTime());
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                    String time1 = format.format(time);
-                    String time2 = format.format(timeValue);
-                    Date date1 = format.parse(time1);
-                    Date date2 = format.parse(time2);
-                    long difference = date2.getTime() - date1.getTime();
-                    long diffMinutes = difference / (60 * 1000) % 60;
-                    long diffHours = difference / (60 * 60 * 1000) % 24;
-                    if (diffMinutes > 0 || diffHours > 0) {
-                        listPlayedEqualAfter.add(listPlayedEqual.get(i));
-                        request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
-                    } else {
-                        listPlayedEqualBefore.add(listPlayedEqual.get(i));
-                        request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
-                    }
-                }
-                for (Booking booking : listPlayedEqualAfter) {
-                    System.out.println(booking.getTimeRent());
-                }
-                System.out.println("----------------------------");
-                for (Booking booking : listPlayedEqualBefore) {
-                    System.out.println(booking.getTimeRent());
-                }
-                System.out.println("----------------------------");
-                for (Booking booking : listPlayedEqual) {
-                    System.out.println(booking.getTimeRent());
-                }
+                request.setAttribute("listNo", listN);
+                request.setAttribute("countN", listN.size());
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,9 +162,9 @@ public class UserController extends HttpServlet {
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Pitch> listP = pd.getAllPitch();
             session.setAttribute("listP", listP);
-            session.setAttribute("listN", listN);
+            session.setAttribute("listNo", listN);
             session.setAttribute("listCP1", listCP);
-            session.setAttribute("countNotify", listN.size());
+            session.setAttribute("countN", listN.size());
             if (user != null) {
                 session.setAttribute("user", user);
                 //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
@@ -358,9 +319,9 @@ public class UserController extends HttpServlet {
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Pitch> listP = pd.getAllPitch();
                 session.setAttribute("listP1", listP);
-                session.setAttribute("listN", listN);
+                session.setAttribute("listNo", listN);
                 session.setAttribute("listCP1", listCP);
-                session.setAttribute("countNotify", listN.size());
+                session.setAttribute("countN", listN.size());
 //                for (int i = 0; i < listN.size(); i++) {
 //                    for (int j = 0; j < listCP.size(); j++) {
 //                        for (int k = 0; k < listP.size(); k++) {
@@ -380,6 +341,9 @@ public class UserController extends HttpServlet {
 //                        }
 //                    }
 //                }
+                for (Booking booking : listN) {
+                    System.out.println(booking.getTimeStart());
+                }
                 if (remember == null) {
                     Cookie[] cookies = request.getCookies();
                     // Delete all the cookies
@@ -423,7 +387,6 @@ public class UserController extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void verify(HttpServletRequest request, HttpServletResponse response) {

@@ -34,7 +34,7 @@
                                             </dl>
                                             <dl class="param param-inline small">
                                                 <dt>Giờ: </dt>
-                                                <dd>${b.timeRent}</dd>
+                                                <dd><fmt:formatDate type="time" value="${b.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${b.timeEnd}" pattern="HH:mm" />h</dd>
                                             </dl>
                                         </figcaption>
                                     </figure> 
@@ -49,80 +49,6 @@
                                 </td>
                                 <td class="text-right"> 
                                     <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
-                                </td>
-                            </tr>
-                        </c:if>
-                    </c:forEach>
-                </c:forEach>
-            </c:forEach>
-            <c:forEach var="b" items="${listPlayedEqualAfter}">
-                <c:forEach var="cp" items="${listCP1}">
-                    <c:forEach var="p" items="${listP1}">
-                        <c:if test="${b.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
-                            <tr id="row_${b.bookingID}">
-                                <td>
-                                    <figure class="media">
-                                        <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
-                                        <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
-                                            <dl class="param param-inline small">
-                                                <dt>Ngày </dt>
-                                                <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
-                                            </dl>
-                                            <dl class="param param-inline small">
-                                                <dt>Giờ </dt>
-                                                <dd>${b.timeRent}</dd>
-                                            </dl>
-                                        </figcaption>
-                                    </figure> 
-                                </td>
-                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
-                                </td>
-                                <td> 
-                                    <div class="price-wrap"> 
-                                        <var class="price">Chưa đá</var> 
-                                    </div> <!-- price-wrap .// -->
-                                </td>
-                                <td class="text-right"> 
-                                    <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
-                                </td>
-                            </tr>
-                        </c:if>
-                    </c:forEach>
-                </c:forEach>
-            </c:forEach>
-            <c:forEach var="b" items="${listPlayedEqualBefore}">
-                <c:forEach var="cp" items="${listCP1}">
-                    <c:forEach var="p" items="${listP1}">
-                        <c:if test="${b.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
-                            <tr>
-                                <td>
-                                    <figure class="media">
-                                        <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
-                                        <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
-                                            <dl class="param param-inline small">
-                                                <dt>Ngày </dt>
-                                                <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
-                                            </dl>
-                                            <dl class="param param-inline small">
-                                                <dt>Giờ </dt>
-                                                <dd>${b.timeRent}</dd>
-                                            </dl>
-                                        </figcaption>
-                                    </figure> 
-                                </td>
-                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
-                                </td>
-                                <td> 
-                                    <div class="price-wrap"> 
-                                        <var class="price">Đã đá</var> 
-                                    </div> <!-- price-wrap .// -->
-                                </td>
-                                <td class="text-right"> 
-                                    <a href="" class="btn btn-outline-danger">Bình luận</a>
                                 </td>
                             </tr>
                         </c:if>
@@ -145,7 +71,7 @@
                                             </dl>
                                             <dl class="param param-inline small">
                                                 <dt>Giờ </dt>
-                                                <dd>${b.timeRent}</dd>
+                                                <dd><fmt:formatDate type="time" value="${b.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${b.timeEnd}" pattern="HH:mm" />h</dd>
                                             </dl>
                                         </figcaption>
                                     </figure> 

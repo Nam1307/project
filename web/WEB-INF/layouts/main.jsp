@@ -65,10 +65,10 @@
                         <c:if test="${user != null && user.roleID == 'US'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countNotify}</span> 
+                                    <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countN}</span> 
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px;">
-                                    <c:forEach var="n" items="${listN}">
+                                    <c:forEach var="n" items="${listNo}">
                                         <c:forEach var="cp" items="${listCP1}">
                                             <c:forEach var="p" items="${listP1}">
                                                 <c:if test="${n.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
@@ -78,14 +78,14 @@
                                                             <label class="form-check-label"><h6>${p.pitchName}</h6></label>
                                                             <p class="justify fst-italic">${cp.childrenPitchName}</p>
                                                             <p class="justify">Ngày: <span class="fw-bold">${n.bookingDate}</span></p>
-                                                            <p class="justify">Thời gian: <span class="fw-bold">${n.timeRent}h</span></p>
+                                                            <p class="justify">Thời gian: <span class="fw-bold"><fmt:formatDate type="time" value="${n.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${n.timeEnd}" pattern="HH:mm" />h</span></p>
                                                         </div>
                                                     </a>
                                                     <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
                                                 </c:if>
                                             </c:forEach>
                                         </c:forEach>
-                                    </c:forEach>           
+                                    </c:forEach>              
                                 </ul>
                             </li> 
                         </c:if>
