@@ -34,8 +34,10 @@ public class BookingDAO {
     private static final String GET_ALL_BOOKING = "SELECT * FROM Booking";
     private static final String INSERT_BOOKING = "INSERT INTO Booking VALUES (?,?,?,?,?)";
     private static final String GET_NOTIFICATION = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ?;";
-    private static final String GET_USER_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate <= ? AND TiemEnd < ?";
-    private static final String GET_USER_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate >= ? AND TiemEnd > ?";
+    private static final String GET_USER_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate < ?";
+    private static final String GET_USER_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate > ?";
+    private static final String GET_USER_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd < ?";
+    private static final String GET_USER_PLAYED_EQUAL_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd > ?";
     private static final String DELETE_BOOKING = "DELETE FROM Booking WHERE BookingID = ?";
 
     public List<Booking> findTime(String ChildrenPitchID, Date BookingDate) throws SQLException {
@@ -286,7 +288,7 @@ public class BookingDAO {
         return list;
     }
 
-    public List<Booking> getUserBookingPlayedBefore(String UserID, Date dateNow, String Time) throws SQLException {
+    public List<Booking> getUserBookingPlayedBefore(String UserID, Date dateNow) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stm = null;
@@ -295,6 +297,86 @@ public class BookingDAO {
             conn = DBUtils.getConnection();
             if (conn != null) {
                 stm = conn.prepareStatement(GET_USER_PLAYED_BEFORE);
+                stm.setString(1, UserID);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                stm.setString(2, df.format(dateNow));
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String bookingID = rs.getString("BookingID");
+                    String childrenPitchID = rs.getString("ChildrenPitchID");
+                    String userID = rs.getString("UserID");
+                    Date bookingDate = rs.getDate("BookingDate");
+                    String timeID = rs.getString("TimeID");
+                    java.sql.Time timeStart = rs.getTime("TimeStart");
+                    java.sql.Time timeEnd = rs.getTime("TiemEnd");
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+    
+    public List<Booking> getUserBookingPlayedAfter(String UserID, Date dateNow) throws SQLException {
+        List<Booking> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_USER_PLAYED_AFTER);
+                stm.setString(1, UserID);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                stm.setString(2, df.format(dateNow));
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String bookingID = rs.getString("BookingID");
+                    String childrenPitchID = rs.getString("ChildrenPitchID");
+                    String userID = rs.getString("UserID");
+                    Date bookingDate = rs.getDate("BookingDate");
+                    String timeID = rs.getString("TimeID");
+                    java.sql.Time timeStart = rs.getTime("TimeStart");
+                    java.sql.Time timeEnd = rs.getTime("TiemEnd");
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+    
+    public List<Booking> getUserBookingPlayedEqualBefore(String UserID, Date dateNow, String Time) throws SQLException {
+        List<Booking> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_USER_PLAYED_EQUAL_BEFORE);
                 stm.setString(1, UserID);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 stm.setString(2, df.format(dateNow));
@@ -327,7 +409,7 @@ public class BookingDAO {
         return list;
     }
     
-    public List<Booking> getUserBookingPlayedAfter(String UserID, Date dateNow, String Time) throws SQLException {
+    public List<Booking> getUserBookingPlayedEqualAfter(String UserID, Date dateNow, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stm = null;
@@ -335,7 +417,7 @@ public class BookingDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                stm = conn.prepareStatement(GET_USER_PLAYED_AFTER);
+                stm = conn.prepareStatement(GET_USER_PLAYED_EQUAL_AFTER);
                 stm.setString(1, UserID);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 stm.setString(2, df.format(dateNow));
@@ -434,7 +516,7 @@ public class BookingDAO {
         BookingDAO dao = new BookingDAO();
         Date date = new Date();
         SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
-        List<Booking> list = dao.getUserBookingPlayedBefore("U03", date, smt.format(date));
+        List<Booking> list = dao.getUserBookingPlayedAfter("U03", date);
         for (Booking booking : list) {
             System.out.println(booking.getBookingID());
         }

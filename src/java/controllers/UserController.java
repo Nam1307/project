@@ -11,6 +11,7 @@ import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Booking;
 import models.ChildrenPitch;
+import models.Comment;
 import models.District;
 import static models.GoogleAccess.getToken;
 import static models.GoogleAccess.getUserInfo;
@@ -91,6 +93,13 @@ public class UserController extends HttpServlet {
             case "verify":
                 verify(request, response);
                 break;
+            case "goToComment":
+                goToComment(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "comment":
+                comment(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -118,14 +127,22 @@ public class UserController extends HttpServlet {
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Booking> listN = bd.getNotification(userID, date);
-                List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, date, smt.format(date));
-                List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date, smt.format(date));
+                List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, date);
+                List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date);
+                List<Booking> listPlayedEqualAfter = bd.getUserBookingPlayedEqualAfter(userID, date, smt.format(date));
+                List<Booking> listPlayedEqualBefore = bd.getUserBookingPlayedEqualBefore(userID, date, smt.format(date));
                 request.setAttribute("listPlayedBefore", listPlayedBefore);
                 request.setAttribute("listPlayedAfter", listPlayedAfter);
+                request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
+                request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
                 request.setAttribute("listP1", listP1);
                 request.setAttribute("listCP1", listCP);
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
+                for (Booking booking : listPlayedAfter) {
+                    System.out.println("-------------------------------");
+                    System.out.println(booking.getBookingID());
+                }
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
             }
         } catch (SQLException ex) {
@@ -453,6 +470,74 @@ public class UserController extends HttpServlet {
                     maxIndex += 1;
                     result = "U" + String.format("%02d", maxIndex);
                     temp = dao.getUser(result);;
+                }
+            }
+            return result;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+    
+    private void goToComment(HttpServletRequest request, HttpServletResponse response) {
+        String userID = request.getParameter("userID");
+        String pitchID = request.getParameter("pitchID");
+        request.setAttribute("userID", userID);
+        request.setAttribute("pitchID", pitchID);
+    }
+    
+    private void comment(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            String userID = request.getParameter("userID");
+            String pitchID = request.getParameter("pitchID");
+            String rating = request.getParameter("rating");
+            String content = request.getParameter("content"); 
+            UserDAO ud = new UserDAO();
+            PitchDAO pd = new PitchDAO();
+            List<Comment> listComment = ud.getAllComment();
+            String commentID = raiseCommentId(listComment);
+            Date date = new Date();
+            int sum = 0;
+            int pitchRating = 0;
+            List<Comment> sumRating = ud.getComment(pitchID);
+            for (int i = 0; i < sumRating.size(); i++) {
+                sum = sum + sumRating.get(i).getRating();
+            }
+            pitchRating = (sum + Integer.parseInt(rating))/(sumRating.size() + 1);
+            System.out.println(pitchRating);
+            Comment comment = new Comment(commentID, pitchID, userID, date, content, Integer.parseInt(rating));
+            if(ud.insertComment(comment)){
+                pd.updatetEstimation(pitchRating, pitchID);
+                response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    private String raiseCommentId(List<Comment> arrayList) throws Exception {
+        try {
+            UserDAO dao = new UserDAO();
+            String result = "";
+            int maxIndex = 1;
+            if (arrayList == null) {
+                maxIndex = 1;
+                result = "M" + String.format("%02d", maxIndex);
+            } else {
+                maxIndex = arrayList.size() + 1;
+                result = "M" + String.format("%02d", maxIndex);
+                Comment temp = dao.getAComment(result);
+                while (temp != null) {
+                    maxIndex += 1;
+                    result = "U" + String.format("%02d", maxIndex);
+                    temp = dao.getAComment(result);
                 }
             }
             return result;

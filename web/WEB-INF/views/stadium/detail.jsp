@@ -67,6 +67,55 @@
             </div>
         </div>
 </section>
+
+<c:forEach var="c" items="${listCO}">
+    <c:forEach var="u" items="${listU}">
+        <c:if test="${c.userID == u.userID}">
+            <div class="mt-5  px-4 px-lg-5 my-5">
+
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card p-3">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div class="user d-flex flex-row align-items-center">
+
+                                    <img src="${u.imgLink}" width="30" class="user-img rounded-circle mr-2">
+                                    <span><small class="font-weight-bold text-primary">${u.fullName}</small> <small class="font-weight-bold">${c.content}</small></span>
+
+                                </div>
+
+
+                                <small><fmt:formatDate value="${c.commentDate}" pattern="dd-MM-yyyy" /></small>
+
+                            </div>
+
+
+                            <div class="action d-flex justify-content-between mt-2 align-items-center">
+
+                                <div class="icons align-items-center">
+                                    <c:forEach begin="1" step="1" end="${c.rating}">
+                                        <i class="bi-star-fill text-warning"></i>
+                                    </c:forEach>
+                                    <c:forEach begin="1" step="1" end="${5 - c.rating}">
+                                        <i class="bi-star-fill"></i>
+                                    </c:forEach>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </c:if>
+    </c:forEach>
+</c:forEach>
+
 <!-- Related items section-->
 <section class="py-5 bg-light">
     <div class="container px-4 px-lg-5 mt-5">

@@ -32,6 +32,7 @@ public class PitchDAO {
     private static final String GET_HIGH_RATE_PITCH = "SELECT TOP(4) * FROM Pitch  WHERE Estimation = 5 order by NEWID() ;";
     private static final String GET_A_PITCH = "SELECT * FROM Pitch WHERE PitchID = ?";
     private static final String GET_ALL_PITCH = "SELECT * FROM Pitch";
+    private static final String UPDATE_ESTIMATION = "UPDATE Pitch SET Estimation = ?  WHERE PitchID = ?;";
 
     public List<District> getDistrict() throws SQLException {
         List<District> list = new ArrayList<>();
@@ -394,6 +395,30 @@ public class PitchDAO {
             }
         }
         return list;
+    }
+    
+    public boolean updatetEstimation(int estimation, String pitchID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_ESTIMATION);
+                stm.setInt(1, estimation);
+                stm.setString(2, pitchID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
     }
 
     public static void main(String[] args) throws SQLException {

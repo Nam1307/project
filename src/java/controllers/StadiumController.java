@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
+import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Booking;
 import models.ChildrenPitch;
+import models.Comment;
 import models.District;
 import models.Pitch;
 import models.Time;
@@ -81,12 +83,15 @@ public class StadiumController extends HttpServlet {
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
             BookingDAO bd = new BookingDAO();
+            UserDAO ud = new UserDAO();
             String pitchID = request.getParameter("pitchID");
             List<ChildrenPitch> listCP = cpd.getType(pitchID);
             Pitch pitch = pd.getAPitch(pitchID);
             List<District> listD = pd.getDistrict();
             List<Ward> listW = pd.getAllWard();
             List<Pitch> listP1 = pd.getAllPitch();
+            List<User> listU = ud.getAllUser();
+            List<Comment> listCO = ud.getComment(pitchID);
             if(user != null){
                 List<Booking> listN = bd.getNotification(user.getUserID(), date);
                 request.setAttribute("listNo", listN);
@@ -99,7 +104,9 @@ public class StadiumController extends HttpServlet {
             request.setAttribute("pitch", pitch);
             request.setAttribute("listCP", listCP);
             request.setAttribute("listP1", listP1);
-            request.setAttribute("listCP1", listCP1);        
+            request.setAttribute("listCP1", listCP1);   
+            request.setAttribute("listU", listU);
+            request.setAttribute("listCO", listCO);
             System.out.println(pitchID);
         } catch (SQLException ex) {
             Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);
