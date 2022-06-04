@@ -73,6 +73,7 @@ public class StadiumController extends HttpServlet {
 
     private void detail(HttpServletRequest request, HttpServletResponse response) {
         try {
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
@@ -93,7 +94,7 @@ public class StadiumController extends HttpServlet {
             List<User> listU = ud.getAllUser();
             List<Comment> listCO = ud.getComment(pitchID);
             if(user != null){
-                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
             }

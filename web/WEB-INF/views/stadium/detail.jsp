@@ -40,30 +40,32 @@
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
                 ${pitch.pitchLocation}
-                <div class="mt-5">
-                    <form action="${pageContext.request.contextPath}/booking/goToConfirmBooking.do" method="post" class="row">
-                        <div class="col-md-6">
-                            <input type="hidden" name="pitchID" value="${pitch.pitchID}" />
-                            <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
-                            <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                <c:forEach var="cp" items="${listCP}" >
-                                    <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
-                                </c:forEach>
-                            </select>
-                            <div class="d-flex mt-3">
-                                <label class="fs-5 me-1 lead fw-bold">Chọn ngày: </label>
-                                <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
-                                <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
-                                    <i class="bi bi-search"></i>
-                                    Find date
-                                </button>
+                <c:if test="${user == null || user.roleID == 'US'}">
+                    <div class="mt-5">
+                        <form action="${pageContext.request.contextPath}/booking/goToConfirmBooking.do" method="post" class="row">
+                            <div class="col-md-6">
+                                <input type="hidden" name="pitchID" value="${pitch.pitchID}" />
+                                <label class="fs-5 mb-2 lead fw-bold">Chọn sân: </label>
+                                <select id="selectBox" name="cpType" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                    <c:forEach var="cp" items="${listCP}" >
+                                        <option value="${cp.childrenPitchID}">${cp.childrenPitchName}</option>
+                                    </c:forEach>
+                                </select>
+                                <div class="d-flex mt-3">
+                                    <label class="fs-5 me-1 lead fw-bold">Chọn ngày: </label>
+                                    <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
+                                    <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
+                                        <i class="bi bi-search"></i>
+                                        Find date
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-3 col-md-6" id="time">
+                            <div class="mt-3 col-md-6" id="time">
 
-                        </div>
-                    </form>
-                </div>
+                            </div>
+                        </form>
+                    </div>
+                </c:if>
             </div>
         </div>
 </section>

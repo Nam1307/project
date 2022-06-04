@@ -66,7 +66,7 @@ public class UserController extends HttpServlet {
             case "bookingList":
                 //Xu ly
                 bookingList(request, response);
-                
+
                 break;
             case "login":
                 //Xu ly
@@ -126,7 +126,7 @@ public class UserController extends HttpServlet {
                 session.removeAttribute("listCP1");
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
-                List<Booking> listN = bd.getNotification(userID, date);
+                List<Booking> listN = bd.getNotification(userID, date, smt.format(date));
                 List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, date);
                 List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date);
                 List<Booking> listPlayedEqualAfter = bd.getUserBookingPlayedEqualAfter(userID, date, smt.format(date));
@@ -161,6 +161,7 @@ public class UserController extends HttpServlet {
     private void loginGoogle(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession();
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             UserDAO dao = new UserDAO();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
@@ -175,13 +176,15 @@ public class UserController extends HttpServlet {
             System.out.println(userID);
             User user = dao.checkUserEmail(userGoogle.getEmail());
             Date date = new Date();
-            List<Booking> listN = bd.getNotification(user.getUserID(), date);
+            List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Pitch> listP = pd.getAllPitch();
-            session.setAttribute("listP", listP);
-            session.setAttribute("listNo", listN);
-            session.setAttribute("listCP1", listCP);
-            session.setAttribute("countN", listN.size());
+            if (user.getRoleID().equals("US")) {
+                session.setAttribute("listP", listP);
+                session.setAttribute("listNo", listN);
+                session.setAttribute("listCP1", listCP);
+                session.setAttribute("countN", listN.size());
+            }
             if (user != null) {
                 session.setAttribute("user", user);
                 //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
@@ -316,7 +319,7 @@ public class UserController extends HttpServlet {
             String password = request.getParameter("password");
             String remember = request.getParameter("remember");
             String pitchID = request.getParameter("pitchID");
-
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             UserDAO dao = new UserDAO();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
@@ -332,13 +335,15 @@ public class UserController extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 Date date = new Date();
-                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Pitch> listP = pd.getAllPitch();
-                session.setAttribute("listP1", listP);
-                session.setAttribute("listNo", listN);
-                session.setAttribute("listCP1", listCP);
-                session.setAttribute("countN", listN.size());
+                if (user.getRoleID().equals("US")) {
+                    session.setAttribute("listP1", listP);
+                    session.setAttribute("listNo", listN);
+                    session.setAttribute("listCP1", listCP);
+                    session.setAttribute("countN", listN.size());
+                }
 //                for (int i = 0; i < listN.size(); i++) {
 //                    for (int j = 0; j < listCP.size(); j++) {
 //                        for (int k = 0; k < listP.size(); k++) {
@@ -477,14 +482,14 @@ public class UserController extends HttpServlet {
             throw ex;
         }
     }
-    
+
     private void goToComment(HttpServletRequest request, HttpServletResponse response) {
         String userID = request.getParameter("userID");
         String pitchID = request.getParameter("pitchID");
         request.setAttribute("userID", userID);
         request.setAttribute("pitchID", pitchID);
     }
-    
+
     private void comment(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
@@ -493,7 +498,7 @@ public class UserController extends HttpServlet {
             String userID = request.getParameter("userID");
             String pitchID = request.getParameter("pitchID");
             String rating = request.getParameter("rating");
-            String content = request.getParameter("content"); 
+            String content = request.getParameter("content");
             UserDAO ud = new UserDAO();
             PitchDAO pd = new PitchDAO();
             List<Comment> listComment = ud.getAllComment();
@@ -505,10 +510,10 @@ public class UserController extends HttpServlet {
             for (int i = 0; i < sumRating.size(); i++) {
                 sum = sum + sumRating.get(i).getRating();
             }
-            pitchRating = (sum + Integer.parseInt(rating))/(sumRating.size() + 1);
+            pitchRating = (sum + Integer.parseInt(rating)) / (sumRating.size() + 1);
             System.out.println(pitchRating);
             Comment comment = new Comment(commentID, pitchID, userID, date, content, Integer.parseInt(rating));
-            if(ud.insertComment(comment)){
+            if (ud.insertComment(comment)) {
                 pd.updatetEstimation(pitchRating, pitchID);
                 response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
             }
@@ -519,9 +524,9 @@ public class UserController extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private String raiseCommentId(List<Comment> arrayList) throws Exception {
         try {
             UserDAO dao = new UserDAO();

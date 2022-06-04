@@ -85,6 +85,7 @@ public class BookingController extends HttpServlet {
 //                request.setAttribute("action", "login");
                 response.sendRedirect("/WebsiteOrderStadium/user/login.do");
             } else {
+                SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
                 ChildrenPitchDAO cpd = new ChildrenPitchDAO();
                 PitchDAO pd = new PitchDAO();
                 BookingDAO bd = new BookingDAO();
@@ -95,7 +96,7 @@ public class BookingController extends HttpServlet {
                 List<Time> listT = bd.getTime();
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
-                List<Booking> listN = bd.getNotification(user.getUserID(), date);
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
                 request.setAttribute("listP1", listP1);
@@ -143,7 +144,8 @@ public class BookingController extends HttpServlet {
             if (bd.insertBooking(booking)) {
                 user = (User) session.getAttribute("user");
                 Date dateToNotify = new Date();
-                List<Booking> listN = bd.getNotification(user.getUserID(), dateToNotify);
+                SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
+                List<Booking> listN = bd.getNotification(user.getUserID(), dateToNotify, smt.format(dateToNotify));
                 List<ChildrenPitch> listCP = cpd.getType(pitchID);
                 List<Time> listT = bd.getTime();
                 List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();

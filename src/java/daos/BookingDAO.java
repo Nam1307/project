@@ -33,7 +33,7 @@ public class BookingDAO {
     private static final String GET_A_BOOKING = "SELECT * FROM Booking WHERE BookingID = ? ";
     private static final String GET_ALL_BOOKING = "SELECT * FROM Booking";
     private static final String INSERT_BOOKING = "INSERT INTO Booking VALUES (?,?,?,?,?)";
-    private static final String GET_NOTIFICATION = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ?;";
+    private static final String GET_NOTIFICATION = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd > ?;";
     private static final String GET_USER_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate < ?";
     private static final String GET_USER_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate > ?";
     private static final String GET_USER_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd < ?";
@@ -248,7 +248,7 @@ public class BookingDAO {
         return check;
     }
 
-    public List<Booking> getNotification(String UserID, Date BookingDate) throws SQLException {
+    public List<Booking> getNotification(String UserID, Date BookingDate, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stm = null;
@@ -260,6 +260,7 @@ public class BookingDAO {
                 stm.setString(1, UserID);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 stm.setString(2, df.format(BookingDate));
+                stm.setString(3, Time);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     String bookingID = rs.getString("BookingID");

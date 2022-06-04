@@ -59,9 +59,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">About</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Booking</a>
-                        </li>
+                        <c:if test="${user != null && user.roleID == 'US'}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Booking</a>
+                            </li>
+                        </c:if>
+                        <c:if test="${user.roleID == 'OW'}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}">Quản lý đặt sân</a>
+                            </li>
+                        </c:if>
                         <c:if test="${user != null && user.roleID == 'US'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
