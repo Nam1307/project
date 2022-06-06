@@ -176,16 +176,18 @@ public class UserController extends HttpServlet {
             System.out.println(userID);
             User user = dao.checkUserEmail(userGoogle.getEmail());
             Date date = new Date();
-            List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Pitch> listP = pd.getAllPitch();
-            if (user.getRoleID().equals("US")) {
-                session.setAttribute("listP", listP);
-                session.setAttribute("listNo", listN);
-                session.setAttribute("listCP1", listCP);
-                session.setAttribute("countN", listN.size());
-            }
+
             if (user != null) {
+                if (user.getRoleID().equals("US")) {
+                    List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                    session.setAttribute("listP", listP);
+                    session.setAttribute("listNo", listN);
+                    session.setAttribute("listCP1", listCP);
+                    session.setAttribute("countN", listN.size());
+                }
                 session.setAttribute("user", user);
                 //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
                 if (pitchID != null) {
