@@ -11,10 +11,10 @@
     <table class="table table-hover shopping-cart-wrap">
         <thead class="text-muted" id="location">
             <tr>
-                <th scope="col">Stadium</th>
-                <th scope="col" width="120">Number of people</th>
-                <th scope="col" width="120">Status</th>
-                <th scope="col" width="200" class="text-right">Action</th>
+                <th scope="col">Sân</th>
+                <th scope="col" width="120">Số lượng người</th>
+                <th scope="col" width="120">Tình trạng</th>
+                <th scope="col" width="200" class="text-right">Xử lý</th>
             </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName} </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -40,7 +40,7 @@
                                     </figure> 
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
+                                    <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
                                 <td> 
                                     <div class="price-wrap"> 
@@ -64,7 +64,7 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName}</h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -77,7 +77,7 @@
                                     </figure> 
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
+                                    <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
                                 <td> 
                                     <div class="price-wrap"> 
@@ -101,7 +101,7 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName}</h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -114,7 +114,7 @@
                                     </figure> 
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
+                                    <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
                                 <td> 
                                     <div class="price-wrap"> 
@@ -122,7 +122,7 @@
                                     </div> <!-- price-wrap .// -->
                                 </td>
                                 <td class="text-right"> 
-                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-danger">Bình luận</a>
+                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Bình luận</a>
                                 </td>
                             </tr>
                         </c:if>
@@ -138,7 +138,7 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Name of stadium </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName} </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -151,7 +151,7 @@
                                     </figure> 
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
-                                    <input type="number" class="form-control" id="exampleInputEmail1" value="3" disabled="">
+                                    <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
                                 <td> 
                                     <div class="price-wrap"> 
@@ -159,7 +159,7 @@
                                     </div> <!-- price-wrap .// -->
                                 </td>
                                 <td class="text-right"> 
-                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-danger">Bình luận</a>
+                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Bình luận</a>
                                 </td>
                             </tr>
                         </c:if>

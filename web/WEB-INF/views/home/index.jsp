@@ -9,61 +9,63 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-<section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
-        <h2 class="fw-bolder mb-4">Được đề xuất</h2>
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">     
-            <c:forEach var="p" items="${listHR}" >
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <!--                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>-->
-                        <!-- Product image-->
-                        <img class="card-img-top" src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" alt="..." height="230px" />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">${p.pitchName}</h5>
-                                <!-- Product price-->
-                                <c:forEach var="lminp" items="${listMinP}" >
-                                    <c:if test="${lminp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lminp.price}" pattern="#,##0VNĐ - " /></span></c:if>
-                                </c:forEach>
-                                <c:forEach var="lmaxp" items="${listMaxP}" >
-                                    <c:if test="${lmaxp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lmaxp.price}" pattern="#,##0VNĐ" /></span></c:if>
-                                </c:forEach>
-                                <p>Price</p>
-                                <p>
-                                    ${p.pitchAddress},
-                                    <c:forEach var="w" items="${listWard}" >
-                                        <c:if test="${w.wardID == p.wardID}">${w.wardName}</c:if>
+<c:if test="${user == null || user.roleID == 'US'}">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Được đề xuất</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">     
+                <c:forEach var="p" items="${listHR}" >
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <!--                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>-->
+                            <!-- Product image-->
+                            <img class="card-img-top" src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" alt="..." height="230px" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">${p.pitchName}</h5>
+                                    <!-- Product price-->
+                                    <c:forEach var="lminp" items="${listMinP}" >
+                                        <c:if test="${lminp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lminp.price}" pattern="#,##0VNĐ - " /></span></c:if>
                                     </c:forEach>
-                                    ,
-                                    <c:forEach var="d" items="${listD}" >
-                                        <c:if test="${d.districtID == p.districtID}">${d.districtName}</c:if>
+                                    <c:forEach var="lmaxp" items="${listMaxP}" >
+                                        <c:if test="${lmaxp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lmaxp.price}" pattern="#,##0VNĐ" /></span></c:if>
                                     </c:forEach>
-                                </p>
-                                <div class="d-flex justify-content-center small mb-2">
-                                    <c:forEach begin="1" step="1" end="${p.estimation}">
-                                        <div class="bi-star-fill text-warning"></div>
-                                    </c:forEach>
-                                    <c:forEach begin="1" step="1" end="${5 - p.estimation}">
-                                        <div class="bi-star-fill"></div>
-                                    </c:forEach>
-                                </div>
+                                    <p>Giá</p>
+                                    <p>
+                                        ${p.pitchAddress},
+                                        <c:forEach var="w" items="${listWard}" >
+                                            <c:if test="${w.wardID == p.wardID}">${w.wardName}</c:if>
+                                        </c:forEach>
+                                        ,
+                                        <c:forEach var="d" items="${listD}" >
+                                            <c:if test="${d.districtID == p.districtID}">${d.districtName}</c:if>
+                                        </c:forEach>
+                                    </p>
+                                    <div class="d-flex justify-content-center small mb-2">
+                                        <c:forEach begin="1" step="1" end="${p.estimation}">
+                                            <div class="bi-star-fill text-warning"></div>
+                                        </c:forEach>
+                                        <c:forEach begin="1" step="1" end="${5 - p.estimation}">
+                                            <div class="bi-star-fill"></div>
+                                        </c:forEach>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">Đặt sân</a></div>
                             </div>
                         </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">View Detail</a></div>
-                        </div>
                     </div>
-                </div>
-            </c:forEach> 
+                </c:forEach> 
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+</c:if>
 <div class="px-4 px-lg-5 mb-3 container mx-auto" style="margin-top: -45px">
     <!--    <div class="col-3"></div>-->
     <!--    <div class="form-floating col-4 mt-5">
@@ -76,6 +78,7 @@
 <label for="floatingSelect">Quận:</label>
 </div>-->
     <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
+        <h2 class="fw-bolder mb-4">Tìm kiếm sân</h2>
         <div class="form-floating col-5" style="padding: 0px">
             <select id="selectBox" name="districtID" onchange="setWard()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
                 <option selected="selected" disabled value="">Quận</option>
@@ -133,7 +136,7 @@
                                     <c:forEach var="lmaxp" items="${listMaxP}" >
                                         <c:if test="${lmaxp.pitchID == p.pitchID}"><span class="text-muted"><fmt:formatNumber value="${lmaxp.price}" pattern="#,##0VNĐ" /></span></c:if>
                                     </c:forEach>
-                                    <p>Price</p>
+                                    <p>Giá</p>
                                     <p>
                                         ${p.pitchAddress},
                                         <c:forEach var="w" items="${listWard}" >
@@ -157,7 +160,7 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">View Detail</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">Đặt sân</a></div>
                             </div>
                         </div>
                     </div>

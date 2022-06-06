@@ -36,8 +36,8 @@
     </form>
 </div>
 ${listB}
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3" style="width: 50%">
-    <table class="table table-striped">
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3" style="width: 70%">
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Thời gian</th>
@@ -67,12 +67,14 @@ ${listB}
                         <c:choose>
                             <c:when test="${listPlayedEqualAfter[count].timeID == t.timeID}">
                                 <c:set var="count" value="${count + 1}"/>
-                                <td>Đã được đặt</td>
+                                <td id="row_${listPlayedEqualAfter[count-1].bookingID}_title">Đã được đặt</td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-success" href="${pageContext.request.contextPath}/toy/edit.do?id=${toy.id}"><i class="bi bi-pencil-square"></i> Edit</a> 
+                                    <button id="row_${listPlayedEqualAfter[count-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualAfter[count-1].bookingID}')">
+                                        Thông tin người đặt
+                                    </button>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-danger" href="${pageContext.request.contextPath}/owner/delete.do?bookingID=${listPlayedEqualAfter[count-1].bookingID}&userID=${listPlayedEqualAfter[count-1].userID}"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                    <a id="row_${listPlayedEqualAfter[count-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedEqualAfter[count-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
                                 </td>
                                 ${listPlayedAfter[count].bookingID}
                             </c:when>
@@ -80,7 +82,9 @@ ${listB}
                                 <c:set var="count1" value="${count1 + 1}"/>
                                 <td>Đã được đặt</td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-success" href="${pageContext.request.contextPath}/toy/edit.do?id=${toy.id}"><i class="bi bi-pencil-square"></i> Edit</a> 
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualBefore[count1-1].bookingID}')">
+                                        Thông tin người đặt
+                                    </button>
                                 </td>
                                 <td>
 
@@ -90,7 +94,9 @@ ${listB}
                                 <c:set var="count2" value="${count2 + 1}"/>
                                 <td>Đã được đặt</td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-success" href="${pageContext.request.contextPath}/toy/edit.do?id=${toy.id}"><i class="bi bi-pencil-square"></i> Edit</a> 
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedBefore[count2-1].bookingID}')">
+                                        Thông tin người đặt
+                                    </button>
                                 </td>
                                 <td>
 
@@ -98,12 +104,14 @@ ${listB}
                             </c:when>
                             <c:when test="${listPlayedAfter[count3].timeID == t.timeID}">
                                 <c:set var="count3" value="${count3 + 1}"/>
-                                <td>Đã được đặt</td>
+                                <td id="row_${listPlayedAfter[count3-1].bookingID}_title">Đã được đặt</td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-success" href="${pageContext.request.contextPath}/toy/edit.do?id=${toy.id}"><i class="bi bi-pencil-square"></i> Edit</a> 
+                                    <button id="row_${listPlayedAfter[count3-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedAfter[count3-1].bookingID}')">
+                                        Thông tin người đặt
+                                    </button>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-danger" href="${pageContext.request.contextPath}/owner/delete.do?bookingID=${listPlayedAfter[count3-1].bookingID}&userID=${listPlayedAfter[count3-1].userID}"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                    <a id="row_${listPlayedAfter[count3-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedAfter[count3-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -121,6 +129,46 @@ ${listB}
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin người đặt sân</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="result">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Hủy đặt sân</h3>
+                <a href="#" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+            </div>
+            <div class="modal-body">
+                <h4>Bạn có chắc hủy lịch đặt sân này của khách hàng không?</h4>
+            </div>
+            <div class="modal-footer">
+                <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
+                <a href="#location" class="btn btn-success" onclick="DeleteEmployee()">Xác nhận</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--        @*hidden field for storing current employeeId*@-->
+<input type="hidden" id="hiddenEmployeeId" />
+
 <script>
     function setChildrenPitch() {
         var selectBox = document.getElementById("selectBox");
@@ -137,8 +185,55 @@ ${listB}
             }
         });
     }
+
     if (document.getElementById('inputDate').value === '') {
         document.getElementById('inputDate').valueAsDate = new Date();
+    }
+
+    function GetBookingInfo(BookingID) {
+        $.ajax({
+            url: "${pageContext.request.contextPath}/owner/detailBooking.do",
+            type: 'get',
+            data: {
+                BookingID: BookingID
+            },
+            success: function (responseData) {
+                document.getElementById("result").innerHTML
+                        = responseData;
+            }
+        });
+    }
+
+    function closeForm() {
+        $("#myModal").modal('hide');
+    }
+
+    var ConfirmDelete = function (EmployeeId) {
+        /*var test = $("#mytable tr").find("#test").html();*/
+        $("#hiddenEmployeeId").val(EmployeeId);
+        $("#myModal").modal('show');
+    }
+
+    var DeleteEmployee = function () {
+
+
+
+        var empId = $("#hiddenEmployeeId").val();
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/owner/delete.do",
+            type: 'get',
+            data: {Id: empId},
+            success: function () {
+                $("#myModal").modal("hide");
+//                $("#row_" + empId + "_title").remove();
+                document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
+                $("#row_" + empId + "_info").remove();
+                $("#row_" + empId + "_delete").remove();
+            }
+
+        })
+
     }
 </script>
 

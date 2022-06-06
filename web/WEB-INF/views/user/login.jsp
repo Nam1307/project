@@ -111,7 +111,7 @@
                                            <%= "1".equals(remember) ? "checked='/checked'" : ""%>
                                            >
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            Ghi nhớ đăng nhập
+                                            Ghi nhớ tài khoản
                                         </label>
                                 </div>
                                 <div class="d-grid mb-2">

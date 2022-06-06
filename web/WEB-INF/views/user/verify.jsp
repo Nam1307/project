@@ -23,9 +23,9 @@
     <div class="container height-100 d-flex justify-content-center align-items-center"> 
         <div class="position-relative"> 
             <div class="card p-2 text-center"> 
-                <h6>Please enter the one time password <br> to verify your account</h6> 
+                <h6>Vui lòng nhập mã xác thực <br> để xác nhận tài khoản</h6> 
                 <div> 
-                    <span>A code has been sent to</span> <small>${email}</small> 
+                    <span>Mã xác thực đã được gửi đến</span> <small>${email}</small> 
                 </div> 
                 <input type="hidden" value="${username}" name="username" />
                 <input type="hidden" value="${email}" name="email" />
@@ -44,7 +44,7 @@
                     <input class="m-2 text-center form-control rounded" name="num6" type="text" id="sixth" maxlength="1" /> 
                 </div> 
                 <div class="mt-4"> 
-                    <button class="btn btn-danger px-4 validate">Validate</button> 
+                    <button class="btn btn-danger px-4 validate">Xác nhận</button> 
                 </div> 
             </div> 
         </div>

@@ -110,7 +110,7 @@
                 <div class="col-2">
 
 
-                    <img src="https://i.imgur.com/xELPaag.jpg" width="70" class="rounded-circle mt-2">
+                    <img src="/WebsiteOrderStadium/images/user.jpg" width="70" class="rounded-circle mt-2">
 
 
                 </div>
@@ -119,7 +119,7 @@
 
                     <div class="comment-box ml-2">
 
-                        <h4>Add a comment</h4>
+                        <h4>Thêm bình luận</h4>
 
                         <div class="rating"> 
                             <input type="radio" name="rating" value="5" id="5" required><label for="5">☆</label>
@@ -127,15 +127,15 @@
                             <input type="radio" name="rating" value="3" id="3" required><label for="3">☆</label>
                             <input type="radio" name="rating" value="2" id="2" required><label for="2">☆</label>
                             <input type="radio" name="rating" value="1" id="1" required><label for="1">☆</label>
-                            <div class="invalid-feedback mt-2">More example invalid feedback text: </div>
+                            <div class="invalid-feedback mt-2">Vui lòng chọn sao đánh giá: </div>
                         </div>
                         <input type="hidden" value="${userID}" name="userID"/>
                         <input type="hidden" value="${pitchID}" name="pitchID"/>
                         <div class="comment-area">
 
-                            <textarea class="form-control" placeholder="what is your view?" rows="4" name="content" maxlength="200" required></textarea>
+                            <textarea class="form-control" placeholder="Bình luận của bạn" rows="4" name="content" maxlength="200" required></textarea>
                             <div class="invalid-feedback">
-                                Please enter a message in the textarea.
+                                Vui lòng điền bình luận.
                             </div>
                         </div>
 
@@ -144,12 +144,6 @@
                             <div class="row">
 
                                 <div class="col-6">
-
-                                    <div class="pull-left">
-
-                                        <button class="btn btn-success btn-sm">Cancel</button>      
-
-                                    </div>
 
                                 </div>
 

@@ -22,21 +22,21 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:if>
-                    <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">Đăng ký</h5>
                     <form action="${pageContext.request.contextPath}/user/createAccount.do" method="post" class="needs-validation" novalidate>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInputUsername" value="${username}" name="username" placeholder="myusername" required autofocus>
-                            <label for="floatingInputUsername">Username</label>
+                            <label for="floatingInputUsername">Tên đăng nhập</label>
                             <div class="invalid-feedback">
-                                Please input a username.
+                                Vui lòng nhập tên đăng nhập.
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="floatingInputEmail" value="${email}" name="email" placeholder="name@example.com" required>
-                            <label for="floatingInputEmail">Email address</label>
+                            <label for="floatingInputEmail">Email</label>
                             <div class="invalid-feedback">
-                                Please input an email.
+                                Vui lòng nhập email.
                             </div>
                         </div>
 
@@ -44,17 +44,17 @@
 
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="floatingPassword" value="${password}" name="password" placeholder="Password" required autofocus>
-                            <label for="floatingPassword">Password</label>
+                            <label for="floatingPassword">Mật khẩu</label>
                             <div class="invalid-feedback">
-                                Please input a password.
+                                Vui lòng nhập mật khẩu.
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="floatingPasswordConfirm" value="${confirmPassword}" name="confirmPassword" placeholder="Confirm Password" required autofocus>
-                            <label for="floatingPasswordConfirm">Confirm Password</label>
+                            <label for="floatingPasswordConfirm">Xác nhận mật khẩu</label>
                             <div class="invalid-feedback">
-                                Please input a password.
+                                Vui lòng nhập xác nhận mật khẩu.
                             </div>
                         </div>
 
@@ -62,16 +62,16 @@
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInputUsername" value="${fullname}" name="fullname" placeholder="myusername" required autofocus>
-                            <label for="floatingInputUsername">Full Name</label>
+                            <label for="floatingInputUsername">Họ và tên</label>
                             <div class="invalid-feedback">
-                                Please input a full name.
+                                Vui lòng nhập họ và tên.
                             </div>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInputUsername" value="${phone}" name="phone" placeholder="myusername" required autofocus maxlength="10" minlength="10">
-                            <label for="floatingInputUsername">Phone</label>
+                            <label for="floatingInputUsername">Điện thoại</label>
                             <div class="invalid-feedback">
-                                Please input a phone.
+                                Vui lòng nhập số điện thoại.
                             </div>
                         </div>
                         <div class="form-floating mb-3">
@@ -82,7 +82,7 @@
                                 </c:forEach>
                             </select>
                             <div class="invalid-feedback">
-                                Please select a district.
+                                Vui lòng chọn quận.
                             </div>
                             <label for="floatingSelect">Quận:</label>
                         </div>
@@ -94,22 +94,22 @@
                                 </c:forEach>
                             </select>
                             <div class="invalid-feedback">
-                                Please select a ward.
+                                Vui lòng chọn phường.
                             </div>
                             <label for="floatingSelect">Phường:</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInputUsername" value="${address}" placeholder="myusername" name="address" required autofocus>
-                            <label for="floatingInputUsername">Address</label>
+                            <label for="floatingInputUsername">Địa chỉ</label>
                             <div class="invalid-feedback">
-                                Please input a address.
+                                Vui lòng nhập địa chỉ.
                             </div>
                         </div>
                         <div class="d-grid mb-2">
-                            <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Register</button>
+                            <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Đăng ký</button>
                         </div>
 
-                        <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/login.do">Have an account? / Sign In</a>
+                        <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/login.do">Đã có tài khoản? / Đăng nhập</a>
 
                         <hr class="my-4">
                     </form>

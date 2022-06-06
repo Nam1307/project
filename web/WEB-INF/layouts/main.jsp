@@ -54,14 +54,14 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home/index.do">Home</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home/index.do">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">About</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">Giới thiệu</a>
                         </li>
                         <c:if test="${user != null && user.roleID == 'US'}">
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Booking</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Xem sân đã đặt</a>
                             </li>
                         </c:if>
                         <c:if test="${user.roleID == 'OW'}">
@@ -75,6 +75,8 @@
                                     <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countN}</span> 
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px;">
+                                    <div class="text-center fs-5 fw-bolder">Thông báo</div>
+                                    <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
                                     <c:forEach var="n" items="${listNo}">
                                         <c:forEach var="cp" items="${listCP1}">
                                             <c:forEach var="p" items="${listP1}">
@@ -82,8 +84,9 @@
                                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">
                                                         <div class="form-check pt-4">
                                                             <i class="bi bi-bell-fill"></i>
-                                                            <label class="form-check-label"><h6>${p.pitchName}</h6></label>
-                                                            <p class="justify fst-italic">${cp.childrenPitchName}</p>
+                                                            <label class="form-check-label fst-italic">Trận đấu sắp diễn ra</label>
+                                                            <p class="form-check-label"><h6>${p.pitchName}</h6></p>
+                                                            <p class="justify fst-italic">Sân con: ${cp.childrenPitchName}</p>
                                                             <p class="justify">Ngày: <span class="fw-bold">${n.bookingDate}</span></p>
                                                             <p class="justify">Thời gian: <span class="fw-bold"><fmt:formatDate type="time" value="${n.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${n.timeEnd}" pattern="HH:mm" />h</span></p>
                                                         </div>
@@ -98,7 +101,7 @@
                         </c:if>
                         <c:if test="${user == null}">
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/user/login.do">Login</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/user/login.do">Đăng nhập</a>
                             </li>
                         </c:if>
                         <c:if test="${user != null}">

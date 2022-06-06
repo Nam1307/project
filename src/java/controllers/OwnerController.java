@@ -6,7 +6,10 @@
 package controllers;
 
 import daos.BookingDAO;
+import daos.ChildrenPitchDAO;
 import daos.OwnerDAO;
+import daos.PitchDAO;
+import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -24,7 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import models.Booking;
 import models.ChildrenPitch;
 import models.Pitch;
+import models.SendEmail;
 import models.Time;
+import models.User;
 
 /**
  *
@@ -64,6 +69,10 @@ public class OwnerController extends HttpServlet {
             case "delete":
                 //Xu ly
                 delete(request, response);
+                break;
+            case "detailBooking":
+                //Xu ly
+                detailBooking(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -152,12 +161,68 @@ public class OwnerController extends HttpServlet {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void delete(HttpServletRequest request, HttpServletResponse response) {
-        String userID = request.getParameter("userID");
-        String bookingID = request.getParameter("bookingID");
-        System.out.println(userID);
-        System.out.println(bookingID);
+        try {
+            String bookingID = request.getParameter("Id");
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            UserDAO ud = new UserDAO();
+            BookingDAO bd = new BookingDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            OwnerDAO od = new OwnerDAO();
+            PitchDAO pd = new PitchDAO();
+            SendEmail sm = new SendEmail();
+            
+            Booking booking = bd.getABooking(bookingID);
+            User user = ud.getUser(booking.getUserID());
+            ChildrenPitch childrenPitch = od.getChildrenPitchEmail(booking.getChildrenPitchID());
+            Pitch pitch = pd.getAPitch(childrenPitch.getPitchID());
+            Time time = od.getTime(booking.getTimeID());
+            String finalTime = smt.format(time.getTimeStart()) + "-" + smt.format(time.getTimeEnd());
+            System.out.println(finalTime);
+            sm.sendEmailDelete(user, finalTime, childrenPitch.getChildrenPitchName(), pitch.getPitchName(), dateFormat.format(booking.getBookingDate()));
+            
+            
+            System.out.println(bookingID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void detailBooking(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            String bookingID = request.getParameter("BookingID");
+            System.out.println(bookingID);
+            BookingDAO bd = new BookingDAO();
+            UserDAO ud = new UserDAO();
+
+            Booking booking = bd.getABooking(bookingID);
+            User user = ud.getUser(booking.getUserID());
+
+            out = response.getWriter();
+            out.println("<form>\n"
+                    + "    <div class=\"mb-3\">\n"
+                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Họ tên người đặt</label>\n"
+                    + "        <input type=\"text\" value=\"" + user.getFullName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                    + "    </div>\n"
+                    + "    <div class=\"mb-3\">\n"
+                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Số điện thoại</label>\n"
+                    + "        <input type=\"text\" value=\"" + user.getPhone() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                    + "    </div>\n"
+                    + "    <div class=\"mb-3\">\n"
+                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Email</label>\n"
+                    + "        <input type=\"email\" value=\"" + user.getEmail() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                    + "    </div>\n"
+                    + "</form>");
+        } catch (IOException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            out.close();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

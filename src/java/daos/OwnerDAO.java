@@ -17,6 +17,7 @@ import java.util.List;
 import models.Booking;
 import models.ChildrenPitch;
 import models.Pitch;
+import models.Time;
 import utils.DBUtils;
 
 /**
@@ -24,6 +25,7 @@ import utils.DBUtils;
  * @author SE150853 Nguyen Huynh Minh Khoi
  */
 public class OwnerDAO {
+
     private static final String GET_PITCH_OF_OWNER = "SELECT * FROM Pitch WHERE UserID = ?";
     private static final String GET_CHILDRENPITCH_OF_OWNER = "SELECT * FROM ChildrenPitch WHERE PitchID = ?";
     private static final String FIND_TIME = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? ORDER BY TimeStart;";
@@ -31,7 +33,9 @@ public class OwnerDAO {
     private static final String GET_BOOKING_PLAYED_EQUAL_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND TiemEnd > ? ORDER BY TimeStart";
     private static final String GET_BOOKING_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? ORDER BY TimeStart";
     private static final String GET_BOOKING_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? ORDER BY TimeStart";
-    
+    private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch WHERE ChildrenPitchID = ?";
+    private static final String GET_TIME = "SELECT * FROM tblTime WHERE TimeID = ?";
+
     public List<Pitch> getPitch(String UserID) throws SQLException {
         List<Pitch> list = new ArrayList<>();
         Connection conn = null;
@@ -71,7 +75,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<ChildrenPitch> getChildrenPitch(String PitchID) throws SQLException {
         List<ChildrenPitch> list = new ArrayList<>();
         Connection conn = null;
@@ -107,7 +111,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<Booking> findTime(String ChildrenPitchID, Date BookingDate) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -129,7 +133,7 @@ public class OwnerDAO {
                     String timeID = rs.getString("TimeID");
                     java.sql.Time timeStart = rs.getTime("TimeStart");
                     java.sql.Time timeEnd = rs.getTime("TiemEnd");
-                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart,timeEnd));
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd));
                 }
             }
         } catch (Exception e) {
@@ -147,7 +151,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedEqualBefore(String ChildrenPitchID, Date dateNow, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -188,7 +192,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedEqualAfter(String ChildrenPitchID, Date dateNow, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -229,7 +233,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedBefore(String ChildrenPitchID, Date dateNow) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -269,7 +273,7 @@ public class OwnerDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedAfter(String ChildrenPitchID, Date dateNow) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -309,8 +313,77 @@ public class OwnerDAO {
         }
         return list;
     }
-
     
+    public ChildrenPitch getChildrenPitchEmail(String ChildrenPitchID) throws SQLException {
+        ChildrenPitch childrenPitch = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_CHILDRENPITCH);
+                stm.setString(1, ChildrenPitchID);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String childrenPitchID = rs.getString("ChildrenPitchID");
+                    String pitchID = rs.getString("PitchID");
+                    String childrenPitchName = rs.getString("ChildrenPitchName");
+                    String childrenPitchType = rs.getString("ChildrenPitchType");
+                    Double price = rs.getDouble("Price");
+                    childrenPitch = new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return childrenPitch;
+    }
+    
+    public Time getTime(String TimeID) throws SQLException {
+        Time time = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_TIME);
+                stm.setString(1, TimeID);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String timeID = rs.getString("TimeID");
+                    java.sql.Time timeStart = rs.getTime("TimeStart");
+                    java.sql.Time timeEnd = rs.getTime("TiemEnd");
+                    time = new Time(timeID, timeStart, timeEnd);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return time;
+    }
+
     public static void main(String[] args) throws SQLException, ParseException {
         OwnerDAO dao = new OwnerDAO();
         SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
@@ -320,7 +393,7 @@ public class OwnerDAO {
         for (Booking booking : list) {
             System.out.println(booking.getBookingID());
         }
-        
+
 //        List<Booking> list = dao.findTime("C01", "06/03/2022");
 //        for (Booking booking : list) {
 //            System.out.println(booking.getTimeStart());
