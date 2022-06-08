@@ -24,7 +24,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:if>
-                    <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">Thông tin đặt sân</h5>
                     <form action="${pageContext.request.contextPath}/booking/confirmBooking.do" method="post" class="needs-validation" novalidate >
                         <div class="form-floating mb-3">
                             <input type="hidden" value="${pitchID}" name="pitchID">
@@ -82,6 +82,17 @@
                                 Vui lòng nhập giờ đặt
                             </div>
                         </div>
+                        <div class="form-floating mb-3">
+                            <c:forEach var="cp" items="${listCP}" >
+                                <c:if test="${cp.childrenPitchID == type}">
+                                    <input type="text" disabled="" class="form-control" id="floatingInputUsername" value="<fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" />" name="type" placeholder="myusername" required autofocus>
+                                </c:if>
+                            </c:forEach>
+                            <label for="floatingInputUsername">Giá</label>
+                            <div class="invalid-feedback">
+                                Vui lòng nhập tên sân
+                            </div>
+                        </div>    
                         <div class="d-grid mb-2">
                             <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase ${disabled}" type="submit">Xác nhận đặt sân</button>
                         </div>

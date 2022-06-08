@@ -12,7 +12,7 @@
 <c:if test="${user == null || user.roleID == 'US'}">
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
-            <h2 class="fw-bolder mb-4">Được đề xuất</h2>
+            <h2 class="fw-bolder mb-4">Sân được đánh giá 5 sao</h2>
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">     
                 <c:forEach var="p" items="${listHR}" >
                     <div class="col mb-5">

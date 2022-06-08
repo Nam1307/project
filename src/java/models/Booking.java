@@ -5,6 +5,7 @@
  */
 package models;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -19,6 +20,8 @@ public class Booking {
     private String timeID;
     private java.sql.Time timeStart;
     private java.sql.Time timeEnd;
+    private boolean status;
+    private String reasonContent;
 
     public Booking() {
     }
@@ -41,7 +44,18 @@ public class Booking {
         this.timeEnd = timeEnd;
     }
 
-    
+    public Booking(String bookingID, String childrenPitchID, String userID, Date bookingDate, String timeID, Time timeStart, Time timeEnd, boolean status, String reasonContent) {
+        this.bookingID = bookingID;
+        this.childrenPitchID = childrenPitchID;
+        this.userID = userID;
+        this.bookingDate = bookingDate;
+        this.timeID = timeID;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
+        this.status = status;
+        this.reasonContent = reasonContent;
+    }
+
 
     public String getBookingID() {
         return bookingID;
@@ -97,6 +111,22 @@ public class Booking {
 
     public void setTimeEnd(java.sql.Time timeEnd) {
         this.timeEnd = timeEnd;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public String getReasonContent() {
+        return reasonContent;
+    }
+
+    public void setReasonContent(String reasonContent) {
+        this.reasonContent = reasonContent;
     }
     
 }

@@ -148,7 +148,7 @@ public class HomeController extends HttpServlet {
             List<Booking> listN = null;
             if (user != null) {
                 if (user.getRoleID().equals("US")) {
-                    listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                    listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                     n1 = pagination(request, response, pd.getNumberOfPitch());
                     listP = pd.getPitch(n1, pageSize);
                     request.setAttribute("listNo", listN);
@@ -395,7 +395,7 @@ public class HomeController extends HttpServlet {
                 if (user != null) {
                     if (user.getRoleID().equals("US")) {
                         SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
-                        List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                        List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                         n1 = pagination(request, response, pd.getNumberOfPitchAterSearching(districtID, wardID));
                         listP = pd.getPitchAfterSearch(districtID, wardID, n1, pageSize);
                         request.setAttribute("listNo", listN);

@@ -165,6 +165,7 @@ public class OwnerController extends HttpServlet {
     private void delete(HttpServletRequest request, HttpServletResponse response) {
         try {
             String bookingID = request.getParameter("Id");
+            String reason = request.getParameter("Reason");
             SimpleDateFormat smt = new SimpleDateFormat("HH:mm");
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             UserDAO ud = new UserDAO();
@@ -180,8 +181,9 @@ public class OwnerController extends HttpServlet {
             Pitch pitch = pd.getAPitch(childrenPitch.getPitchID());
             Time time = od.getTime(booking.getTimeID());
             String finalTime = smt.format(time.getTimeStart()) + "-" + smt.format(time.getTimeEnd());
-            System.out.println(finalTime);
-            sm.sendEmailDelete(user, finalTime, childrenPitch.getChildrenPitchName(), pitch.getPitchName(), dateFormat.format(booking.getBookingDate()));
+            System.out.println(reason);
+            sm.sendEmailDelete(user, finalTime, childrenPitch.getChildrenPitchName(), pitch.getPitchName(), dateFormat.format(booking.getBookingDate()), reason);
+            bd.deleteBooking(bookingID, reason);
             
             
             System.out.println(bookingID);

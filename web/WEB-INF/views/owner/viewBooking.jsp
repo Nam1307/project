@@ -153,10 +153,19 @@ ${listB}
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Hủy đặt sân</h3>
-                <a href="#" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc hủy lịch đặt sân này của khách hàng không?</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Lý do hủy sân:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                        <div class="invalid-feedback" id="invalid-feedback">
+                            Vui lòng điền lý do.
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
@@ -219,21 +228,30 @@ ${listB}
 
 
         var empId = $("#hiddenEmployeeId").val();
+        var reason = $("#message-text").val();
 
-        $.ajax({
-            url: "${pageContext.request.contextPath}/owner/delete.do",
-            type: 'get',
-            data: {Id: empId},
-            success: function () {
-                $("#myModal").modal("hide");
+        if (reason === '') {
+//                        reason = 'Không có lý do';
+            document.getElementById("message-text").classList.add("border");
+            document.getElementById("message-text").classList.add("border-danger");
+            $("#invalid-feedback").show();
+        } else {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/owner/delete.do",
+                type: 'get',
+                data: {Id: empId,
+                    Reason: reason
+                },
+                success: function () {
+                    $("#myModal").modal("hide");
 //                $("#row_" + empId + "_title").remove();
-                document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
-                $("#row_" + empId + "_info").remove();
-                $("#row_" + empId + "_delete").remove();
-            }
+                    document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
+                    $("#row_" + empId + "_info").remove();
+                    $("#row_" + empId + "_delete").remove();
+                }
 
-        })
-
+            });
+        }
     }
 </script>
 

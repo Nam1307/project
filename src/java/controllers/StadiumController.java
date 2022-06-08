@@ -94,7 +94,7 @@ public class StadiumController extends HttpServlet {
             List<User> listU = ud.getAllUser();
             List<Comment> listCO = ud.getComment(pitchID);
             if(user != null){
-                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date),true);
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
             }

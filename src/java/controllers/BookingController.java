@@ -11,6 +11,7 @@ import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -96,7 +97,7 @@ public class BookingController extends HttpServlet {
                 List<Time> listT = bd.getTime();
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
-                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
                 request.setAttribute("listP1", listP1);
@@ -145,7 +146,7 @@ public class BookingController extends HttpServlet {
                 user = (User) session.getAttribute("user");
                 Date dateToNotify = new Date();
                 SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
-                List<Booking> listN = bd.getNotification(user.getUserID(), dateToNotify, smt.format(dateToNotify));
+                List<Booking> listN = bd.getNotification(user.getUserID(), dateToNotify, smt.format(dateToNotify), true);
                 List<ChildrenPitch> listCP = cpd.getType(pitchID);
                 List<Time> listT = bd.getTime();
                 List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
@@ -177,10 +178,16 @@ public class BookingController extends HttpServlet {
 
     private void deleteBooking(HttpServletRequest request, HttpServletResponse response) {
         try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
             String bookingID = request.getParameter("Id");
+            String reason = request.getParameter("Reason");
             BookingDAO bd = new BookingDAO();
-            bd.deleteBooking(bookingID);
-        } catch (SQLException ex) {
+            System.out.println(bookingID);
+            System.out.println(reason);
+            bd.deleteBooking(bookingID, reason);
+        } catch (UnsupportedEncodingException | SQLException ex) {
             Logger.getLogger(BookingController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

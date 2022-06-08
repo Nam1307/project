@@ -97,7 +97,7 @@ public class SendEmail {
         return test;
     }
 
-    public boolean sendEmailDelete(User user, String time, String childrenPitchName, String pitchName, String date) {
+    public boolean sendEmailDelete(User user, String time, String childrenPitchName, String pitchName, String date, String reason) {
         boolean test = false;
 
         String toEmail = user.getEmail();
@@ -146,6 +146,7 @@ public class SendEmail {
                     + "    <div>Chủ sân đã xóa lịch đặt sân của bạn vào lúc : " + time + " , ngày " + date +"</div>\n"
                     + "    <div>Tại sân : " + pitchName + "</div>\n"
                     + "    <div>Có sân con : " + childrenPitchName + "</div>\n"
+                    + "    <div>Lý do : " + reason + "</div>\n"
                     + "    <div>Thư này được tạo ra tự động.</div>\n"
                     + "    <div>Nếu bạn cần trợ giúp hoặc có câu hỏi, hãy gửi email đến minhkhoi11.04nhmk@gmail.com bất cứ lúc nào.</div>\n"
                     + "    <h3 style=\"color: blue;\">Trân trọng!</h3>\n"

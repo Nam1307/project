@@ -126,7 +126,7 @@ public class UserController extends HttpServlet {
                 session.removeAttribute("listCP1");
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
-                List<Booking> listN = bd.getNotification(userID, date, smt.format(date));
+                List<Booking> listN = bd.getNotification(userID, date, smt.format(date), true);
                 List<Booking> listPlayedBefore = bd.getUserBookingPlayedBefore(userID, date);
                 List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date);
                 List<Booking> listPlayedEqualAfter = bd.getUserBookingPlayedEqualAfter(userID, date, smt.format(date));
@@ -182,7 +182,7 @@ public class UserController extends HttpServlet {
 
             if (user != null) {
                 if (user.getRoleID().equals("US")) {
-                    List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                    List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                     session.setAttribute("listP", listP);
                     session.setAttribute("listNo", listN);
                     session.setAttribute("listCP1", listCP);
@@ -337,7 +337,7 @@ public class UserController extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 Date date = new Date();
-                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date));
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Pitch> listP = pd.getAllPitch();
                 if (user.getRoleID().equals("US")) {

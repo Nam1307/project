@@ -13,8 +13,10 @@
             <tr>
                 <th scope="col">Sân</th>
                 <th scope="col" width="120">Số lượng người</th>
+                <th scope="col" width="200" class="text-right">Giá</th>
                 <th scope="col" width="120">Tình trạng</th>
                 <th scope="col" width="200" class="text-right">Xử lý</th>
+                <th scope="col" width="120">Lý do</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +24,7 @@
                 <c:forEach var="cp" items="${listCP1}">
                     <c:forEach var="p" items="${listP1}">
                         <c:if test="${b.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
-                            <tr id="row_${b.bookingID}">
+                            <tr>
                                 <td>
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
@@ -38,17 +40,39 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
+                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
-                                <td> 
+                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <div class="price-wrap"> 
-                                        <var class="price">Chưa đá</var> 
+                                        <var class="price"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></var> 
                                     </div> <!-- price-wrap .// -->
                                 </td>
+                                <td id="row_${b.bookingID}_status"> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã hủy sân</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                    <c:if test="${b.status == true}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Chưa đá</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                </td id="row_${b.bookingID}_content">
                                 <td class="text-right"> 
-                                    <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                    <c:if test="${b.status == true}">
+                                        <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                    </c:if>
+                                </td>
+                                <td class="text-right"> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">${b.reasonContent}</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:if>
@@ -75,17 +99,39 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
+                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
-                                <td> 
+                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <div class="price-wrap"> 
-                                        <var class="price">Chưa đá</var> 
+                                        <var class="price"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></var> 
                                     </div> <!-- price-wrap .// -->
                                 </td>
+                                <td id="row_${b.bookingID}_status"> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã hủy sân</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                    <c:if test="${b.status == true}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Chưa đá</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                </td>
+                                <td class="text-right" id="row_${b.bookingID}_content"> 
+                                    <c:if test="${b.status == true}">
+                                        <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                    </c:if>
+                                </td>
                                 <td class="text-right"> 
-                                    <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">${b.reasonContent}</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:if>
@@ -112,17 +158,39 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
+                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
-                                <td> 
+                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <div class="price-wrap"> 
-                                        <var class="price">Đã đá</var> 
+                                        <var class="price"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></var> 
                                     </div> <!-- price-wrap .// -->
                                 </td>
+                                <td> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã hủy sân</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                    <c:if test="${b.status == true}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã đá</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                </td>
                                 <td class="text-right"> 
-                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Bình luận</a>
+                                    <c:if test="${b.status == true}">
+                                        <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Đánh giá</a>
+                                    </c:if>
+                                </td>
+                                <td class="text-right"> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">${b.reasonContent}</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:if>
@@ -148,18 +216,40 @@
                                                 <dd><fmt:formatDate type="time" value="${b.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${b.timeEnd}" pattern="HH:mm" />h</dd>
                                             </dl>
                                         </figcaption>
-                                    </figure> 
+                                    </figure>
+                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
                                 </td>
-                                <td> 
+                                <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <div class="price-wrap"> 
-                                        <var class="price">Đã đá</var> 
+                                        <var class="price"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></var> 
                                     </div> <!-- price-wrap .// -->
                                 </td>
+                                <td> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã hủy sân</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                    <c:if test="${b.status == true}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">Đã đá</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
+                                </td>
                                 <td class="text-right"> 
-                                    <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Bình luận</a>
+                                    <c:if test="${b.status == true}">
+                                        <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Đánh giá</a>
+                                    </c:if>
+                                </td>
+                                <td class="text-right"> 
+                                    <c:if test="${b.status == false}">
+                                        <div class="price-wrap"> 
+                                            <var class="price">${b.reasonContent}</var> 
+                                        </div> <!-- price-wrap .// -->
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:if>
@@ -179,10 +269,19 @@
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc hủy lịch đặt sân này không?</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Lý do hủy sân:</label>
+                        <textarea class="form-control" id="message-text" required></textarea>
+                        <div class="invalid-feedback" id="invalid-feedback">
+                            Vui lòng điền lý do.
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <a href="#" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
-                <a href="#location" class="btn btn-success" onclick="DeleteEmployee()">Xác nhận</a>
+                <button class="btn btn-primary" onclick="DeleteEmployee()">Xác nhận</button>
             </div>
 
         </div>
@@ -206,17 +305,33 @@
 
 
         var empId = $("#hiddenEmployeeId").val();
+        var reason = $("#message-text").val();
+        if (reason === '') {
+//                        reason = 'Không có lý do';
+            document.getElementById("message-text").classList.add("border");
+            document.getElementById("message-text").classList.add("border-danger");
+            $("#invalid-feedback").show();
+        } else {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/booking/deleteBooking.do",
+                type: 'get',
+                data: {Id: empId,
+                    Reason: reason
+                },
+                success: function () {
+                    $("#myModal").modal("hide");
+//                $("#row_" + empId + "_status").remove();
+                    document.getElementById("row_" + empId + "_status").innerHTML
+                            = "<div class=\"price-wrap\"> \n" +
+                            "                                            <var class=\"price\">Đã hủy sân</var> \n" +
+                            "                                        </div> <!-- price-wrap .// -->";
+                    document.getElementById("row_" + empId + "_content").innerHTML
+                            = "<div class=\"price-wrap\"> \n" +
+                            "                                            <var class=\"price\">" + reason + "</var> \n" +
+                            "                                        </div> <!-- price-wrap .// -->";
+                }
 
-        $.ajax({
-            url: "${pageContext.request.contextPath}/booking/deleteBooking.do",
-            type: 'get',
-            data: {Id: empId},
-            success: function () {
-                $("#myModal").modal("hide");
-                $("#row_" + empId).remove();
-            }
-
-        })
-
+            });
+        }
     }
 </script>
