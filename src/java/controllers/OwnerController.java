@@ -368,8 +368,22 @@ public class OwnerController extends HttpServlet {
     
     private void deleteChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
         try {
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             String childrenPitchID = request.getParameter("Id");
+            Date dateNow = new Date();
             OwnerDAO od = new OwnerDAO();
+            BookingDAO bd = new BookingDAO();
+            
+            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(childrenPitchID, dateNow, smt.format(dateNow));
+            List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitchID, dateNow);
+            
+            for (Booking booking : listPlayedEqualAfter) {
+                bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
+            }
+            System.out.println("----------------------------------------------------");
+            for (Booking booking : listPlayedAfter) {
+                bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
+            }
             od.deleteChildrenPitch(childrenPitchID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);

@@ -37,6 +37,7 @@ public class OwnerDAO {
     private static final String GET_TIME = "SELECT * FROM tblTime WHERE TimeID = ?";
     private static final String UPDATE_CHILDRENPITCH = "UPDATE ChildrenPitch SET ChildrenPitchName = ?, ChildrenPitchType = ?, Price = ?  WHERE ChildrenPitchID = ?";
     private static final String DELETE_CHILDRENPITCH = "UPDATE ChildrenPitch SET StatusChildrenPitch = 0 WHERE ChildrenPitchID = ?";
+    private static final String GET_BOOKING_PLAYED_AFTER_FOR_CP = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate > ? AND StatusBooking = 1 ORDER BY TimeStart";
 
     public List<Pitch> getPitch(String UserID) throws SQLException {
         List<Pitch> list = new ArrayList<>();
@@ -436,6 +437,47 @@ public class OwnerDAO {
         }
         return check;
     }
+    
+    public List<Booking> getUserBookingPlayedAfterForCP(String ChildrenPitchID, Date dateNow) throws SQLException {
+        List<Booking> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_BOOKING_PLAYED_AFTER_FOR_CP);
+                stm.setString(1, ChildrenPitchID);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                stm.setString(2, df.format(dateNow));
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String bookingID = rs.getString("BookingID");
+                    String childrenPitchID = rs.getString("ChildrenPitchID");
+                    String userID = rs.getString("UserID");
+                    Date bookingDate = rs.getDate("BookingDate");
+                    String timeID = rs.getString("TimeID");
+                    java.sql.Time timeStart = rs.getTime("TimeStart");
+                    java.sql.Time timeEnd = rs.getTime("TiemEnd");
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
+    
 
     public static void main(String[] args) throws SQLException, ParseException {
         OwnerDAO dao = new OwnerDAO();
