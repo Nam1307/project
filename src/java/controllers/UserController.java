@@ -118,12 +118,15 @@ public class UserController extends HttpServlet {
                 BookingDAO bd = new BookingDAO();
                 PitchDAO pd = new PitchDAO();
                 ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+                UserDAO ud = new UserDAO();
                 String userID = request.getParameter("userID");
                 Date date = new Date();
+                
                 session.removeAttribute("listNo");
                 session.removeAttribute("countN");
                 session.removeAttribute("listP1");
                 session.removeAttribute("listCP1");
+                
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Booking> listN = bd.getNotification(userID, date, smt.format(date), true);
@@ -131,6 +134,9 @@ public class UserController extends HttpServlet {
                 List<Booking> listPlayedAfter = bd.getUserBookingPlayedAfter(userID, date);
                 List<Booking> listPlayedEqualAfter = bd.getUserBookingPlayedEqualAfter(userID, date, smt.format(date));
                 List<Booking> listPlayedEqualBefore = bd.getUserBookingPlayedEqualBefore(userID, date, smt.format(date));
+                List<User> listU = ud.getAllUser();
+                
+                request.setAttribute("listU", listU);
                 request.setAttribute("listPlayedBefore", listPlayedBefore);
                 request.setAttribute("listPlayedAfter", listPlayedAfter);
                 request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);

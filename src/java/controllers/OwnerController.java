@@ -12,6 +12,7 @@ import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,6 +74,28 @@ public class OwnerController extends HttpServlet {
             case "detailBooking":
                 //Xu ly
                 detailBooking(request, response);
+                break;
+            case "childrenPitchManagement":
+                //Xu ly
+                childrenPitchManagement(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "viewChildrenPitch":
+                //Xu ly
+                viewChildrenPitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "viewEdit":
+                //Xu ly
+                viewEdit(request, response);
+                break;
+            case "update":
+                //Xu ly
+                update(request, response);
+                break;
+            case "deleteChildrenPitch":
+                //Xu ly
+                deleteChildrenPitch(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -174,7 +197,7 @@ public class OwnerController extends HttpServlet {
             OwnerDAO od = new OwnerDAO();
             PitchDAO pd = new PitchDAO();
             SendEmail sm = new SendEmail();
-            
+
             Booking booking = bd.getABooking(bookingID);
             User user = ud.getUser(booking.getUserID());
             ChildrenPitch childrenPitch = od.getChildrenPitchEmail(booking.getChildrenPitchID());
@@ -184,8 +207,7 @@ public class OwnerController extends HttpServlet {
             System.out.println(reason);
             sm.sendEmailDelete(user, finalTime, childrenPitch.getChildrenPitchName(), pitch.getPitchName(), dateFormat.format(booking.getBookingDate()), reason);
             bd.deleteBooking(bookingID, reason);
-            
-            
+
             System.out.println(bookingID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
@@ -224,6 +246,133 @@ public class OwnerController extends HttpServlet {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             out.close();
+        }
+    }
+
+    private void childrenPitchManagement(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String userID = request.getParameter("userID");
+            OwnerDAO od = new OwnerDAO();
+            List<Pitch> listP = od.getPitch(userID);
+            ChildrenPitch children = od.getChildrenPitchEmail("C01");
+
+            request.setAttribute("children", children);
+            request.setAttribute("listP", listP);
+            request.setAttribute("userID", userID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void viewChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            OwnerDAO od = new OwnerDAO();
+
+            String userID = request.getParameter("userID");
+            String pitchID = request.getParameter("pitchID");
+            List<ChildrenPitch> listCP = od.getChildrenPitch(pitchID);
+            List<Pitch> listP = od.getPitch(userID);
+
+            request.setAttribute("pitchID", pitchID);
+            request.setAttribute("userID", userID);
+            request.setAttribute("listP", listP);
+            request.setAttribute("listCP", listCP);
+            request.setAttribute("action", "childrenPitchManagement");
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void viewEdit(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            String ChildrenPitchID = request.getParameter("ChildrenPitchID");
+            OwnerDAO od = new OwnerDAO();
+
+            ChildrenPitch cp = od.getChildrenPitchEmail(ChildrenPitchID);
+
+            out = response.getWriter();
+            if (cp.getChildrenPitchType().equals("7")) {
+                out.println("<form>\n"
+                        + "        <input class=\"form-control\" type=\"hidden\" id=\"childrenPitchID\" value=\"" + cp.getChildrenPitchID() + "\">\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Tên sân con:</label>\n"
+                        + "        <input class=\"form-control\" id=\"childrenPitchName\" value=\"" + cp.getChildrenPitchName() + "\">\n"
+                        + "        <div class=\"invalid-feedback\" id=\"invalid-feedback-0\">\n"
+                        + "            Vui lòng điền tên.\n"
+                        + "        </div>\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Số người:</label>\n"
+                        + "        <select class=\"form-select\" id=\"childrenPitchType\" aria-label=\"Default select example\">\n"
+                        + "            <option value=\"7\" selected>7</option>\n"
+                        + "            <option value=\"5\">5</option>\n"
+                        + "        </select>\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Giá:</label>\n"
+                        + "        <input class=\"form-control\" id=\"price\" value=\"" + String.format("%.0f", cp.getPrice()) + "\">\n"
+                        + "        <div class=\"invalid-feedback\" id=\"invalid-feedback-1\">\n"
+                        + "            Vui lòng điền giá.\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</form>");
+            } else {
+                out.println("<form>\n"
+                        + "        <input class=\"form-control\" type=\"hidden\" id=\"childrenPitchID\" value=\"" + cp.getChildrenPitchID() + "\">\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Tên sân con:</label>\n"
+                        + "        <input class=\"form-control\" id=\"childrenPitchName\" value=\"" + cp.getChildrenPitchName() + "\">\n"
+                        + "        <div class=\"invalid-feedback\" id=\"invalid-feedback-0\">\n"
+                        + "            Vui lòng điền tên.\n"
+                        + "        </div>\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Số người:</label>\n"
+                        + "        <select class=\"form-select\" id=\"childrenPitchType\" aria-label=\"Default select example\">\n"
+                        + "            <option value=\"7\">7</option>\n"
+                        + "            <option value=\"5\" selected>5</option>\n"
+                        + "        </select>\n"
+                        + "        <label for=\"message-text\" class=\"col-form-label\">Giá:</label>\n"
+                        + "        <input class=\"form-control\" id=\"price\" value=\"" + String.format("%.0f", cp.getPrice()) + "\">\n"
+                        + "        <div class=\"invalid-feedback\" id=\"invalid-feedback-1\">\n"
+                        + "            Vui lòng điền giá.\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</form>");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            out.close();
+        }
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            String childrenPitchID = request.getParameter("childrenPitchID");
+            String childrenPitchName = request.getParameter("childrenPitchName");
+            String childrenPitchType = request.getParameter("childrenPitchType");
+            double price = Double.parseDouble(request.getParameter("price"));
+            OwnerDAO od = new OwnerDAO();
+
+            ChildrenPitch cp = od.getChildrenPitchEmail(childrenPitchID);
+            System.out.println(childrenPitchID + "/ " + childrenPitchName + "/ " + childrenPitchType + "/ " + price);
+            System.out.println(cp.getPrice());
+            od.updateChildrenPitch(childrenPitchName, childrenPitchType, price, childrenPitchID);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void deleteChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String childrenPitchID = request.getParameter("Id");
+            OwnerDAO od = new OwnerDAO();
+            od.deleteChildrenPitch(childrenPitchID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

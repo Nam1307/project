@@ -27,14 +27,16 @@ import utils.DBUtils;
 public class OwnerDAO {
 
     private static final String GET_PITCH_OF_OWNER = "SELECT * FROM Pitch WHERE UserID = ?";
-    private static final String GET_CHILDRENPITCH_OF_OWNER = "SELECT * FROM ChildrenPitch WHERE PitchID = ?";
+    private static final String GET_CHILDRENPITCH_OF_OWNER = "SELECT * FROM ChildrenPitch WHERE PitchID = ? AND StatusChildrenPitch = 1";
     private static final String FIND_TIME = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND StatusBooking = 1 ORDER BY TimeStart;";
     private static final String GET_BOOKING_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND TiemEnd < ? AND StatusBooking = 1 ORDER BY TimeStart";
     private static final String GET_BOOKING_PLAYED_EQUAL_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND TiemEnd > ? AND StatusBooking = 1 ORDER BY TimeStart";
     private static final String GET_BOOKING_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND StatusBooking = 1 ORDER BY TimeStart";
     private static final String GET_BOOKING_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND StatusBooking = 1 ORDER BY TimeStart";
-    private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch WHERE ChildrenPitchID = ?";
+    private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch WHERE ChildrenPitchID = ? AND StatusChildrenPitch = 1";
     private static final String GET_TIME = "SELECT * FROM tblTime WHERE TimeID = ?";
+    private static final String UPDATE_CHILDRENPITCH = "UPDATE ChildrenPitch SET ChildrenPitchName = ?, ChildrenPitchType = ?, Price = ?  WHERE ChildrenPitchID = ?";
+    private static final String DELETE_CHILDRENPITCH = "UPDATE ChildrenPitch SET StatusChildrenPitch = 0 WHERE ChildrenPitchID = ?";
 
     public List<Pitch> getPitch(String UserID) throws SQLException {
         List<Pitch> list = new ArrayList<>();
@@ -93,7 +95,8 @@ public class OwnerDAO {
                     String childrenPitchName = rs.getString("ChildrenPitchName");
                     String childrenPitchType = rs.getString("ChildrenPitchType");
                     Double price = rs.getDouble("Price");
-                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price));
+                    boolean status = rs.getBoolean("StatusChildrenPitch");
+                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price, status));
                 }
             }
         } catch (Exception e) {
@@ -331,7 +334,8 @@ public class OwnerDAO {
                     String childrenPitchName = rs.getString("ChildrenPitchName");
                     String childrenPitchType = rs.getString("ChildrenPitchType");
                     Double price = rs.getDouble("Price");
-                    childrenPitch = new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price);
+                    boolean status = rs.getBoolean("StatusChildrenPitch");
+                    childrenPitch = new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price, status);
                 }
             }
         } catch (Exception e) {
@@ -382,6 +386,55 @@ public class OwnerDAO {
             }
         }
         return time;
+    }
+    
+    public boolean updateChildrenPitch(String childrenPitchName, String childrenPitchType, double price, String childrenPitchID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_CHILDRENPITCH);
+                stm.setString(1, childrenPitchName);
+                stm.setString(2, childrenPitchType);
+                stm.setDouble(3, price);
+                stm.setString(4, childrenPitchID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
+    
+    public boolean deleteChildrenPitch(String childrenPitchID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(DELETE_CHILDRENPITCH);
+                stm.setString(1, childrenPitchID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
     }
 
     public static void main(String[] args) throws SQLException, ParseException {

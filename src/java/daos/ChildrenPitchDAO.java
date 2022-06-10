@@ -21,14 +21,14 @@ import utils.DBUtils;
 public class ChildrenPitchDAO {
 
     private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch";
-    private static final String GET_TYPE = "SELECT * FROM ChildrenPitch WHERE PitchID = ?";
+    private static final String GET_TYPE = "SELECT * FROM ChildrenPitch WHERE PitchID = ? AND StatusChildrenPitch = 1";
     private static final String GET_MAX_PRICE = "SELECT Pitch.PitchID , MAX(price) AS Price\n"
             + "FROM ChildrenPitch, Pitch \n"
-            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID\n"
+            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID AND StatusChildrenPitch = 1\n"
             + "GROUP BY Pitch.PitchID;";
     private static final String GET_MIN_PRICE = "SELECT Pitch.PitchID , MIN(price) AS Price\n"
             + "FROM ChildrenPitch, Pitch \n"
-            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID\n"
+            + "WHERE ChildrenPitch.PitchID = Pitch.PitchID AND StatusChildrenPitch = 1\n"
             + "GROUP BY Pitch.PitchID;";
 
     public List<ChildrenPitch> getChildrenPitch() throws SQLException {
@@ -47,7 +47,8 @@ public class ChildrenPitchDAO {
                     String childrenPitchName = rs.getString("ChildrenPitchName");
                     String childrenPitchType = rs.getString("ChildrenPitchType");
                     Double price = rs.getDouble("Price");
-                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price));
+                    boolean status = rs.getBoolean("StatusChildrenPitch");
+                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price, status));
                 }
             }
         } catch (Exception e) {
@@ -83,7 +84,8 @@ public class ChildrenPitchDAO {
                     String childrenPitchName = rs.getString("ChildrenPitchName");
                     String childrenPitchType = rs.getString("ChildrenPitchType");
                     Double price = rs.getDouble("Price");
-                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price));
+                    boolean status = rs.getBoolean("StatusChildrenPitch");
+                    list.add(new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price, status));
                 }
             }
         } catch (Exception e) {

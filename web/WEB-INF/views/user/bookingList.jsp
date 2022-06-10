@@ -29,7 +29,15 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName} </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - <c:if test="${cp.status != false}">Sân con: ${cp.childrenPitchName}</c:if> 
+                                                <c:if test="${cp.status == false}">
+                                                    <c:forEach var="u" items="${listU}">
+                                                        <c:if test="${u.userID == p.userID}">
+                                                            Sân đã bị xóa. Liên hệ chủ sân (${u.phone})
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                            </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -88,7 +96,15 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName}</h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - <c:if test="${cp.status != false}">Sân con: ${cp.childrenPitchName}</c:if> 
+                                                <c:if test="${cp.status == false}">
+                                                    <c:forEach var="u" items="${listU}">
+                                                        <c:if test="${u.userID == p.userID}">
+                                                            Sân đã bị xóa. Liên hệ chủ sân (${u.phone})
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                            </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -147,7 +163,15 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName}</h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - <c:if test="${cp.status != false}">Sân con: ${cp.childrenPitchName}</c:if> 
+                                                <c:if test="${cp.status == false}">
+                                                    <c:forEach var="u" items="${listU}">
+                                                        <c:if test="${u.userID == p.userID}">
+                                                            Sân đã bị xóa. Liên hệ chủ sân (${u.phone})
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                            </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày: </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>
@@ -206,7 +230,15 @@
                                     <figure class="media">
                                         <div class="img-wrap"><img src="${pageContext.request.contextPath}/images/${p.pitchID}.jpg" class="img-thumbnail img-sm" width="200px" height="200px"></div>
                                         <figcaption class="media-body">
-                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - Sân con: ${cp.childrenPitchName} </h6>
+                                            <h6 class="title text-truncate">Sân chính: ${p.pitchName} - <c:if test="${cp.status != false}">Sân con: ${cp.childrenPitchName}</c:if> 
+                                                <c:if test="${cp.status == false}">
+                                                    <c:forEach var="u" items="${listU}">
+                                                        <c:if test="${u.userID == p.userID}">
+                                                            Sân đã bị xóa. Liên hệ chủ sân (${u.phone})
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                            </h6>
                                             <dl class="param param-inline small">
                                                 <dt>Ngày </dt>
                                                 <dd><fmt:formatDate value="${b.bookingDate}" pattern="dd-MM-yyyy" /></dd>

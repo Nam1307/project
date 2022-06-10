@@ -68,6 +68,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}">Quản lý đặt sân</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}">Quản lý sân con</a>
+                            </li>
                         </c:if>
                         <c:if test="${user != null && user.roleID == 'US'}">
                             <li class="nav-item dropdown">
@@ -80,13 +83,13 @@
                                     <c:forEach var="n" items="${listNo}">
                                         <c:forEach var="cp" items="${listCP1}">
                                             <c:forEach var="p" items="${listP1}">
-                                                <c:if test="${n.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID}">
+                                                <c:if test="${n.childrenPitchID eq cp.childrenPitchID && cp.pitchID eq p.pitchID && cp.status == true}">
                                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">
                                                         <div class="form-check pt-4">
                                                             <i class="bi bi-bell-fill"></i>
                                                             <label class="form-check-label fst-italic">Trận đấu sắp diễn ra</label>
                                                             <p class="form-check-label"><h6>${p.pitchName}</h6></p>
-                                                            <p class="justify fst-italic">Sân con: ${cp.childrenPitchName}</p>
+                                                            <p class="justify fst-italic"><c:if test="${cp.status != false}">Sân con: ${cp.childrenPitchName}</c:if><c:if test="${cp.status == false}">Sân con: Đã bị xóa</c:if></p>
                                                             <p class="justify">Ngày: <span class="fw-bold">${n.bookingDate}</span></p>
                                                             <p class="justify">Thời gian: <span class="fw-bold"><fmt:formatDate type="time" value="${n.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${n.timeEnd}" pattern="HH:mm" />h</span></p>
                                                         </div>

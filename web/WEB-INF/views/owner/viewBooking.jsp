@@ -36,7 +36,7 @@
     </form>
 </div>
 ${listB}
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3" style="width: 70%">
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%">
     <table class="table table-striped table-hover">
         <thead>
             <tr>

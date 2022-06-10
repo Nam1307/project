@@ -33,7 +33,7 @@ public class BookingDAO {
     private static final String GET_A_BOOKING = "SELECT * FROM Booking WHERE BookingID = ? ";
     private static final String GET_ALL_BOOKING = "SELECT * FROM Booking";
     private static final String INSERT_BOOKING = "INSERT INTO Booking VALUES (?,?,?,?,?,?,?)";
-    private static final String GET_NOTIFICATION = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd > ? AND StatusBooking = ?;";
+    private static final String GET_NOTIFICATION = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID LEFT JOIN ChildrenPitch ON ChildrenPitch.ChildrenPitchID = Booking.ChildrenPitchID WHERE UserID = ? AND BookingDate = ? AND TiemEnd > ? AND StatusBooking = ? AND StatusChildrenPitch = 1;";
     private static final String GET_USER_PLAYED_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate < ?";
     private static final String GET_USER_PLAYED_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate > ?";
     private static final String GET_USER_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd < ?";
