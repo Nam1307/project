@@ -69,13 +69,13 @@
                                             <var class="price">Chưa đá</var> 
                                         </div> <!-- price-wrap .// -->
                                     </c:if>
-                                </td id="row_${b.bookingID}_content">
-                                <td class="text-right"> 
-                                    <c:if test="${b.status == true}">
-                                        <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
-                                    </c:if>
                                 </td>
                                 <td class="text-right"> 
+                                    <c:if test="${b.status == true}">
+                                        <a id="row_${b.bookingID}_button" href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                    </c:if>
+                                </td>
+                                <td class="text-right" id="row_${b.bookingID}_content"> 
                                     <c:if test="${b.status == false}">
                                         <div class="price-wrap"> 
                                             <var class="price">${b.reasonContent}</var> 
@@ -137,12 +137,12 @@
                                         </div> <!-- price-wrap .// -->
                                     </c:if>
                                 </td>
-                                <td class="text-right" id="row_${b.bookingID}_content"> 
+                                <td class="text-right"> 
                                     <c:if test="${b.status == true}">
-                                        <a href="#" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
+                                        <a href="#" id="row_${b.bookingID}_button" class="btn btn-outline-danger" onclick="ConfirmDelete('${b.bookingID}')"> × Hủy sân</a>
                                     </c:if>
                                 </td>
-                                <td class="text-right"> 
+                                <td class="text-right" id="row_${b.bookingID}_content"> 
                                     <c:if test="${b.status == false}">
                                         <div class="price-wrap"> 
                                             <var class="price">${b.reasonContent}</var> 
@@ -352,7 +352,7 @@
                 },
                 success: function () {
                     $("#myModal").modal("hide");
-//                $("#row_" + empId + "_status").remove();
+                    $("#row_" + empId + "_button").remove();
                     document.getElementById("row_" + empId + "_status").innerHTML
                             = "<div class=\"price-wrap\"> \n" +
                             "                                            <var class=\"price\">Đã hủy sân</var> \n" +

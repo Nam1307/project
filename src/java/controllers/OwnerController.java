@@ -97,6 +97,14 @@ public class OwnerController extends HttpServlet {
                 //Xu ly
                 deleteChildrenPitch(request, response);
                 break;
+            case "createChildrenPitch":
+                createChildrenPitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "create":
+                create(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -254,9 +262,7 @@ public class OwnerController extends HttpServlet {
             String userID = request.getParameter("userID");
             OwnerDAO od = new OwnerDAO();
             List<Pitch> listP = od.getPitch(userID);
-            ChildrenPitch children = od.getChildrenPitchEmail("C01");
 
-            request.setAttribute("children", children);
             request.setAttribute("listP", listP);
             request.setAttribute("userID", userID);
         } catch (SQLException ex) {
@@ -365,7 +371,7 @@ public class OwnerController extends HttpServlet {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void deleteChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
         try {
             SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
@@ -373,20 +379,82 @@ public class OwnerController extends HttpServlet {
             Date dateNow = new Date();
             OwnerDAO od = new OwnerDAO();
             BookingDAO bd = new BookingDAO();
-            
+
             List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(childrenPitchID, dateNow, smt.format(dateNow));
             List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitchID, dateNow);
-            
+
             for (Booking booking : listPlayedEqualAfter) {
                 bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
             }
-            System.out.println("----------------------------------------------------");
             for (Booking booking : listPlayedAfter) {
                 bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
             }
             od.deleteChildrenPitch(childrenPitchID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void createChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String userID = request.getParameter("userID");
+            OwnerDAO od = new OwnerDAO();
+            List<Pitch> listP = od.getPitch(userID);
+            request.setAttribute("listP", listP);
+            request.setAttribute("userID", userID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void create(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            OwnerDAO od = new OwnerDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            String pitchID = request.getParameter("pitchID");
+            String cpName = request.getParameter("cpName");
+            String cpPrice = request.getParameter("cpPrice");
+            String cpType = request.getParameter("cpType");
+            List<ChildrenPitch> listChildrenPitch = cpd.getChildrenPitch();
+            String cpID = raiseChildrenPitchId(listChildrenPitch);
+            
+            ChildrenPitch childrenPitch = new ChildrenPitch(cpID, pitchID, cpName, cpType, Double.parseDouble(cpPrice), true);
+            
+            if(od.insertChildrenPitch(childrenPitch)){
+                request.setAttribute("success", "Thêm sân con thành công");
+            }
+            request.setAttribute("action", "createChildrenPitch");
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private String raiseChildrenPitchId(List<ChildrenPitch> arrayList) throws Exception {
+        try {
+            ChildrenPitchDAO dao = new ChildrenPitchDAO();
+            String result = "";
+            int maxIndex = 1;
+            if (arrayList == null) {
+                maxIndex = 1;
+                result = "C" + String.format("%02d", maxIndex);
+            } else {
+                maxIndex = arrayList.size() + 1;
+                result = "C" + String.format("%02d", maxIndex);
+                ChildrenPitch temp = dao.getAChildrenPitch(result);
+                while (temp != null) {
+                    maxIndex += 1;
+                    result = "C" + String.format("%02d", maxIndex);
+                    temp = dao.getAChildrenPitch(result);
+                }
+            }
+            return result;
+        } catch (Exception ex) {
+            throw ex;
         }
     }
 

@@ -22,6 +22,7 @@ public class ChildrenPitchDAO {
 
     private static final String GET_CHILDRENPITCH = "SELECT * FROM ChildrenPitch";
     private static final String GET_TYPE = "SELECT * FROM ChildrenPitch WHERE PitchID = ? AND StatusChildrenPitch = 1";
+    private static final String GET_A_CHILDRENPITCH = "SELECT * FROM ChildrenPitch WHERE ChildrenPitchID = ?";
     private static final String GET_MAX_PRICE = "SELECT Pitch.PitchID , MAX(price) AS Price\n"
             + "FROM ChildrenPitch, Pitch \n"
             + "WHERE ChildrenPitch.PitchID = Pitch.PitchID AND StatusChildrenPitch = 1\n"
@@ -102,6 +103,43 @@ public class ChildrenPitchDAO {
             }
         }
         return list;
+    }
+    
+    public ChildrenPitch getAChildrenPitch(String ChildrenPitchID) throws SQLException {
+        ChildrenPitch childrenPitch = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_A_CHILDRENPITCH);
+                stm.setString(1, ChildrenPitchID);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String childrenPitchID = rs.getString("ChildrenPitchID");
+                    String pitchID = rs.getString("PitchID");
+                    String childrenPitchName = rs.getString("ChildrenPitchName");
+                    String childrenPitchType = rs.getString("ChildrenPitchType");
+                    Double price = rs.getDouble("Price");
+                    boolean status = rs.getBoolean("StatusChildrenPitch");
+                    childrenPitch = new ChildrenPitch(childrenPitchID, pitchID, childrenPitchName, childrenPitchType, price, status);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return childrenPitch;
     }
 
     public List<ChildrenPitch> getMaxPrice() throws SQLException {

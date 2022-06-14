@@ -7,6 +7,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+${listCP}
+<div class="px-4 px-lg-5 mb-5 mx-auto mt-5">
+    <a class="btn btn-outline-success btn-lg" href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}"><i class="bi bi-plus-circle"></i> Tạo sân con mới</a>
+</div>
 <div class="px-4 px-lg-5 mb-3 mx-auto mt-3">
     <form action="${pageContext.request.contextPath}/owner/viewChildrenPitch.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
         <div class="col-3"></div>
@@ -32,7 +36,7 @@
                 <th>Tên</th>
                 <th>Số người</th>
                 <th style="text-align: right">Giá</th>
-                <th>Operation</th>
+                <th>Xử lý</th>
             </tr>
         </thead>
         <tbody id="myContent">
