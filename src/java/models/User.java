@@ -21,11 +21,13 @@ public class User {
     private String userAddress;
     private String email;
     private String imgLink;
+    private boolean ownerStatus;
+    private boolean userStatus;
 
     public User() {
     }
 
-    public User(String userID, String roleID, String wardID, String districtID, String userName, String pass, String fullName, String phone, String userAddress, String email, String imgLink) {
+    public User(String userID, String roleID, String wardID, String districtID, String userName, String pass, String fullName, String phone, String userAddress, String email, String imgLink, boolean ownerStatus, boolean userStatus) {
         this.userID = userID;
         this.roleID = roleID;
         this.wardID = wardID;
@@ -37,8 +39,9 @@ public class User {
         this.userAddress = userAddress;
         this.email = email;
         this.imgLink = imgLink;
+        this.ownerStatus = ownerStatus;
+        this.userStatus = userStatus;
     }
-    
 
     public String getUserID() {
         return userID;
@@ -126,5 +129,21 @@ public class User {
 
     public void setImgLink(String imgLink) {
         this.imgLink = imgLink;
+    }
+
+    public boolean isOwnerStatus() {
+        return ownerStatus;
+    }
+
+    public void setOwnerStatus(boolean ownerStatus) {
+        this.ownerStatus = ownerStatus;
+    }
+
+    public boolean isUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(boolean userStatus) {
+        this.userStatus = userStatus;
     }
 }

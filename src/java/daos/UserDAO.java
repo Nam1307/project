@@ -25,15 +25,16 @@ public class UserDAO {
 
     private static final String GET_USER = "SELECT * FROM tblUser where UserID=?";
     private static final String GET_ALL_USER = "SELECT * FROM tblUser";
-    private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=?";
-    private static final String INSERT_USER = "INSERT INTO tblUser VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-    private static final String CHECK_LOGIN = "SELECT * FROM tblUser where UserName=? AND Pass = ?";
-    private static final String CHECK_DUPLICATE_USERNAME = "SELECT * FROM tblUser where UserName=?";
+    private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=? AND UserStatus = 1";
+    private static final String INSERT_USER = "INSERT INTO tblUser VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String CHECK_LOGIN = "SELECT * FROM tblUser where UserName=? AND Pass = ? AND UserStatus = 1";
+    private static final String CHECK_DUPLICATE_USERNAME = "SELECT * FROM tblUser where UserName=? AND UserStatus = 1";
     private static final String UPDATE_USER_PHONE = "UPDATE tblUser SET Phone = ?  WHERE UserID = ?;";
     private static final String GET_COMMENT = "SELECT * FROM tblComment where PitchID=?";
     private static final String GET_A_COMMENT = "SELECT * FROM tblComment where CommentID=?";
     private static final String GET_ALL_COMMENT = "SELECT * FROM tblComment";
     private static final String INSERT_COMMENT = "INSERT INTO tblComment VALUES (?,?,?,?,?,?)";
+    
 
     public User getUser(String UserID) throws SQLException {
         User user = null;
@@ -58,7 +59,9 @@ public class UserDAO {
                     String userAddress = rs.getString("UserAddress");
                     String email = rs.getString("Email");
                     String imgLink = rs.getString("ImgLink");
-                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink);
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus);
                 }
             }
         } catch (Exception e) {
@@ -99,7 +102,9 @@ public class UserDAO {
                     String userAddress = rs.getString("UserAddress");
                     String email = rs.getString("Email");
                     String imgLink = rs.getString("ImgLink");
-                    list.add(new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink));
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    list.add(new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus));
                 }
             }
         } catch (Exception e) {
@@ -141,7 +146,9 @@ public class UserDAO {
                     String userAddress = rs.getString("UserAddress");
                     String email = rs.getString("Email");
                     String imgLink = rs.getString("ImgLink");
-                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink);
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus);
                 }
             }
         } catch (Exception e) {
@@ -179,6 +186,8 @@ public class UserDAO {
                 stm.setString(9, user.getUserAddress());
                 stm.setString(10, user.getEmail());
                 stm.setString(11, user.getImgLink());
+                stm.setBoolean(12, user.isOwnerStatus());
+                stm.setBoolean(13, user.isUserStatus());
                 check = stm.executeUpdate() > 0 ? true : false;
             }
         } catch (Exception e) {
@@ -217,7 +226,9 @@ public class UserDAO {
                     String userAddress = rs.getString("UserAddress");
                     String email = rs.getString("Email");
                     String imgLink = rs.getString("ImgLink");
-                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink);
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus);
                 }
             }
         } catch (Exception e) {
@@ -259,7 +270,9 @@ public class UserDAO {
                     String userAddress = rs.getString("UserAddress");
                     String email = rs.getString("Email");
                     String imgLink = rs.getString("ImgLink");
-                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink);
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus);
                 }
             }
         } catch (Exception e) {

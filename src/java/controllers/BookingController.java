@@ -82,8 +82,6 @@ public class BookingController extends HttpServlet {
             if (user == null) {
                 session.setAttribute("pitchID", pitchID);
                 request.setAttribute("pitchID", pitchID);
-//                request.setAttribute("controller", "user");
-//                request.setAttribute("action", "login");
                 response.sendRedirect("/WebsiteOrderStadium/user/login.do");
             } else {
                 SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");

@@ -64,6 +64,11 @@
                                 <a class="nav-link" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">Xem sân đã đặt</a>
                             </li>
                         </c:if>
+                        <c:if test="${user == null}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/user/goToBecomingOwnerPage.do">Đăng ký trờ thành chủ sân</a>
+                            </li>
+                        </c:if>
                         <c:if test="${user.roleID == 'OW'}">
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}">Quản lý đặt sân</a>
@@ -98,6 +103,33 @@
                                                 </c:if>
                                             </c:forEach>
                                         </c:forEach>
+                                    </c:forEach>              
+                                </ul>
+                            </li> 
+                        </c:if>
+                        <c:if test="${user != null && user.roleID == 'AD'}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do">Xét duyệt chủ sân</a>
+                            </li>
+                        </c:if>
+                        <c:if test="${user != null && user.roleID == 'AD'}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countNoAdmin}</span> 
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notification" style="padding: 0px; margin: 0px;">
+                                    <div class="text-center fs-5 fw-bolder">Thông báo</div>
+                                    <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
+                                    <c:forEach var="u" items="${listNoAdmin}">
+                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">
+                                            <div class="form-check pt-4">
+                                                <i class="bi bi-bell-fill"></i>
+                                                <label class="form-check-label fst-italic">Đang chờ xác nhận trở thành quản lý sân</label>
+                                                <p class="justify">Họ và tên: <span class="fw-bold">${u.fullName}</span></p>
+                                                <p class="justify">Mail: <span class="fw-bold">${u.email}</span></p>
+                                            </div>
+                                        </a>
+                                        <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
                                     </c:forEach>              
                                 </ul>
                             </li> 

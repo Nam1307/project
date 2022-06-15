@@ -10,15 +10,9 @@ import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -100,6 +94,13 @@ public class UserController extends HttpServlet {
             case "comment":
                 comment(request, response);
                 break;
+            case "goToBecomingOwnerPage":
+                goToBecomingOwnerPage(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "confirmBecomingOwner":
+                confirmBecomingOwner(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -121,12 +122,12 @@ public class UserController extends HttpServlet {
                 UserDAO ud = new UserDAO();
                 String userID = request.getParameter("userID");
                 Date date = new Date();
-                
+
                 session.removeAttribute("listNo");
                 session.removeAttribute("countN");
                 session.removeAttribute("listP1");
                 session.removeAttribute("listCP1");
-                
+
                 List<Pitch> listP1 = pd.getAllPitch();
                 List<ChildrenPitch> listCP = cpd.getChildrenPitch();
                 List<Booking> listN = bd.getNotification(userID, date, smt.format(date), true);
@@ -135,7 +136,7 @@ public class UserController extends HttpServlet {
                 List<Booking> listPlayedEqualAfter = bd.getUserBookingPlayedEqualAfter(userID, date, smt.format(date));
                 List<Booking> listPlayedEqualBefore = bd.getUserBookingPlayedEqualBefore(userID, date, smt.format(date));
                 List<User> listU = ud.getAllUser();
-                
+
                 request.setAttribute("listU", listU);
                 request.setAttribute("listPlayedBefore", listPlayedBefore);
                 request.setAttribute("listPlayedAfter", listPlayedAfter);
@@ -203,7 +204,7 @@ public class UserController extends HttpServlet {
                 }
                 session.removeAttribute("pitchID");
             } else {
-                User u = new User(userID, "US", null, null, userGoogle.getEmail(), "", userGoogle.getName(), "", "", userGoogle.getEmail(), userGoogle.getPicture());
+                User u = new User(userID, "US", null, null, userGoogle.getEmail(), "", userGoogle.getName(), "", "", userGoogle.getEmail(), userGoogle.getPicture(), false, true);
                 if (dao.insertUser(u)) {
                     session.setAttribute("user", u);
                     //response.sendRedirect("/WebsiteOrderStadium/home/index.do");
@@ -242,7 +243,6 @@ public class UserController extends HttpServlet {
     private void logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession();
-//            session.removeAttribute("user");
             session.invalidate();
             response.sendRedirect("/WebsiteOrderStadium/home/index.do");
         } catch (IOException ex) {
@@ -285,7 +285,7 @@ public class UserController extends HttpServlet {
                         String userID = raiseProductId(list);
                         SendEmail sm = new SendEmail();
                         String code = sm.getRandom();
-                        user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg");
+                        user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg", false, true);
                         boolean sendEmail = sm.sendEmail(user, code);
                         System.out.println(districtID + " , " + wardID);
                         session.setAttribute("code", code);
@@ -446,7 +446,7 @@ public class UserController extends HttpServlet {
             String code = (String) session.getAttribute("code");
             if (finalNum.equals(code)) {
                 request.setAttribute("action", "login");
-                User user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg");
+                User user = new User(userID, "US", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg", false, true);
                 dao.insertUser(user);
                 session.removeAttribute("code");
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
@@ -532,7 +532,84 @@ public class UserController extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
+    private void goToBecomingOwnerPage(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            PitchDAO pd = new PitchDAO();
+            List<District> listD = pd.getDistrict();
+            List<Ward> listWard = pd.getAllWard();
+            request.setAttribute("listWard", listWard);
+            request.setAttribute("listD", listD);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void confirmBecomingOwner(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            UserDAO dao = new UserDAO();
+            String username = request.getParameter("username");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirmPassword");
+            String fullname = request.getParameter("fullname");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String districtID = request.getParameter("districtID");
+            String wardID = request.getParameter("ward");
+            if (!password.equals(confirmPassword)) {
+                request.setAttribute("action", "goToBecomingOwnerPage");
+                request.setAttribute("error", "Xác nhận mật khẩu không đúng");
+            } else {
+                User user = null;
+                user = dao.checkDuplicateUsername(username);
+                if (user != null) {
+                    request.setAttribute("action", "goToBecomingOwnerPage");
+                    request.setAttribute("error", "Tên đăng nhập đã tồn tại");
+                } else {
+                    user = dao.checkUserEmail(email);
+                    if (user != null) {
+                        request.setAttribute("action", "goToBecomingOwnerPage");
+                        request.setAttribute("error", "Email đã tồn tại");
+                    } else {
+                        List<User> list = dao.getAllUser();
+                        String userID = raiseProductId(list);
+                        user = new User(userID, "OW", wardID, districtID, username, password, fullname, phone, address, email, "/WebsiteOrderStadium/images/user.jpg", true, false);
+                        dao.insertUser(user);
+                        request.setAttribute("success", "Đăng ký chở thành chủ sân thành công. Xin vui lòng chờ Admin xét duyệt!");
+                        request.setAttribute("disabled", "disabled");
+                        request.setAttribute("action", "goToBecomingOwnerPage");
+                    }
+                }
+            }
+            PitchDAO pd = new PitchDAO();
+            List<District> listD = pd.getDistrict();
+            List<Ward> listWard = pd.getAllWard();
+            List<Ward> listW = pd.getWard(districtID);
+            request.setAttribute("listWard", listWard);
+            request.setAttribute("listD", listD);
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.setAttribute("password", password);
+            request.setAttribute("confirmPassword", confirmPassword);
+            request.setAttribute("fullname", fullname);
+            request.setAttribute("phone", phone);
+            request.setAttribute("address", address);
+            request.setAttribute("districtID", districtID);
+            request.setAttribute("ward", wardID);
+            request.setAttribute("listW", listW);
+            request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private String raiseCommentId(List<Comment> arrayList) throws Exception {

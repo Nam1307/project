@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.AdminDAO;
 import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
 import daos.PitchDAO;
@@ -147,10 +148,14 @@ public class HomeController extends HttpServlet {
             SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             List<Booking> listN = null;
             if (user != null) {
-                if (user.getRoleID().equals("US")) {
+                if (user.getRoleID().equals("US") || user.getRoleID().equals("AD")) {
+                    AdminDAO ad = new AdminDAO();
+                    List<User> listNoAdmin = ad.getUserForBecomingOwner();
                     listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                     n1 = pagination(request, response, pd.getNumberOfPitch());
                     listP = pd.getPitch(n1, pageSize);
+                    request.setAttribute("listNoAdmin", listNoAdmin);
+                    request.setAttribute("countNoAdmin", listNoAdmin.size());
                     request.setAttribute("listNo", listN);
                     request.setAttribute("countN", listN.size());
                 } else if (user.getRoleID().equals("OW")) {
@@ -393,7 +398,7 @@ public class HomeController extends HttpServlet {
                     }
                 }
                 if (user != null) {
-                    if (user.getRoleID().equals("US")) {
+                    if (user.getRoleID().equals("US") || user.getRoleID().equals("AD")) {
                         SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
                         List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                         n1 = pagination(request, response, pd.getNumberOfPitchAterSearching(districtID, wardID));

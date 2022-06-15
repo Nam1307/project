@@ -68,7 +68,6 @@ public class StadiumController extends HttpServlet {
             default:
                 request.setAttribute("action", "error");
         }
-
     }
 
     private void detail(HttpServletRequest request, HttpServletResponse response) {
