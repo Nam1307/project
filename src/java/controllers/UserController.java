@@ -371,9 +371,6 @@ public class UserController extends HttpServlet {
 //                        }
 //                    }
 //                }
-                for (Booking booking : listN) {
-                    System.out.println(booking.getTimeStart());
-                }
                 if (remember == null) {
                     Cookie[] cookies = request.getCookies();
                     // Delete all the cookies

@@ -10,7 +10,9 @@ import daos.PitchDAO;
 import daos.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +47,11 @@ public class AdminController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getAttribute("action").toString();
         switch (action) {
+            case "userManagement":
+                //Xu ly
+                userManagement(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             case "viewBecomingOwner":
                 //Xu ly
                 viewBecomingOwner(request, response);
@@ -58,11 +65,33 @@ public class AdminController extends HttpServlet {
                 //Xu ly
                 confirmOwner(request, response);
                 break;
+            case "denyOwner":
+                //Xu ly
+                denyOwner(request, response);
+                break;
+            case "searchForBecomingOwner":
+                //Xu ly
+                searchForBecomingOwner(request, response);
+                break;
+            case "chooseRole":
+                //Xu ly
+                chooseRole(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
     }
 
+    private void userManagement(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            AdminDAO ad = new AdminDAO();
+            List<User> listU = ad.getUserActive();
+            request.setAttribute("listU", listU);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void viewBecomingOwner(HttpServletRequest request, HttpServletResponse response) {
         try {
             AdminDAO ad = new AdminDAO();
@@ -132,6 +161,87 @@ public class AdminController extends HttpServlet {
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void denyOwner(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            String userID = request.getParameter("Id");
+            String reason = request.getParameter("Reason");
+            UserDAO ud = new UserDAO();
+
+            User user = ud.getUser(userID);
+            SendEmail sm = new SendEmail();
+            sm.sendEmailDenyOwner(user, reason);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void searchForBecomingOwner(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            String name = request.getParameter("name");
+            AdminDAO ad = new AdminDAO();
+            List<User> users = ad.searchUserForBecomingOwner(name);
+            int count = 1;
+            out = response.getWriter();
+            for (User user : users) {
+                out.println("<tr id=\"row_"+user.getUserID()+"\">\n"
+                        + "                    <td>"+ count++ +"</td>\n"
+                        + "                    <td id=\"row_${cp.childrenPitchID}_name\">"+user.getFullName()+"</td>\n"
+                        + "                    <td>\n"
+                        + "                        <button type=\"button\" class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\" onclick=\"GetBecomingOwnerInfo('"+user.getUserID()+"')\">\n"
+                        + "                            Xem thông tin\n"
+                        + "                        </button>\n"
+                        + "                    </td>\n"
+                        + "                    <td>\n"
+                        + "                        <a  class=\"btn btn-outline-success btn-sm\"href=\"#\" onclick=\"ConfirmBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Xác nhận</i></a>\n"
+                        + "                        <a  class=\"btn btn-outline-danger btn-sm\"href=\"#\" onclick=\"DenyBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Từ chối</i></a>\n"
+                        + "                    </td>\n"
+                        + "                </tr>");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void chooseRole(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            String roleID = request.getParameter("role");
+        AdminDAO ad = new AdminDAO();
+        List<User> list = new ArrayList<>();
+        if(roleID.equals("")){
+            list = ad.getUserActive();
+        }else{
+            list = ad.getUserActiveByRole(roleID);
+        }
+        int count = 1;
+        out = response.getWriter();
+        for (User user : list) {
+                out.println("<tr id=\"row_"+user.getUserID()+"\">\n"
+                        + "                    <td>"+ count++ +"</td>\n"
+                        + "                    <td id=\"row_${cp.childrenPitchID}_name\">"+user.getFullName()+"</td>\n"
+                        + "                    <td>\n"
+                        + "                        <button type=\"button\" class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\" onclick=\"GetBecomingOwnerInfo('"+user.getUserID()+"')\">\n"
+                        + "                            Xem thông tin\n"
+                        + "                        </button>\n"
+                        + "                    </td>\n"
+                        + "                    <td>\n"
+                        + "                        <a  class=\"btn btn-outline-danger btn-sm\"href=\"#\" onclick=\"DenyBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Từ chối</i></a>\n"
+                        + "                    </td>\n"
+                        + "                </tr>");
+            }
+        } catch (Exception e) {
+            
         }
     }
 

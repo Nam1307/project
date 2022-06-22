@@ -8,6 +8,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%; padding-top: 30px">
+    <i style="left: 30px; position: relative" class="bi bi-search"></i>
+    <input type="text" style="text-indent: 30px" placeholder="Tìm kiếm" oninput="searchByName(this)" />
+</div>
 <div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%; padding-top: 50px; padding-bottom: 50px">
     <table class="table table-striped ">
         <thead>
@@ -29,7 +33,8 @@
                         </button>
                     </td>
                     <td>
-                        <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Xác nhận</i></a>
+                        <a  class="btn btn-outline-success btn-sm"href="#" onclick="ConfirmBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Xác nhận</i></a>
+                        <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Từ chối</i></a>
                     </td>
                 </tr>
             </c:forEach>
@@ -63,11 +68,39 @@
                 <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
             </div>
             <div class="modal-body">
-                <h4>Bạn có chắc cho người này trở thành chủ sân không?</h4>
+                <h4>Bạn có chắc xác nhận cho người này trở thành chủ sân không?</h4>
             </div>
             <div class="modal-footer">
                 <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
                 <a href="#location" class="btn btn-success" onclick="Confirm()">Xác nhận</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Từ chối trở thành chủ sân</h3>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm1()">X</a>
+            </div>
+            <div class="modal-body">
+                <h4>Bạn có chắc từ chối cho người này trở thành chủ sân không?</h4>
+            </div>
+            <form>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Lý do hủy sân:</label>
+                    <textarea class="form-control" id="message-text"></textarea>
+                    <div class="invalid-feedback" id="invalid-feedback">
+                        Vui lòng điền lý do.
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm1()">Hủy</a>
+                <a href="#location" class="btn btn-success" onclick="Deny()">Xác nhận</a>
             </div>
 
         </div>
@@ -103,7 +136,6 @@
 
     var Confirm = function () {
         var empId = $("#hiddenEmployeeId").val();
-        var reason = $("#message-text").val();
 
         $.ajax({
             url: "${pageContext.request.contextPath}/admin/confirmOwner.do",
@@ -115,5 +147,53 @@
                 $("#row_" + empId).remove();
             }
         });
+    };
+
+    function closeForm1() {
+        $("#myModal1").modal('hide');
+    }
+
+    var DenyBecomingOwner = function (EmployeeId) {
+        /*var test = $("#mytable tr").find("#test").html();*/
+        $("#hiddenEmployeeId").val(EmployeeId);
+        $("#myModal1").modal('show');
+    };
+
+    var Deny = function () {
+        var empId = $("#hiddenEmployeeId").val();
+        var reason = $("#message-text").val();
+
+        if (reason === '') {
+            document.getElementById("message-text").classList.add("border");
+            document.getElementById("message-text").classList.add("border-danger");
+            $("#invalid-feedback").show();
+        } else {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/admin/denyOwner.do",
+                type: 'get',
+                data: {Id: empId,
+                    Reason: reason
+                },
+                success: function () {
+                    $("#myModal1").modal("hide");
+                    $("#row_" + empId).remove();
+                }
+            });
+        }
+    };
+
+    function searchByName(param) {
+        var name = param.value;
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/admin/searchForBecomingOwner.do",
+                    type: 'get',
+                    data: {
+                        name: name
+                    },
+                    success: function (responseData) {
+                        document.getElementById("myContent").innerHTML
+                                = responseData;
+                    }
+                });
     }
 </script>

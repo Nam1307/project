@@ -111,6 +111,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do">Xét duyệt chủ sân</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/admin/userManagement.do">Quản lý người dùng</a>
+                            </li>
                         </c:if>
                         <c:if test="${user != null && user.roleID == 'AD'}">
                             <li class="nav-item dropdown">

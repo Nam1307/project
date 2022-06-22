@@ -55,7 +55,7 @@
                                     <input class="form-control text-center me-3" id="inputDate" name="dateBooking" type="date" style="max-width: 18rem" />
                                     <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="findDate()">
                                         <i class="bi bi-search"></i>
-                                        Tìm thời gian
+                                        Tìm slot trống
                                     </button>
                                 </div>
                             </div>
