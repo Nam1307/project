@@ -8,79 +8,90 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%; padding-top: 30px">
-    <div class="card mb-3 text-dark bg-info" style="max-width: 300px;">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="/WebsiteOrderStadium/images/user.png" class="img-fluid rounded-start mt-1" alt="...">
-            </div>
-            <div class="col-md-8">
+<h2 class="d-flex justify-content-center mt-5">Quản lý người dùng</h2>
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu người dùng
+                </div>
                 <div class="card-body">
-                    <h2 class="card-title">${listU.size()}</h2>
-                    <p class="card-text text-muted">Người dùng</p>
+                    <div class="table-responsive">
+                        <table
+                            id="example"
+                            class="table table-striped data-table"
+                            style="width: 100%"
+                            >
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên</th>
+                                    <th>Vai trò</th>
+                                    <th>Xem thông tin người dùng</th>
+                                    <th>Xử lý</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myContent">
+                                <c:forEach var="u" items="${listU}" varStatus="count">
+                                     ${u.wardID}
+                                    <tr id="row_${u.userID}">
+                                        <td>${count.index + 1}</td>
+                                        <td id="row_${cp.childrenPitchID}_name">${u.fullName}</td>
+                                        <td>${u.roleID}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBecomingOwnerInfo('${u.userID}')">
+                                                Xem thông tin
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Xóa</i></a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" style="margin-left: -20px">
-        <div class="col-4 mt-5" style="padding: 0px; margin: 0px">
-            <i style="left: 30px; position: relative" class="bi bi-search"></i>
-            <input type="text" style="text-indent: 30px; width: 300px" placeholder="Tìm kiếm" oninput="searchByName(this)" />
-        </div>
-        <div class="col-4"></div>
-        <div class="form-floating col-4 mt-4" style="padding: 0px">
-            <select id="selectBox" name="districtID" onchange="chooseRole()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                <option selected="selected" value="">Tất cả</option>
-                <option value="OW">Chủ sân</option>
-                <option value="US">Khách hàng</option>
-            </select>
-            <label for="floatingSelect">Người dùng:</label>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/script.css"></script>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin người đặt sân</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="result">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%; padding-top: 50px; padding-bottom: 50px">
-    <table class="table table-striped ">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Tên</th>
-                <th>Xem thông tin đăng ký</th>
-                <th>Xử lý</th>
-            </tr>
-        </thead>
-        <tbody id="myContent">
-            <c:forEach var="u" items="${listU}" varStatus="count">
-                <tr id="row_${u.userID}">
-                    <td>${count.index + 1}</td>
-                    <td id="row_${cp.childrenPitchID}_name">${u.fullName}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBecomingOwnerInfo('${u.userID}')">
-                            Xem thông tin
-                        </button>
-                    </td>
-                    <td>
-                        <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Từ chối</i></a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
-</div>
 
 <script>
-    function chooseRole() {
-        var selectBox = document.getElementById("selectBox");
-        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    function GetBecomingOwnerInfo(UserID) {
         $.ajax({
-            url: "${pageContext.request.contextPath}/admin/chooseRole.do",
-            type: 'post',
+            url: "${pageContext.request.contextPath}/admin/getBecomingOwnerInfo.do",
+            type: 'get',
             data: {
-                role: selectedValue
+                UserID: UserID
             },
             success: function (responseData) {
-                document.getElementById("myContent").innerHTML
-                        = responseData;
+                document.getElementById("result").innerHTML
+                                        = responseData;
             }
-        });
+                });
     }
 </script>

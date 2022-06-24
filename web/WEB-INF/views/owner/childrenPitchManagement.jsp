@@ -7,10 +7,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-${listCP}
-<div class="px-4 px-lg-5 mb-5 mx-auto mt-5">
-    <a class="btn btn-outline-success btn-lg" href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}"><i class="bi bi-plus-circle"></i> Tạo sân con mới</a>
-</div>
 <div class="px-4 px-lg-5 mb-3 mx-auto mt-3">
     <form action="${pageContext.request.contextPath}/owner/viewChildrenPitch.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
         <div class="col-3"></div>
@@ -28,34 +24,51 @@ ${listCP}
         <div class="col-3"></div>
     </form>
 </div>
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%">
-    <table class="table table-striped ">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Tên</th>
-                <th>Số người</th>
-                <th style="text-align: right">Giá</th>
-                <th>Xử lý</th>
-            </tr>
-        </thead>
-        <tbody id="myContent">
-            <c:forEach var="cp" items="${listCP}" varStatus="count">
-                <tr id="row_${cp.childrenPitchID}">
-                    <td>${count.index + 1}</td>
-                    <td id="row_${cp.childrenPitchID}_name">${cp.childrenPitchName}</td>
-                    <td id="row_${cp.childrenPitchID}_type">${cp.childrenPitchType}</td>
-                    <td id="row_${cp.childrenPitchID}_price" style="text-align: right"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></td>
-                    <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetEditInfo('${cp.childrenPitchID}')">
-                            Điều chỉnh sân
-                        </button>
-                        <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${cp.childrenPitchID}')"><i class="bi bi-x-circle-fill">Delete</i></a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu đặt sân
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table
+                            id="example"
+                            class="table table-striped data-table"
+                            style="width: 100%"
+                            >
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên</th>
+                                    <th>Số người</th>
+                                    <th style="text-align: right">Giá</th>
+                                    <th>Xử lý</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myContent">
+                                <c:forEach var="cp" items="${listCP}" varStatus="count">
+                                    <tr id="row_${cp.childrenPitchID}">
+                                        <td>${count.index + 1}</td>
+                                        <td id="row_${cp.childrenPitchID}_name">${cp.childrenPitchName}</td>
+                                        <td id="row_${cp.childrenPitchID}_type">${cp.childrenPitchType}</td>
+                                        <td id="row_${cp.childrenPitchID}_price" style="text-align: right"><fmt:formatNumber value="${cp.price}" pattern="#,##0VNĐ" /></td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetEditInfo('${cp.childrenPitchID}')">
+                                                Điều chỉnh sân
+                                            </button>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${cp.childrenPitchID}')"><i class="bi bi-x-circle-fill">Delete</i></a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -98,6 +111,9 @@ ${listCP}
 <!--        @*hidden field for storing current employeeId*@-->
 <input type="hidden" id="hiddenEmployeeId" />
 
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/script.css"></script>
 
 <script>
     function GetEditInfo(ChildrenPitchID) {

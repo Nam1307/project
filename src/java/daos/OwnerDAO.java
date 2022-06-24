@@ -39,6 +39,12 @@ public class OwnerDAO {
     private static final String DELETE_CHILDRENPITCH = "UPDATE ChildrenPitch SET StatusChildrenPitch = 0 WHERE ChildrenPitchID = ?";
     private static final String GET_BOOKING_PLAYED_AFTER_FOR_CP = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate > ? AND StatusBooking = 1 ORDER BY TimeStart";
     private static final String INSERT_CHILDRENPITCH = "INSERT INTO ChildrenPitch VALUES (?,?,?,?,?,?)";
+    private static final String GET_DATA_FOR_CHART = "select count(*) as total from Booking, tblUser, Pitch, ChildrenPitch where Booking.ChildrenPitchID = ChildrenPitch.ChildrenPitchID \n" +
+"  and ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and  BookingDate between ? and ? and tblUser.UserID = ? and Booking.StatusBooking = 1";
+    private static final String GET_ALL_CHILDRENPITCH_FOR_OWNER = "  select count(*) as total from  tblUser, Pitch, ChildrenPitch "
+            + "where ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and ChildrenPitch.StatusChildrenPitch = 1 and tblUser.UserID = ?";
+    private static final String GET_ALL_BOOKING_FOR_OWNER = "select count(*) as total from Booking, tblUser, Pitch, ChildrenPitch where Booking.ChildrenPitchID = ChildrenPitch.ChildrenPitchID \n" +
+"  and ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and tblUser.UserID = ? and Booking.StatusBooking = 1";
     
     public List<Pitch> getPitch(String UserID) throws SQLException {
         List<Pitch> list = new ArrayList<>();
@@ -507,20 +513,93 @@ public class OwnerDAO {
         return check;
     }
     
+    public int getDataForChart(String startDate, String endDate, String ownerId) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_DATA_FOR_CHART);
+                stm.setString(1, startDate);
+                stm.setString(2, endDate);
+                stm.setString(3, ownerId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    count = rs.getInt("total");
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
+    
+    public int getAllChildrenPitchForOwner(String ownerId) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_ALL_CHILDRENPITCH_FOR_OWNER);
+                stm.setString(1, ownerId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    count = rs.getInt("total");
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
+    
+    public int getAllBookingForOwner(String ownerId) throws SQLException {
+        int count = 0;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(GET_ALL_BOOKING_FOR_OWNER);
+                stm.setString(1, ownerId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    count = rs.getInt("total");
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return count;
+    }
+    
 
     public static void main(String[] args) throws SQLException, ParseException {
         OwnerDAO dao = new OwnerDAO();
-        SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
-        Date dateNow = new Date();
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2022-06-04");
-        List<Booking> list = dao.getUserBookingPlayedEqualBefore("C03", date, smt.format(dateNow));
-        for (Booking booking : list) {
-            System.out.println(booking.getBookingID());
-        }
-
-//        List<Booking> list = dao.findTime("C01", "06/03/2022");
-//        for (Booking booking : list) {
-//            System.out.println(booking.getTimeStart());
-//        }
+        int count = dao.getAllBookingForOwner("U02");
+        System.out.println(count);
     }
 }

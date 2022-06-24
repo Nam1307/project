@@ -65,44 +65,43 @@
             </div>
         </div>
     </section>
-</c:if>
-<div class="px-4 px-lg-5 mb-3 container mx-auto" style="margin-top: -45px">
-    <!--    <div class="col-3"></div>-->
-    <!--    <div class="form-floating col-4 mt-5">
-            <select id="selectBox" name="district" onchange="ward()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                <option selected disabled value="">Quận</option>
-    <c:forEach var="d" items="${listD}" >
-        <option ${district == d.districtID?"selected":""} value="${d.districtID}">${d.districtName}</option>
-    </c:forEach>
-</select>
-<label for="floatingSelect">Quận:</label>
-</div>-->
-    <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
-        <h2 class="fw-bolder mb-4">Tìm kiếm sân</h2>
-        <div class="form-floating col-5" style="padding: 0px">
-            <select id="selectBox" name="districtID" onchange="setWard()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                <option selected="selected" disabled value="">Quận</option>
-                <c:forEach var="d" items="${listD}" >
-                    <option ${district == d.districtID?"selected":""} value="${d.districtID}">${d.districtName}</option>
-                </c:forEach>
-            </select>
-            <label for="floatingSelect">Quận:</label>
-        </div>
-        <!--        <div id="districtID">
-                    <input type="hidden" name="districtID" value="${district}">
-                </div>-->
-        <div class="form-floating mb-3 col-5">
-            <select id="ward" name="ward" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                <option selected disabled value="">Phường</option>
-                <c:forEach var="w" items="${listW}" >
-                    <option ${ward == w.wardID?"selected":""} value="${w.wardID}">${w.wardName}</option>
-                </c:forEach>
-            </select>
-            <label for="floatingSelect">Phường:</label>
-        </div>
-        <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
-    </form>
-
+    <div class="px-4 px-lg-5 mb-3 container mx-auto" style="margin-top: -45px">
+        <!--    <div class="col-3"></div>-->
+        <!--    <div class="form-floating col-4 mt-5">
+                <select id="selectBox" name="district" onchange="ward()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                    <option selected disabled value="">Quận</option>
+        <c:forEach var="d" items="${listD}" >
+            <option ${district == d.districtID?"selected":""} value="${d.districtID}">${d.districtName}</option>
+        </c:forEach>
+    </select>
+    <label for="floatingSelect">Quận:</label>
+    </div>-->
+        <form action="${pageContext.request.contextPath}/home/search.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
+            <h2 class="fw-bolder mb-4">Tìm kiếm sân</h2>
+            <div class="form-floating col-5" style="padding: 0px">
+                <select id="selectBox" name="districtID" onchange="setWard()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                    <option selected="selected" disabled value="">Quận</option>
+                    <c:forEach var="d" items="${listD}" >
+                        <option ${district == d.districtID?"selected":""} value="${d.districtID}">${d.districtName}</option>
+                    </c:forEach>
+                </select>
+                <label for="floatingSelect">Quận:</label>
+            </div>
+            <!--        <div id="districtID">
+                        <input type="hidden" name="districtID" value="${district}">
+                    </div>-->
+            <div class="form-floating mb-3 col-5">
+                <select id="ward" name="ward" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                    <option selected disabled value="">Phường</option>
+                    <c:forEach var="w" items="${listW}" >
+                        <option ${ward == w.wardID?"selected":""} value="${w.wardID}">${w.wardName}</option>
+                    </c:forEach>
+                </select>
+                <label for="floatingSelect">Phường:</label>
+            </div>
+            <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
+        </form>
+    </c:if>
 </div>
 <section class="py-5">
     <div class="container px-4 px-lg-5">
@@ -159,7 +158,7 @@
                                 </div>
                             </div>
                             <!-- Product actions-->
-                            <c:if test="${user.roleID == 'US'}">
+                            <c:if test="${user.roleID == 'US' || user == null}">
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                     <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">Đặt sân</a></div>
                                 </div>

@@ -382,10 +382,17 @@ public class UserController extends HttpServlet {
                             response.addCookie(cookie);
                         }
                     }
+
                     if (pitchID != null) {
                         response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
                     } else {
-                        response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                        if (user.getRoleID().equals("OW")) {
+                            response.sendRedirect("/WebsiteOrderStadium/owner/index.do");
+                        } else if (user.getRoleID().equals("AD")) {
+                            response.sendRedirect("/WebsiteOrderStadium/admin/index.do");
+                        } else {
+                            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                        }
                     }
                 } else {
                     if (remember.equals("1")) {

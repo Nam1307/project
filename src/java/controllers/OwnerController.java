@@ -25,6 +25,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import models.Booking;
 import models.ChildrenPitch;
 import models.Pitch;
@@ -53,6 +54,11 @@ public class OwnerController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getAttribute("action").toString();
         switch (action) {
+            case "index":
+                //Xu ly
+                index(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             case "viewBooking":
                 //Xu ly
                 viewBooking(request, response);
@@ -110,6 +116,36 @@ public class OwnerController extends HttpServlet {
         }
     }
 
+    private void index(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            OwnerDAO od = new OwnerDAO();
+            
+            int june = od.getDataForChart("2022/06/01", "2022/06/30", user.getUserID());
+            int july = od.getDataForChart("2022/07/01", "2022/07/31", user.getUserID());
+            int august = od.getDataForChart("2022/08/01", "2022/08/31", user.getUserID());
+            int september = od.getDataForChart("2022/09/01", "2022/09/30", user.getUserID());
+            int october = od.getDataForChart("2022/10/01", "2022/10/31", user.getUserID());
+            int november = od.getDataForChart("2022/11/01", "2022/11/30", user.getUserID());
+            int december = od.getDataForChart("2022/12/01", "2022/12/31", user.getUserID());
+            int allChildrenPitch = od.getAllChildrenPitchForOwner(user.getUserID());
+            int allBooking = od.getAllBookingForOwner(user.getUserID());
+            
+            request.setAttribute("june", june);
+            request.setAttribute("july", july);
+            request.setAttribute("august", august);
+            request.setAttribute("september", september);
+            request.setAttribute("october", october);
+            request.setAttribute("november", november);
+            request.setAttribute("december", december);
+            request.setAttribute("allChildrenPitch", allChildrenPitch);
+            request.setAttribute("allBooking", allBooking);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void viewBooking(HttpServletRequest request, HttpServletResponse response) {
         try {
             String userID = request.getParameter("userID");

@@ -19,7 +19,9 @@
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link href="${pageContext.request.contextPath}/css/site.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/css/dashboard.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
         <style>
             .notification {
                 color: white;
@@ -53,9 +55,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home/index.do">Trang chủ</a>
-                        </li>
+                        <c:if test="${user != null && user.roleID == 'US'}">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/home/index.do">Trang chủ</a>
+                            </li>
+                        </c:if>
+                        <c:if test="${user.roleID == 'OW'}">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/owner/index.do">Trang chủ</a>
+                            </li>
+                        </c:if>
+                        <c:if test="${user.roleID == 'AD'}">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/admin/index.do">Trang chủ</a>
+                            </li>
+                        </c:if>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/home/about.do">Giới thiệu</a>
                         </li>
@@ -67,14 +81,6 @@
                         <c:if test="${user == null}">
                             <li class="nav-item">
                                 <a class="nav-link" href="${pageContext.request.contextPath}/user/goToBecomingOwnerPage.do">Đăng ký trờ thành chủ sân</a>
-                            </li>
-                        </c:if>
-                        <c:if test="${user.roleID == 'OW'}">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}">Quản lý đặt sân</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}">Quản lý sân con</a>
                             </li>
                         </c:if>
                         <c:if test="${user != null && user.roleID == 'US'}">
@@ -108,14 +114,6 @@
                             </li> 
                         </c:if>
                         <c:if test="${user != null && user.roleID == 'AD'}">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do">Xét duyệt chủ sân</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/admin/userManagement.do">Quản lý người dùng</a>
-                            </li>
-                        </c:if>
-                        <c:if test="${user != null && user.roleID == 'AD'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle notification" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span><i class="bi bi-bell"></i>Thông báo</span><span class="badge">${countNoAdmin}</span> 
@@ -124,7 +122,7 @@
                                     <div class="text-center fs-5 fw-bolder">Thông báo</div>
                                     <hr class="dropdown-divider" style="padding: 0px; margin: 0px">
                                     <c:forEach var="u" items="${listNoAdmin}">
-                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/user/bookingList.do?userID=${user.userID}">
+                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do">
                                             <div class="form-check pt-4">
                                                 <i class="bi bi-bell-fill"></i>
                                                 <label class="form-check-label fst-italic">Đang chờ xác nhận trở thành quản lý sân</label>
@@ -161,65 +159,256 @@
                 </div>
             </div>
         </nav>
-        <header>
-            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <c:if test="${user == null || user.roleID == 'US'}">
+            <header>
+                <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" style="background-image: url('${pageContext.request.contextPath}/images/banner1.jpg')">
+                        </div>
+                        <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner4.jpg')">
+                        </div>
+                        <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner3.jpg')">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active" style="background-image: url('${pageContext.request.contextPath}/images/banner1.jpg')">
-                    </div>
-                    <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner4.jpg')">
-                    </div>
-                    <div class="carousel-item" style="background-image: url('${pageContext.request.contextPath}/images/banner3.jpg')">
-                    </div>
+            </header>
+            <!--Contents-->
+            <div class="row">
+                <div class="col">
+                    <jsp:include page="/WEB-INF/views/${controller}/${action}.jsp" />
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
-        </header>
-        <!--Contents-->
-        <div class="row">
-            <div class="col">
-                <jsp:include page="/WEB-INF/views/${controller}/${action}.jsp" />
-            </div>
-        </div>
-        <!--Footer-->
-        <section class="">
-            <!-- Footer -->
-            <footer class="text-center text-white" style="background-color: #0a4275;">
-                <!-- Grid container -->
-                <div class="container p-4 pb-0">
-                    <!-- Section: CTA -->
-                    <section class="">
-                        <p class="d-flex justify-content-center align-items-center">
-                            <span class="me-3">Register for booking</span>
-                            <button type="button" class="btn btn-outline-light btn-rounded">
-                                Sign up!
-                            </button>
-                        </p>
-                    </section>
-                    <!-- Section: CTA -->
-                </div>
-                <!-- Grid container -->
+        </c:if>
 
-                <!-- Copyright -->
-                <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                    © 2020 Copyright:
-                    <a class="text-white" href="#">OUR TEAM</a>
+        <!-- offcanvas -->
+        <c:if test="${user.roleID == 'OW'}">
+            <script src="${pageContext.request.contextPath}/js/script.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+            <div
+                class="offcanvas offcanvas-start sidebar-nav bg-dark"
+                tabindex="-1"
+                id="sidebar" style="margin-top: 10px"
+                >
+                <div class="offcanvas-body p-0 mt-5">
+                    <nav class="navbar-dark">
+                        <ul class="navbar-nav">
+
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3">
+                                    ĐẶT SÂN
+                                </div>
+                            </li>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}" class="nav-link px-3 active">
+                                    <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                                    <span>Quản lý đặt sân</span>
+                                </a>
+                            </li>
+
+                            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
+                                    Quản lý sân
+                                </div>
+                            </li>
+                            <li>
+                                <a
+                                    class="nav-link px-3 sidebar-link"
+                                    data-bs-toggle="collapse"
+                                    href="#layouts"
+                                    >
+                                    <span class="me-2"><i class="bi bi-layout-split"></i></span>
+                                    <span>Quản lý sân con</span>
+                                    <span class="ms-auto">
+                                        <span class="right-icon">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </span>
+                                    </span>
+                                </a>
+                                <div class="collapse" id="layouts">
+                                    <ul class="navbar-nav ps-3">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}" class="nav-link px-3">
+                                                <span class="me-2"
+                                                      ><i class="bi bi-speedometer2"></i
+                                                    ></span>
+                                                <span>Thêm mới</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="collapse" id="layouts">
+                                    <ul class="navbar-nav ps-3">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}" class="nav-link px-3">
+                                                <span class="me-2"
+                                                      ><i class="bi bi-speedometer2"></i
+                                                    ></span>
+                                                <span>Điều chỉnh sân</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-3">
+                                    <span class="me-2"><i class="bi bi-book-fill"></i></span>
+                                    <span>Pages</span>
+                                </a>
+                            </li>
+                            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
+                                    Bình luận
+                                </div>
+                            </li>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/home/index.do" class="nav-link px-3">
+                                    <span class="me-2"><i class="bi bi-graph-up"></i></span>
+                                    <span>Xem bình luận</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-3">
+                                    <span class="me-2"><i class="bi bi-table"></i></span>
+                                    <span>Tables</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <!-- Copyright -->
-            </footer>
-            <!-- Footer -->
-        </section>
+            </div>
+            <main class="mt-5 pt-3">
+                <jsp:include page="/WEB-INF/views/${controller}/${action}.jsp" />
+            </main>
+        </c:if>
+        <!-- offcanvas -->
+
+        <!-- offcanvas -->
+        <c:if test="${user.roleID == 'AD'}">
+            <script src="${pageContext.request.contextPath}/js/script.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+            <div
+                class="offcanvas offcanvas-start sidebar-nav bg-dark"
+                tabindex="-1"
+                id="sidebar" style="margin-top: 10px"
+                >
+                <div class="offcanvas-body p-0 mt-5">
+                    <nav class="navbar-dark">
+                        <ul class="navbar-nav">
+
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3">
+                                    CHỦ SÂN
+                                </div>
+                            </li>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do" class="nav-link px-3 active">
+                                    <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                                    <span>Xác nhận trở thành chủ sân</span>
+                                </a>
+                            </li>
+
+                            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
+                                    NGƯỜI DÙNG
+                                </div>
+                            </li>
+                            <li>
+                                <a
+                                    class="nav-link px-3 sidebar-link"
+                                    data-bs-toggle="collapse"
+                                    href="#layouts"
+                                    >
+                                    <span class="me-2"><i class="bi bi-layout-split"></i></span>
+                                    <span>Quản lý</span>
+                                    <span class="ms-auto">
+                                        <span class="right-icon">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </span>
+                                    </span>
+                                </a>
+                                <div class="collapse" id="layouts">
+                                    <ul class="navbar-nav ps-3">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/admin/userManagement.do" class="nav-link px-3">
+                                                <span class="me-2"
+                                                      ><i class="bi bi-speedometer2"></i
+                                                    ></span>
+                                                <span>Quản lý người dùng</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="collapse" id="layouts">
+                                    <ul class="navbar-nav ps-3">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}" class="nav-link px-3">
+                                                <span class="me-2"
+                                                      ><i class="bi bi-speedometer2"></i
+                                                    ></span>
+                                                <span>Quản lý bình luận</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <main class="mt-5 pt-3">
+                <jsp:include page="/WEB-INF/views/${controller}/${action}.jsp" />
+            </main>
+        </c:if>
+        <!-- offcanvas -->
+
+
+        <!--Footer-->
+        <c:if test="${user == null || user.roleID == 'US'}">
+            <section class="">
+                <!-- Footer -->
+                <footer class="text-center text-white" style="background-color: #0a4275;">
+                    <!-- Grid container -->
+                    <div class="container p-4 pb-0">
+                        <!-- Section: CTA -->
+                        <section class="">
+                            <p class="d-flex justify-content-center align-items-center">
+                                <span class="me-3">Register for booking</span>
+                                <button type="button" class="btn btn-outline-light btn-rounded">
+                                    Sign up!
+                                </button>
+                            </p>
+                        </section>
+                        <!-- Section: CTA -->
+                    </div>
+                    <!-- Grid container -->
+
+                    <!-- Copyright -->
+                    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                        © 2020 Copyright:
+                        <a class="text-white" href="#">OUR TEAM</a>
+                    </div>
+                    <!-- Copyright -->
+                </footer>
+                <!-- Footer -->
+            </section>
+        </c:if>
         <!-- Footer -->
         <!-- End of .container -->
     </body>

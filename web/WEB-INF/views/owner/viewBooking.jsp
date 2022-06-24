@@ -36,98 +36,115 @@
     </form>
 </div>
 ${listB}
-<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive" style="width: 70%">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Thời gian</th>
-                <th>Trạng thái</th>
-                <th>Xem chi tiết</th>
-                <th>Hủy đặt sân</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:set var = "count" value = "0"/>
-            <c:set var = "count1" value = "0"/>
-            <c:set var = "count2" value = "0"/>
-            <c:set var = "count3" value = "0"/>
-            <c:forEach var="t" items="${listT}">
-                <tr>
-                    <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
-                    <c:if test="${listB == []}">
-                        <td>Chưa được đặt</td>
-                        <td>
+<div class="px-4 px-lg-5 mb-3 mx-auto mt-3 table-responsive">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu đặt sân
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table
+                            id="example"
+                            class="table table-striped data-table"
+                            style="width: 100%"
+                            >
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Trạng thái</th>
+                                    <th>Xem chi tiết</th>
+                                    <th>Hủy đặt sân</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:set var = "count" value = "0"/>
+                                <c:set var = "count1" value = "0"/>
+                                <c:set var = "count2" value = "0"/>
+                                <c:set var = "count3" value = "0"/>
+                                <c:forEach var="t" items="${listT}">
+                                    <tr>
+                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                        <c:if test="${listB == []}">
+                                            <td>Chưa được đặt</td>
+                                            <td>
 
-                        </td>
-                        <td>
+                                            </td>
+                                            <td>
 
-                        </td>
-                    </c:if>
-                    <c:if test="${listB != []}">
-                        <c:choose>
-                            <c:when test="${listPlayedEqualAfter[count].timeID == t.timeID}">
-                                <c:set var="count" value="${count + 1}"/>
-                                <td id="row_${listPlayedEqualAfter[count-1].bookingID}_title">Đã được đặt</td>
-                                <td>
-                                    <button id="row_${listPlayedEqualAfter[count-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualAfter[count-1].bookingID}')">
-                                        Thông tin người đặt
-                                    </button>
-                                </td>
-                                <td>
-                                    <a id="row_${listPlayedEqualAfter[count-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedEqualAfter[count-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
-                                </td>
-                                ${listPlayedAfter[count].bookingID}
-                            </c:when>
-                            <c:when test="${listPlayedEqualBefore[count1].timeID == t.timeID}">
-                                <c:set var="count1" value="${count1 + 1}"/>
-                                <td>Đã được đặt</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualBefore[count1-1].bookingID}')">
-                                        Thông tin người đặt
-                                    </button>
-                                </td>
-                                <td>
+                                            </td>
+                                        </c:if>
+                                        <c:if test="${listB != []}">
+                                            <c:choose>
+                                                <c:when test="${listPlayedEqualAfter[count].timeID == t.timeID}">
+                                                    <c:set var="count" value="${count + 1}"/>
+                                                    <td id="row_${listPlayedEqualAfter[count-1].bookingID}_title">Đã được đặt</td>
+                                                    <td>
+                                                        <button id="row_${listPlayedEqualAfter[count-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualAfter[count-1].bookingID}')">
+                                                            Thông tin người đặt
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <a id="row_${listPlayedEqualAfter[count-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedEqualAfter[count-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                    </td>
+                                                    ${listPlayedAfter[count].bookingID}
+                                                </c:when>
+                                                <c:when test="${listPlayedEqualBefore[count1].timeID == t.timeID}">
+                                                    <c:set var="count1" value="${count1 + 1}"/>
+                                                    <td>Đã được đặt</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualBefore[count1-1].bookingID}')">
+                                                            Thông tin người đặt
+                                                        </button>
+                                                    </td>
+                                                    <td>
 
-                                </td>
-                            </c:when>
-                            <c:when test="${listPlayedBefore[count2].timeID == t.timeID}">
-                                <c:set var="count2" value="${count2 + 1}"/>
-                                <td>Đã được đặt</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedBefore[count2-1].bookingID}')">
-                                        Thông tin người đặt
-                                    </button>
-                                </td>
-                                <td>
+                                                    </td>
+                                                </c:when>
+                                                <c:when test="${listPlayedBefore[count2].timeID == t.timeID}">
+                                                    <c:set var="count2" value="${count2 + 1}"/>
+                                                    <td>Đã được đặt</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedBefore[count2-1].bookingID}')">
+                                                            Thông tin người đặt
+                                                        </button>
+                                                    </td>
+                                                    <td>
 
-                                </td>
-                            </c:when>
-                            <c:when test="${listPlayedAfter[count3].timeID == t.timeID}">
-                                <c:set var="count3" value="${count3 + 1}"/>
-                                <td id="row_${listPlayedAfter[count3-1].bookingID}_title">Đã được đặt</td>
-                                <td>
-                                    <button id="row_${listPlayedAfter[count3-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedAfter[count3-1].bookingID}')">
-                                        Thông tin người đặt
-                                    </button>
-                                </td>
-                                <td>
-                                    <a id="row_${listPlayedAfter[count3-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedAfter[count3-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
-                                </td>
-                            </c:when>
-                            <c:otherwise>
-                                <td>Chưa được đặt</td>
-                                <td>
+                                                    </td>
+                                                </c:when>
+                                                <c:when test="${listPlayedAfter[count3].timeID == t.timeID}">
+                                                    <c:set var="count3" value="${count3 + 1}"/>
+                                                    <td id="row_${listPlayedAfter[count3-1].bookingID}_title">Đã được đặt</td>
+                                                    <td>
+                                                        <button id="row_${listPlayedAfter[count3-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedAfter[count3-1].bookingID}')">
+                                                            Thông tin người đặt
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <a id="row_${listPlayedAfter[count3-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedAfter[count3-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                    </td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td>Chưa được đặt</td>
+                                                    <td>
 
-                                </td>
-                                <td>
+                                                    </td>
+                                                    <td>
 
-                                </td>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                </c:forEach>
-        </tbody>
-    </table>
+                                                    </td>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:if>
+                                    </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -178,6 +195,10 @@ ${listB}
 <!--        @*hidden field for storing current employeeId*@-->
 <input type="hidden" id="hiddenEmployeeId" />
 
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/script.css"></script>
+
 <script>
     function setChildrenPitch() {
         var selectBox = document.getElementById("selectBox");
@@ -218,7 +239,6 @@ ${listB}
     }
 
     var ConfirmDelete = function (EmployeeId) {
-        /*var test = $("#mytable tr").find("#test").html();*/
         $("#hiddenEmployeeId").val(EmployeeId);
         $("#myModal").modal('show');
     }
@@ -244,7 +264,6 @@ ${listB}
                 },
                 success: function () {
                     $("#myModal").modal("hide");
-//                $("#row_" + empId + "_title").remove();
                     document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
                     $("#row_" + empId + "_info").remove();
                     $("#row_" + empId + "_delete").remove();
@@ -253,5 +272,6 @@ ${listB}
             });
         }
     }
+    
 </script>
 

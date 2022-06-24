@@ -47,6 +47,11 @@ public class AdminController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getAttribute("action").toString();
         switch (action) {
+            case "index":
+                //Xu ly
+                index(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             case "userManagement":
                 //Xu ly
                 userManagement(request, response);
@@ -69,16 +74,25 @@ public class AdminController extends HttpServlet {
                 //Xu ly
                 denyOwner(request, response);
                 break;
-            case "searchForBecomingOwner":
-                //Xu ly
-                searchForBecomingOwner(request, response);
-                break;
-            case "chooseRole":
-                //Xu ly
-                chooseRole(request, response);
-                break;
             default:
                 request.setAttribute("action", "error");
+        }
+    }
+
+    private void index(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            AdminDAO ad = new AdminDAO();
+
+            List<User> listNoAdmin = ad.getUserForBecomingOwner();
+            int numUS = ad.getNumberOfUserByRole("US");
+            int numOW = ad.getNumberOfUserByRole("OW");
+
+            request.setAttribute("listNoAdmin", listNoAdmin);
+            request.setAttribute("countNoAdmin", listNoAdmin.size());
+            request.setAttribute("numUS", numUS);
+            request.setAttribute("numOW", numOW);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -86,12 +100,15 @@ public class AdminController extends HttpServlet {
         try {
             AdminDAO ad = new AdminDAO();
             List<User> listU = ad.getUserActive();
+            List<User> listNoAdmin = ad.getUserForBecomingOwner();
+            request.setAttribute("listNoAdmin", listNoAdmin);
+            request.setAttribute("countNoAdmin", listNoAdmin.size());
             request.setAttribute("listU", listU);
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void viewBecomingOwner(HttpServletRequest request, HttpServletResponse response) {
         try {
             AdminDAO ad = new AdminDAO();
@@ -115,31 +132,53 @@ public class AdminController extends HttpServlet {
             User user = ud.getUser(userID);
             List<Ward> listW = pd.getAllWard();
             List<District> listD = pd.getDistrict();
-
-            for (District district : listD) {
-                for (Ward ward : listW) {
-                    if (user.getDistrictID().equals(district.getDistrictID()) && user.getWardID().equals(ward.getWardID())) {
-                        out = response.getWriter();
-                        out.println("<form>\n"
-                                + "    <div class=\"mb-3\">\n"
-                                + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Họ tên người chờ xét duyệt</label>\n"
-                                + "        <input type=\"text\" value=\"" + user.getFullName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
-                                + "    </div>\n"
-                                + "    <div class=\"mb-3\">\n"
-                                + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Số điện thoại</label>\n"
-                                + "        <input type=\"text\" value=\"" + user.getPhone() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
-                                + "    </div>\n"
-                                + "    <div class=\"mb-3\">\n"
-                                + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Email</label>\n"
-                                + "        <input type=\"email\" value=\"" + user.getEmail() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
-                                + "    </div>\n"
-                                + "    <div class=\"mb-3\">\n"
-                                + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Địa chỉ</label>\n"
-                                + "        <input type=\"email\" value=\"" + user.getUserAddress() + ", " + ward.getWardName() + ", " + district.getDistrictName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
-                                + "    </div>\n"
-                                + "</form>");
+            if (user.getDistrictID() != null && user.getWardID() != null) {
+                for (District district : listD) {
+                    for (Ward ward : listW) {
+                        if (user.getDistrictID().equals(district.getDistrictID()) && user.getWardID().equals(ward.getWardID())) {
+                            out = response.getWriter();
+                            out.println("<form>\n"
+                                    + "    <div class=\"mb-3\">\n"
+                                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Họ tên người chờ xét duyệt</label>\n"
+                                    + "        <input type=\"text\" value=\"" + user.getFullName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                                    + "    </div>\n"
+                                    + "    <div class=\"mb-3\">\n"
+                                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Số điện thoại</label>\n"
+                                    + "        <input type=\"text\" value=\"" + user.getPhone() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                                    + "    </div>\n"
+                                    + "    <div class=\"mb-3\">\n"
+                                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Email</label>\n"
+                                    + "        <input type=\"email\" value=\"" + user.getEmail() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                                    + "    </div>\n"
+                                    + "    <div class=\"mb-3\">\n"
+                                    + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Địa chỉ</label>\n"
+                                    + "        <input type=\"email\" value=\"" + user.getUserAddress() + ", " + ward.getWardName() + ", " + district.getDistrictName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                                    + "    </div>\n"
+                                    + "</form>");
+                        }
                     }
                 }
+            } else {
+                out = response.getWriter();
+
+                out.println("<form>\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Họ tên người chờ xét duyệt</label>\n"
+                        + "        <input type=\"text\" value=\"" + user.getFullName() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                        + "    </div>\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Số điện thoại</label>\n"
+                        + "        <input type=\"text\" value=\"" + user.getPhone() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                        + "    </div>\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Email</label>\n"
+                        + "        <input type=\"email\" value=\"" + user.getEmail() + "\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                        + "    </div>\n"
+                        + "    <div class=\"mb-3\">\n"
+                        + "        <label for=\"exampleInputEmail1\" class=\"form-label\">Địa chỉ</label>\n"
+                        + "        <input type=\"email\" value=\"\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" disabled=\"\">\n"
+                        + "    </div>\n"
+                        + "</form>");
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
@@ -180,68 +219,6 @@ public class AdminController extends HttpServlet {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void searchForBecomingOwner(HttpServletRequest request, HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            String name = request.getParameter("name");
-            AdminDAO ad = new AdminDAO();
-            List<User> users = ad.searchUserForBecomingOwner(name);
-            int count = 1;
-            out = response.getWriter();
-            for (User user : users) {
-                out.println("<tr id=\"row_"+user.getUserID()+"\">\n"
-                        + "                    <td>"+ count++ +"</td>\n"
-                        + "                    <td id=\"row_${cp.childrenPitchID}_name\">"+user.getFullName()+"</td>\n"
-                        + "                    <td>\n"
-                        + "                        <button type=\"button\" class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\" onclick=\"GetBecomingOwnerInfo('"+user.getUserID()+"')\">\n"
-                        + "                            Xem thông tin\n"
-                        + "                        </button>\n"
-                        + "                    </td>\n"
-                        + "                    <td>\n"
-                        + "                        <a  class=\"btn btn-outline-success btn-sm\"href=\"#\" onclick=\"ConfirmBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Xác nhận</i></a>\n"
-                        + "                        <a  class=\"btn btn-outline-danger btn-sm\"href=\"#\" onclick=\"DenyBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Từ chối</i></a>\n"
-                        + "                    </td>\n"
-                        + "                </tr>");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void chooseRole(HttpServletRequest request, HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            String roleID = request.getParameter("role");
-        AdminDAO ad = new AdminDAO();
-        List<User> list = new ArrayList<>();
-        if(roleID.equals("")){
-            list = ad.getUserActive();
-        }else{
-            list = ad.getUserActiveByRole(roleID);
-        }
-        int count = 1;
-        out = response.getWriter();
-        for (User user : list) {
-                out.println("<tr id=\"row_"+user.getUserID()+"\">\n"
-                        + "                    <td>"+ count++ +"</td>\n"
-                        + "                    <td id=\"row_${cp.childrenPitchID}_name\">"+user.getFullName()+"</td>\n"
-                        + "                    <td>\n"
-                        + "                        <button type=\"button\" class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\" onclick=\"GetBecomingOwnerInfo('"+user.getUserID()+"')\">\n"
-                        + "                            Xem thông tin\n"
-                        + "                        </button>\n"
-                        + "                    </td>\n"
-                        + "                    <td>\n"
-                        + "                        <a  class=\"btn btn-outline-danger btn-sm\"href=\"#\" onclick=\"DenyBecomingOwner('"+user.getUserID()+"')\"><i class=\"bi bi-x-circle-fill\">Từ chối</i></a>\n"
-                        + "                    </td>\n"
-                        + "                </tr>");
-            }
-        } catch (Exception e) {
-            
         }
     }
 
