@@ -34,7 +34,6 @@
                             </thead>
                             <tbody id="myContent">
                                 <c:forEach var="u" items="${listU}" varStatus="count">
-                                     ${u.wardID}
                                     <tr id="row_${u.userID}">
                                         <td>${count.index + 1}</td>
                                         <td id="row_${cp.childrenPitchID}_name">${u.fullName}</td>
@@ -45,7 +44,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Xóa</i></a>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${u.userID}')"><i class="bi bi-x-circle-fill">Xóa tài khoản</i></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -67,18 +66,48 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thông tin người đặt sân</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin tài khoản</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="result">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xóa tài khoản người dùng</h3>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+            </div>
+            <div class="modal-body">
+                <h4>Bạn có chắc muốn xóa người dùng không?</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Lý do xóa tài khoản:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                        <div class="invalid-feedback" id="invalid-feedback">
+                            Vui lòng điền lý do.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
+                <a href="#location" class="btn btn-success" onclick="DeleteEmployee()">Xác nhận</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--        @*hidden field for storing current employeeId*@-->
+<input type="hidden" id="hiddenEmployeeId" />
 
 <script>
     function GetBecomingOwnerInfo(UserID) {
@@ -93,5 +122,39 @@
                                         = responseData;
             }
                 });
+    }
+    
+    function closeForm() {
+        $("#myModal").modal('hide');
+    }
+
+    var ConfirmDelete = function (EmployeeId) {
+        /*var test = $("#mytable tr").find("#test").html();*/
+        $("#hiddenEmployeeId").val(EmployeeId);
+        $("#myModal").modal('show');
+    }
+
+    var DeleteEmployee = function () {
+        var empId = $("#hiddenEmployeeId").val();
+        var reason = $("#message-text").val();
+        if (reason === '') {
+//                        reason = 'Không có lý do';
+            document.getElementById("message-text").classList.add("border");
+            document.getElementById("message-text").classList.add("border-danger");
+            $("#invalid-feedback").show();
+        } else {
+            $.ajax({
+            url: "${pageContext.request.contextPath}/admin/deleteUser.do",
+            type: 'get',
+            data: {Id: empId,
+                   Reason: reason
+            },
+            success: function () {
+                $("#myModal").modal("hide");
+                $("#row_" + empId).remove();
+            }
+
+        });
+        }
     }
 </script>

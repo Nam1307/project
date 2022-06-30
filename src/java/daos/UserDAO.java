@@ -25,7 +25,7 @@ public class UserDAO {
 
     private static final String GET_USER = "SELECT * FROM tblUser where UserID=?";
     private static final String GET_ALL_USER = "SELECT * FROM tblUser";
-    private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=? AND UserStatus = 1";
+    private static final String CHECK_USER_EMAIL = "SELECT * FROM tblUser where Email=?";
     private static final String INSERT_USER = "INSERT INTO tblUser VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String CHECK_LOGIN = "SELECT * FROM tblUser where UserName=? AND Pass = ? AND UserStatus = 1";
     private static final String CHECK_DUPLICATE_USERNAME = "SELECT * FROM tblUser where UserName=? AND UserStatus = 1";
@@ -34,6 +34,7 @@ public class UserDAO {
     private static final String GET_A_COMMENT = "SELECT * FROM tblComment where CommentID=?";
     private static final String GET_ALL_COMMENT = "SELECT * FROM tblComment";
     private static final String INSERT_COMMENT = "INSERT INTO tblComment VALUES (?,?,?,?,?,?)";
+    private static final String CHECK_USER_EMAIL_LOGIN_GOOGLE = "SELECT * FROM tblUser where Email=? AND UserStatus = 1";
     
 
     public User getUser(String UserID) throws SQLException {
@@ -452,6 +453,50 @@ public class UserDAO {
             }
         }
         return comment;
+    }
+    
+    public User checkUserEmailLoginGoogle(String userEmail) throws SQLException {
+        User user = null;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(CHECK_USER_EMAIL_LOGIN_GOOGLE);
+                stm.setString(1, userEmail);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    String userID = rs.getString("UserID");
+                    String roleID = rs.getString("RoleID");
+                    String wardID = rs.getString("WardID");
+                    String districtID = rs.getString("DistrictID");
+                    String userName = rs.getString("UserName");
+                    String pass = rs.getString("Pass");
+                    String fullName = rs.getString("FullName");
+                    String phone = rs.getString("Phone");
+                    String userAddress = rs.getString("UserAddress");
+                    String email = rs.getString("Email");
+                    String imgLink = rs.getString("ImgLink");
+                    boolean ownerStatus = rs.getBoolean("OwnerStatus");
+                    boolean userStatus = rs.getBoolean("UserStatus");
+                    user = new User(userID, roleID, wardID, districtID, userName, pass, fullName, phone, userAddress, email, imgLink,ownerStatus, userStatus);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return user;
     }
 
 

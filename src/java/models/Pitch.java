@@ -19,11 +19,12 @@ public class Pitch {
     private int estimation;
     private String pitchLocation;
     private String pitchDescription;
+    private boolean pitchStatus;
 
     public Pitch() {
     }
 
-    public Pitch(String pitchID, String wardID, String districtID, String userID, String pitchName, String pitchAddress, int estimation, String pitchLocation, String pitchDescription) {
+    public Pitch(String pitchID, String wardID, String districtID, String userID, String pitchName, String pitchAddress, int estimation, String pitchLocation, String pitchDescription, boolean pitchStatus) {
         this.pitchID = pitchID;
         this.wardID = wardID;
         this.districtID = districtID;
@@ -33,6 +34,7 @@ public class Pitch {
         this.estimation = estimation;
         this.pitchLocation = pitchLocation;
         this.pitchDescription = pitchDescription;
+        this.pitchStatus = pitchStatus;
     }
 
     public String getPitchID() {
@@ -107,5 +109,12 @@ public class Pitch {
         this.pitchDescription = pitchDescription;
     }
 
+    public boolean isPitchStatus() {
+        return pitchStatus;
+    }
+
+    public void setPitchStatus(boolean pitchStatus) {
+        this.pitchStatus = pitchStatus;
+    }
     
 }

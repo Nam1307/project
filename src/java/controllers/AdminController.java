@@ -21,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Comment;
 import models.District;
 import models.SendEmail;
 import models.User;
@@ -73,6 +74,19 @@ public class AdminController extends HttpServlet {
             case "denyOwner":
                 //Xu ly
                 denyOwner(request, response);
+                break;
+            case "deleteUser":
+                //Xu ly
+                deleteUser(request, response);
+                break;
+            case "commentManagement":
+                //Xu ly
+                commentManagement(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "deleteComment":
+                //Xu ly
+                deleteComment(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -217,6 +231,64 @@ public class AdminController extends HttpServlet {
             sm.sendEmailDenyOwner(user, reason);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void deleteUser(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            String userId = request.getParameter("Id");
+            String reason = request.getParameter("Reason");
+            AdminDAO ad = new AdminDAO();
+            UserDAO ud = new UserDAO();
+            SendEmail se = new SendEmail();
+
+            User user = ud.getUser(userId);
+
+            if (ad.deleteUser(userId)) {
+                se.sendEmailDeleteUser(user, reason);
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void commentManagement(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            UserDAO ud = new UserDAO();
+            List<Comment> listC = ud.getAllComment();
+            List<User> listU = ud.getAllUser();
+            request.setAttribute("listC", listC);
+            request.setAttribute("listU", listU);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void deleteComment(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String pitchID = request.getParameter("pitchID");
+            String commentID = request.getParameter("commentID");
+            UserDAO ud = new UserDAO();
+            AdminDAO ad = new AdminDAO();
+            PitchDAO pd = new PitchDAO();
+
+            if (ad.deleteComment(commentID)) {
+                int sum = 0;
+                int pitchRating = 0;
+                List<Comment> sumRating = ud.getComment(pitchID);
+                for (int i = 0; i < sumRating.size(); i++) {
+                    sum = sum + sumRating.get(i).getRating();
+                }
+                pitchRating = (sum  / (sumRating.size()));
+                pd.updatetEstimation(pitchRating, pitchID);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }

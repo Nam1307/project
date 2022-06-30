@@ -26,7 +26,7 @@ import utils.DBUtils;
  */
 public class OwnerDAO {
 
-    private static final String GET_PITCH_OF_OWNER = "SELECT * FROM Pitch WHERE UserID = ?";
+    private static final String GET_PITCH_OF_OWNER = "SELECT * FROM Pitch WHERE UserID = ? AND PichStatus = 1";
     private static final String GET_CHILDRENPITCH_OF_OWNER = "SELECT * FROM ChildrenPitch WHERE PitchID = ? AND StatusChildrenPitch = 1";
     private static final String FIND_TIME = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND StatusBooking = 1 ORDER BY TimeStart;";
     private static final String GET_BOOKING_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE ChildrenPitchID = ? AND BookingDate = ? AND TiemEnd < ? AND StatusBooking = 1 ORDER BY TimeStart";
@@ -42,9 +42,10 @@ public class OwnerDAO {
     private static final String GET_DATA_FOR_CHART = "select count(*) as total from Booking, tblUser, Pitch, ChildrenPitch where Booking.ChildrenPitchID = ChildrenPitch.ChildrenPitchID \n" +
 "  and ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and  BookingDate between ? and ? and tblUser.UserID = ? and Booking.StatusBooking = 1";
     private static final String GET_ALL_CHILDRENPITCH_FOR_OWNER = "  select count(*) as total from  tblUser, Pitch, ChildrenPitch "
-            + "where ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and ChildrenPitch.StatusChildrenPitch = 1 and tblUser.UserID = ?";
+            + "where ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and ChildrenPitch.StatusChildrenPitch = 1 and tblUser.UserID = ? and PichStatus = 1";
     private static final String GET_ALL_BOOKING_FOR_OWNER = "select count(*) as total from Booking, tblUser, Pitch, ChildrenPitch where Booking.ChildrenPitchID = ChildrenPitch.ChildrenPitchID \n" +
 "  and ChildrenPitch.PitchID = Pitch.PitchID and tblUser.UserID = Pitch.UserID and tblUser.UserID = ? and Booking.StatusBooking = 1";
+    private static final String UPDATE_PITCH = "UPDATE Pitch SET WardID = ?, DistrictID = ?, PitchName = ?, PitchAddress = ?, PitchDescription = ?  WHERE PitchID = ?";
     
     public List<Pitch> getPitch(String UserID) throws SQLException {
         List<Pitch> list = new ArrayList<>();
@@ -67,7 +68,8 @@ public class OwnerDAO {
                     int estimation = rs.getInt("Estimation");
                     String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription));
+                    boolean status = rs.getBoolean("PichStatus");
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -596,6 +598,33 @@ public class OwnerDAO {
         return count;
     }
     
+    public boolean updatePitch(String wardID, String districtID, String pitchName, String pitchAddress, String pitchDescription, String pitchID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(UPDATE_PITCH);
+                stm.setString(1, wardID);
+                stm.setString(2, districtID);
+                stm.setString(3, pitchName);
+                stm.setString(4, pitchAddress);
+                stm.setString(5, pitchDescription);
+                stm.setString(6, pitchID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
 
     public static void main(String[] args) throws SQLException, ParseException {
         OwnerDAO dao = new OwnerDAO();

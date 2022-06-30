@@ -10,33 +10,49 @@ import daos.ChildrenPitchDAO;
 import daos.OwnerDAO;
 import daos.PitchDAO;
 import daos.UserDAO;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import models.Booking;
 import models.ChildrenPitch;
+import models.District;
 import models.Pitch;
 import models.SendEmail;
 import models.Time;
 import models.User;
+import models.Ward;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
  * @author SE150853 Nguyen Huynh Minh Khoi
  */
+@MultipartConfig
 @WebServlet(name = "OwnerController", urlPatterns = {"/owner"})
 public class OwnerController extends HttpServlet {
 
@@ -111,6 +127,25 @@ public class OwnerController extends HttpServlet {
                 create(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
+            case "pitchManagement":
+                pitchManagement(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "editPitch":
+                //Xu ly
+                editPitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "updatePitch":
+                //Xu ly
+                updatePitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "goToLoadPicture":
+                //Xu ly
+                goToLoadPicture(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
             default:
                 request.setAttribute("action", "error");
         }
@@ -121,7 +156,7 @@ public class OwnerController extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             OwnerDAO od = new OwnerDAO();
-            
+
             int june = od.getDataForChart("2022/06/01", "2022/06/30", user.getUserID());
             int july = od.getDataForChart("2022/07/01", "2022/07/31", user.getUserID());
             int august = od.getDataForChart("2022/08/01", "2022/08/31", user.getUserID());
@@ -131,7 +166,7 @@ public class OwnerController extends HttpServlet {
             int december = od.getDataForChart("2022/12/01", "2022/12/31", user.getUserID());
             int allChildrenPitch = od.getAllChildrenPitchForOwner(user.getUserID());
             int allBooking = od.getAllBookingForOwner(user.getUserID());
-            
+
             request.setAttribute("june", june);
             request.setAttribute("july", july);
             request.setAttribute("august", august);
@@ -145,7 +180,7 @@ public class OwnerController extends HttpServlet {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void viewBooking(HttpServletRequest request, HttpServletResponse response) {
         try {
             String userID = request.getParameter("userID");
@@ -456,10 +491,10 @@ public class OwnerController extends HttpServlet {
             String cpType = request.getParameter("cpType");
             List<ChildrenPitch> listChildrenPitch = cpd.getChildrenPitch();
             String cpID = raiseChildrenPitchId(listChildrenPitch);
-            
+
             ChildrenPitch childrenPitch = new ChildrenPitch(cpID, pitchID, cpName, cpType, Double.parseDouble(cpPrice), true);
-            
-            if(od.insertChildrenPitch(childrenPitch)){
+
+            if (od.insertChildrenPitch(childrenPitch)) {
                 request.setAttribute("success", "Thêm sân con thành công");
             }
             request.setAttribute("action", "createChildrenPitch");
@@ -469,7 +504,7 @@ public class OwnerController extends HttpServlet {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private String raiseChildrenPitchId(List<ChildrenPitch> arrayList) throws Exception {
         try {
             ChildrenPitchDAO dao = new ChildrenPitchDAO();
@@ -491,6 +526,127 @@ public class OwnerController extends HttpServlet {
             return result;
         } catch (Exception ex) {
             throw ex;
+        }
+    }
+
+    private void pitchManagement(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String userID = request.getParameter("userID");
+            OwnerDAO od = new OwnerDAO();
+            List<Pitch> listP = od.getPitch(userID);
+
+            request.setAttribute("listP", listP);
+            request.setAttribute("userID", userID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void editPitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String pitchID = request.getParameter("PitchID");
+            PitchDAO pd = new PitchDAO();
+
+            Pitch pitch = pd.getAPitch(pitchID);
+            List<District> listD = pd.getDistrict();
+            List<Ward> listW = pd.getWard(pitch.getDistrictID());
+
+            request.setAttribute("listD", listD);
+            request.setAttribute("listW", listW);
+            request.setAttribute("p", pitch);
+            System.out.println(pitchID);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void goToLoadPicture(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        HttpSession session = request.getSession();
+        String pitchName = request.getParameter("pitchName");
+        String pitchID = request.getParameter("pitchID");
+        String districtID = request.getParameter("districtID");
+        String wardID = request.getParameter("ward");
+        String pitchAddress = request.getParameter("address");
+        String pitchDescription = request.getParameter("description");
+        Pitch pitch = new Pitch(pitchID, wardID, districtID, "", pitchName, pitchAddress, 0, pitchAddress, pitchDescription, true);
+        System.out.println(pitchName + "-" + pitchDescription);
+        session.setAttribute("pitchUpdate", pitch);
+        request.setAttribute("pitchID", pitchID);
+        request.setAttribute("action", "uploadPitchPicture");
+    }
+
+//    private void updatePitch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        try {
+//            String pitchName = request.getParameter("pitchName");
+//            Part part = request.getPart("link");
+//            System.out.println(pitchName);
+//            System.out.println(part);
+//            request.setAttribute("action", "editPitch");
+//        } catch (ServletException ex) {
+//            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+    private void updatePitch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            HttpSession session = request.getSession();
+            Pitch pitch = (Pitch) session.getAttribute("pitchUpdate");
+            String pitchID = pitch.getPitchID();
+            OwnerDAO od = new OwnerDAO();
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            ServletContext servletContext = this.getServletConfig().getServletContext();
+            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+            factory.setRepository(repository);
+
+            ServletFileUpload upload = new ServletFileUpload(factory);
+
+            List<FileItem> items = upload.parseRequest(request);
+
+            Iterator<FileItem> iter = items.iterator();
+
+            HashMap<String, String> fields = new HashMap<>();
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+
+                if (item.isFormField()) {
+                    fields.put(item.getFieldName(), item.getString());
+                    String name = item.getFieldName();
+                    String value = item.getString();
+                    System.out.println(name);
+                    System.out.println(value);
+                } else {
+                    String filename = item.getName();
+                    System.out.println("filename: " + filename);
+                    if (filename == null || filename.equals("")) {
+                        od.updatePitch(pitch.getWardID(), pitch.getDistrictID(), pitch.getPitchName(), pitch.getPitchAddress(), pitch.getPitchDescription(), pitch.getPitchID());
+                    } else {
+                        Path path = Paths.get(filename);
+                        String realPath = request.getServletContext().getInitParameter("file-upload");
+                        Path source = Paths.get(realPath + "/" + pitchID+ ".jpg");
+                        Files.move(source, source.resolveSibling(pitchID + "_d.jpg"));
+                        String fileName = Paths.get(path.getFileName().toString().replaceAll(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")), fields.get("pitchID"))).getFileName().toString();
+                        if (!Files.exists(Paths.get(realPath))) {
+                            Files.createDirectory(Paths.get(realPath));
+                        }
+                        File uploadFile = new File(realPath + "/" + fileName);
+                        System.out.println(fileName);
+                        item.write(uploadFile);
+                        Files.delete(Paths.get(realPath + "/" + pitchID+ "_d.jpg"));
+                        od.updatePitch(pitch.getWardID(), pitch.getDistrictID(), pitch.getPitchName(), pitch.getPitchAddress(), pitch.getPitchDescription(), pitch.getPitchID());
+                    }
+                }
+            }
+            request.setAttribute("success", "Cập nhật thành công");
+            request.setAttribute("pitchID", pitchID);
+            session.removeAttribute("pitchUpdate");
+            request.setAttribute("action", "uploadPitchPicture");
+        } catch (FileUploadException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

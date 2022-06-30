@@ -181,7 +181,7 @@ public class UserController extends HttpServlet {
             UserGoogleDto userGoogle = getUserInfo(accessToken);
             System.out.println(userGoogle);
             System.out.println(userID);
-            User user = dao.checkUserEmail(userGoogle.getEmail());
+            User user = dao.checkUserEmailLoginGoogle(userGoogle.getEmail());
             Date date = new Date();
 
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
@@ -409,7 +409,13 @@ public class UserController extends HttpServlet {
                         if (pitchID != null) {
                             response.sendRedirect("/WebsiteOrderStadium/stadium/detail.do?pitchID=" + pitchID);
                         } else {
-                            response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                            if (user.getRoleID().equals("OW")) {
+                                response.sendRedirect("/WebsiteOrderStadium/owner/index.do");
+                            } else if (user.getRoleID().equals("AD")) {
+                                response.sendRedirect("/WebsiteOrderStadium/admin/index.do");
+                            } else {
+                                response.sendRedirect("/WebsiteOrderStadium/home/index.do");
+                            }
                         }
                     }
                 }

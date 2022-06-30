@@ -406,8 +406,8 @@ public class HomeController extends HttpServlet {
                         request.setAttribute("listNo", listN);
                         request.setAttribute("countN", listN.size());
                     } else if (user.getRoleID().equals("OW")) {
-                        n1 = pagination(request, response, pd.getNumberOfPitchAterSearchingOwner(districtID, wardID, user.getUserID()));
-                        listP = pd.getPitchAfterSearchOwner(user.getUserID(), districtID, wardID, n1, pageSize);
+//                        n1 = pagination(request, response, pd.getNumberOfPitchAterSearchingOwner(districtID, wardID, user.getUserID()));
+//                        listP = pd.getPitchAfterSearchOwner(user.getUserID(), districtID, wardID, n1, pageSize);
                     }
                 } else {
                     n1 = pagination(request, response, pd.getNumberOfPitchAterSearching(districtID, wardID));
