@@ -124,10 +124,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -231,10 +230,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -303,10 +301,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -344,10 +341,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    pitch = new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status);
+                    pitch = new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status);
                 }
             }
         } catch (Exception e) {
@@ -384,10 +380,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -451,10 +446,9 @@ public class PitchDAO {
                     String pitchName = rs.getString("PitchName");
                     String pitchAddress = rs.getString("PitchAddress");
                     int estimation = rs.getInt("Estimation");
-                    String pitchLocation = rs.getString("PitchLocation");
                     String pitchDescription = rs.getString("PitchDescription");
                     boolean status = rs.getBoolean("PichStatus");
-                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchLocation, pitchDescription, status));
+                    list.add(new Pitch(pitchID, wardID, districtID, userID, pitchName, pitchAddress, estimation, pitchDescription, status));
                 }
             }
         } catch (Exception e) {
@@ -601,6 +595,5 @@ public class PitchDAO {
 //        }
 //        System.out.println(dao.getNumberOfPitch());
         Pitch pitch = dao.getAPitch("P01");
-        System.out.println(pitch.getPitchLocation());
     }
 }

@@ -160,6 +160,7 @@
             </div>
         </nav>
         <c:if test="${user == null || user.roleID == 'US'}">
+            <script src="${pageContext.request.contextPath}/js/script.js"></script>
             <header>
                 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -221,7 +222,7 @@
                             <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
                             <li>
                                 <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                                    Quản lý sân
+                                    Quản lý
                                 </div>
                             </li>
                             <li>
@@ -231,7 +232,7 @@
                                     href="#layouts"
                                     >
                                     <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                                    <span>Quản lý sân con</span>
+                                    <span>Quản lý sân</span>
                                     <span class="ms-auto">
                                         <span class="right-icon">
                                             <i class="bi bi-chevron-down"></i>
@@ -241,11 +242,11 @@
                                 <div class="collapse" id="layouts">
                                     <ul class="navbar-nav ps-3">
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}" class="nav-link px-3">
+                                            <a href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}" class="nav-link px-3">
                                                 <span class="me-2"
                                                       ><i class="bi bi-speedometer2"></i
                                                     ></span>
-                                                <span>Thêm mới</span>
+                                                <span>Quản lý sân con</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -253,16 +254,16 @@
                                 <div class="collapse" id="layouts">
                                     <ul class="navbar-nav ps-3">
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}" class="nav-link px-3">
+                                            <a href="${pageContext.request.contextPath}/owner/pitchManagement.do?userID=${user.userID}" class="nav-link px-3">
                                                 <span class="me-2"
                                                       ><i class="bi bi-speedometer2"></i
                                                     ></span>
-                                                <span>Điều chỉnh sân</span>
+                                                <span>Quản lý sân chính</span>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
-                                <a
+<!--                                <a
                                     class="nav-link px-3 sidebar-link"
                                     data-bs-toggle="collapse"
                                     href="#layouts"
@@ -278,7 +279,7 @@
                                 <div class="collapse" id="layouts">
                                     <ul class="navbar-nav ps-3">
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}" class="nav-link px-3">
+                                            <a href="${pageContext.request.contextPath}/owner/createPitch.do" class="nav-link px-3">
                                                 <span class="me-2"
                                                       ><i class="bi bi-speedometer2"></i
                                                     ></span>
@@ -295,10 +296,10 @@
                                                       ><i class="bi bi-speedometer2"></i
                                                     ></span>
                                                 <span>Điều chỉnh sân</span>
-                                            </a>
-                                        </li>
+                                            </a>-->
+<!--                                        </li>
                                     </ul>
-                                </div>
+                                </div>-->
                             </li>
                             <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
                             <li>
@@ -310,12 +311,6 @@
                                 <a href="${pageContext.request.contextPath}/home/index.do" class="nav-link px-3">
                                     <span class="me-2"><i class="bi bi-graph-up"></i></span>
                                     <span>Xem bình luận</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-3">
-                                    <span class="me-2"><i class="bi bi-table"></i></span>
-                                    <span>Tables</span>
                                 </a>
                             </li>
                         </ul>

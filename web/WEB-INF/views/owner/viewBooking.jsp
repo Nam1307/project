@@ -9,24 +9,25 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="px-4 px-lg-5 mb-3 mx-auto mt-3">
     <form action="${pageContext.request.contextPath}/owner/search.do" method="post" class="mt-3 row border-top border-bottom bg-light" style="padding-top: 50px; padding-bottom: 35px">
-        <div class="form-floating col-3" style="padding: 0px">
-            <select id="selectBox" name="pitchID" onchange="setChildrenPitch()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                <option selected="selected" disabled value="">Sân chính</option>
-                <c:forEach var="d" items="${listP}" >
-                    <option ${pitchID == d.pitchID?"selected":""} value="${d.pitchID}">${d.pitchName}</option>
-                </c:forEach>
-            </select>
-            <label for="floatingSelect">Sân chính:</label>
-        </div>
-        <div class="form-floating mb-3 col-3">
-            <select id="ward" name="childrenPitchID" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
-                <option selected disabled value="">Sân con</option>
-                <c:forEach var="w" items="${listCP}" >
-                    <option ${cpID == w.childrenPitchID?"selected":""} value="${w.childrenPitchID}">${w.childrenPitchName}</option>
-                </c:forEach>
-            </select>
-            <label for="floatingSelect">Sân con:</label>
-        </div>
+        <!--        <div class="form-floating col-3" style="padding: 0px">
+                    <select id="selectBox" name="pitchID" onchange="setChildrenPitch()" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+                        <option selected="selected" disabled value="">Sân chính</option>
+        <c:forEach var="d" items="${listP}" >
+            <option ${pitchID == d.pitchID?"selected":""} value="${d.pitchID}">${d.pitchName}</option>
+        </c:forEach>
+    </select>
+    <label for="floatingSelect">Sân chính:</label>
+</div>
+<div class="form-floating mb-3 col-3">
+    <select id="ward" name="childrenPitchID" class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select example" style="height: 70px">
+        <option selected disabled value="">Sân con</option>
+        <c:forEach var="w" items="${listCP}" >
+            <option ${cpID == w.childrenPitchID?"selected":""} value="${w.childrenPitchID}">${w.childrenPitchName}</option>
+        </c:forEach>
+    </select>
+    <label for="floatingSelect">Sân con:</label>
+</div>-->
+        <div class="col-3"></div>
         <div class="form-floating mb-3 col-3">
             <input class="form-control form-control-lg text-center me-3" style="height: 70px" id="inputDate" name="dateBooking" type="date" value="${dateBooking}" />
             <label for="floatingSelect">Ngày:</label>
@@ -52,21 +53,86 @@ ${listB}
                             >
                             <thead>
                                 <tr>
+                                    <!--                                    <th>Thời gian</th>
+                                                                        <th>Trạng thái</th>
+                                                                        <th>Xem chi tiết</th>
+                                                                        <th>Hủy đặt sân</th>-->
                                     <th>Thời gian</th>
-                                    <th>Trạng thái</th>
-                                    <th>Xem chi tiết</th>
+                                    <th>Thông tin người đặt</th>
+                                    <th>Sân chính</th>
+                                    <th>Sân con</th>
                                     <th>Hủy đặt sân</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <c:set var = "count" value = "0"/>
-                                <c:set var = "count1" value = "0"/>
-                                <c:set var = "count2" value = "0"/>
-                                <c:set var = "count3" value = "0"/>
-                                <c:forEach var="t" items="${listT}">
-                                    <tr>
-                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
-                                        <c:if test="${listB == []}">
+                            <!--                            <tbody>
+                            <c:set var = "count" value = "0"/>
+                            <c:set var = "count1" value = "0"/>
+                            <c:set var = "count2" value = "0"/>
+                            <c:set var = "count3" value = "0"/>
+                            <c:forEach var="t" items="${listT}">
+                                <tr>
+                                    <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                <c:if test="${listB == []}">
+                                    <td>Chưa được đặt</td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </c:if>
+                                <c:if test="${listB != []}">
+                                    <c:choose>
+                                        <c:when test="${listPlayedEqualAfter[count].timeID == t.timeID}">
+                                            <c:set var="count" value="${count + 1}"/>
+                                            <td id="row_${listPlayedEqualAfter[count-1].bookingID}_title">Đã được đặt</td>
+                                            <td>
+                                                <button id="row_${listPlayedEqualAfter[count-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualAfter[count-1].bookingID}')">
+                                                    Thông tin người đặt
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a id="row_${listPlayedEqualAfter[count-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedEqualAfter[count-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                            </td>
+                                            ${listPlayedAfter[count].bookingID}
+                                        </c:when>
+                                        <c:when test="${listPlayedEqualBefore[count1].timeID == t.timeID}">
+                                            <c:set var="count1" value="${count1 + 1}"/>
+                                            <td>Đã được đặt</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualBefore[count1-1].bookingID}')">
+                                                    Thông tin người đặt
+                                                </button>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </c:when>
+                                        <c:when test="${listPlayedBefore[count2].timeID == t.timeID}">
+                                            <c:set var="count2" value="${count2 + 1}"/>
+                                            <td>Đã được đặt</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedBefore[count2-1].bookingID}')">
+                                                    Thông tin người đặt
+                                                </button>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </c:when>
+                                        <c:when test="${listPlayedAfter[count3].timeID == t.timeID}">
+                                            <c:set var="count3" value="${count3 + 1}"/>
+                                            <td id="row_${listPlayedAfter[count3-1].bookingID}_title">Đã được đặt</td>
+                                            <td>
+                                                <button id="row_${listPlayedAfter[count3-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedAfter[count3-1].bookingID}')">
+                                                    Thông tin người đặt
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a id="row_${listPlayedAfter[count3-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedAfter[count3-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                            </td>
+                                        </c:when>
+                                        <c:otherwise>
                                             <td>Chưa được đặt</td>
                                             <td>
 
@@ -74,70 +140,104 @@ ${listB}
                                             <td>
 
                                             </td>
-                                        </c:if>
-                                        <c:if test="${listB != []}">
-                                            <c:choose>
-                                                <c:when test="${listPlayedEqualAfter[count].timeID == t.timeID}">
-                                                    <c:set var="count" value="${count + 1}"/>
-                                                    <td id="row_${listPlayedEqualAfter[count-1].bookingID}_title">Đã được đặt</td>
-                                                    <td>
-                                                        <button id="row_${listPlayedEqualAfter[count-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualAfter[count-1].bookingID}')">
-                                                            Thông tin người đặt
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <a id="row_${listPlayedEqualAfter[count-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedEqualAfter[count-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
-                                                    </td>
-                                                    ${listPlayedAfter[count].bookingID}
-                                                </c:when>
-                                                <c:when test="${listPlayedEqualBefore[count1].timeID == t.timeID}">
-                                                    <c:set var="count1" value="${count1 + 1}"/>
-                                                    <td>Đã được đặt</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedEqualBefore[count1-1].bookingID}')">
-                                                            Thông tin người đặt
-                                                        </button>
-                                                    </td>
-                                                    <td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+                            </c:forEach>
+                    </tbody>-->
+                            <tbody>
+                                <c:forEach var="t" items="${listT}">
+                                    <c:forEach var="b" items="${listPlayedBefore}">
+                                        <c:forEach var="p" items="${listP}">
+                                            <c:forEach var="cp" items="${listCP}">
+                                                <c:if test="${(t.timeID == b.timeID) && (p.pitchID == cp.pitchID) && (b.childrenPitchID == cp.childrenPitchID)}">
+                                                    <tr id="row_${b.bookingID}">
+                                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${b.bookingID}')">
+                                                                Thông tin người đặt
+                                                            </button>
+                                                        </td>
+                                                        <td>${p.pitchName}</td>
+                                                        <td>${cp.childrenPitchName}</td>
+                                                        <td>
 
-                                                    </td>
-                                                </c:when>
-                                                <c:when test="${listPlayedBefore[count2].timeID == t.timeID}">
-                                                    <c:set var="count2" value="${count2 + 1}"/>
-                                                    <td>Đã được đặt</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedBefore[count2-1].bookingID}')">
-                                                            Thông tin người đặt
-                                                        </button>
-                                                    </td>
-                                                    <td>
-
-                                                    </td>
-                                                </c:when>
-                                                <c:when test="${listPlayedAfter[count3].timeID == t.timeID}">
-                                                    <c:set var="count3" value="${count3 + 1}"/>
-                                                    <td id="row_${listPlayedAfter[count3-1].bookingID}_title">Đã được đặt</td>
-                                                    <td>
-                                                        <button id="row_${listPlayedAfter[count3-1].bookingID}_info" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${listPlayedAfter[count3-1].bookingID}')">
-                                                            Thông tin người đặt
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <a id="row_${listPlayedAfter[count3-1].bookingID}_delete" class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${listPlayedAfter[count3-1].bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
-                                                    </td>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <td>Chưa được đặt</td>
-                                                    <td>
-
-                                                    </td>
-                                                    <td>
-
-                                                    </td>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
                                     </c:forEach>
+                                </c:forEach>
+                                <c:forEach var="t" items="${listT}">
+                                    <c:forEach var="b" items="${listPlayedEqualBefore}">
+                                        <c:forEach var="p" items="${listP}">
+                                            <c:forEach var="cp" items="${listCP}">
+                                                <c:if test="${(t.timeID == b.timeID) && (p.pitchID == cp.pitchID) && (b.childrenPitchID == cp.childrenPitchID)}">
+                                                    <tr id="row_${b.bookingID}">
+                                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${b.bookingID}')">
+                                                                Thông tin người đặt
+                                                            </button>
+                                                        </td>
+                                                        <td>${p.pitchName}</td>
+                                                        <td>${cp.childrenPitchName}</td>
+                                                        <td>
+
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </c:forEach>
+                                <c:forEach var="t" items="${listT}">
+                                    <c:forEach var="b1" items="${listPlayedEqualAfter}">
+                                        <c:forEach var="p" items="${listP}">
+                                            <c:forEach var="cp" items="${listCP}">
+                                                <c:if test="${(t.timeID == b1.timeID) && (p.pitchID == cp.pitchID) && (b1.childrenPitchID == cp.childrenPitchID)}">
+                                                    <tr id="row_${b1.bookingID}">
+                                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${b1.bookingID}')">
+                                                                Thông tin người đặt
+                                                            </button>
+                                                        </td>
+                                                        <td>${p.pitchName}</td>
+                                                        <td>${cp.childrenPitchName}</td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b1.bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </c:forEach>
+                                <c:forEach var="t" items="${listT}">
+                                    <c:forEach var="b" items="${listPlayedAfter}">
+                                        <c:forEach var="p" items="${listP}">
+                                            <c:forEach var="cp" items="${listCP}">
+                                                <c:if test="${(t.timeID == b.timeID) && (p.pitchID == cp.pitchID) && (b.childrenPitchID == cp.childrenPitchID)}">
+                                                    <tr id="row_${b.bookingID}">
+                                                        <td><fmt:formatDate type="time" value="${t.timeStart}" pattern="HH:mm" />-<fmt:formatDate type="time" value="${t.timeEnd}" pattern="HH:mm" />h</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBookingInfo('${b.bookingID}')">
+                                                                Thông tin người đặt
+                                                            </button>
+                                                        </td>
+                                                        <td>${p.pitchName}</td>
+                                                        <td>${cp.childrenPitchName}</td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b.bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>
@@ -200,78 +300,78 @@ ${listB}
 <script src="${pageContext.request.contextPath}/js/script.css"></script>
 
 <script>
-    function setChildrenPitch() {
-        var selectBox = document.getElementById("selectBox");
-        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-        $.ajax({
-            url: "${pageContext.request.contextPath}/owner/childrenPitch.do",
-            type: 'post',
-            data: {
-                pitchID: selectedValue
-            },
-            success: function (responseData) {
-                document.getElementById("ward").innerHTML
-                        = responseData;
-            }
-        });
-    }
+                    function setChildrenPitch() {
+                        var selectBox = document.getElementById("selectBox");
+                        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                        $.ajax({
+                            url: "${pageContext.request.contextPath}/owner/childrenPitch.do",
+                            type: 'post',
+                            data: {
+                                pitchID: selectedValue
+                            },
+                            success: function (responseData) {
+                                document.getElementById("ward").innerHTML
+                                        = responseData;
+                            }
+                        });
+                    }
 
-    if (document.getElementById('inputDate').value === '') {
-        document.getElementById('inputDate').valueAsDate = new Date();
-    }
+                    if (document.getElementById('inputDate').value === '') {
+                        document.getElementById('inputDate').valueAsDate = new Date();
+                    }
 
-    function GetBookingInfo(BookingID) {
-        $.ajax({
-            url: "${pageContext.request.contextPath}/owner/detailBooking.do",
-            type: 'get',
-            data: {
-                BookingID: BookingID
-            },
-            success: function (responseData) {
-                document.getElementById("result").innerHTML
-                        = responseData;
-            }
-        });
-    }
+                    function GetBookingInfo(BookingID) {
+                        $.ajax({
+                            url: "${pageContext.request.contextPath}/owner/detailBooking.do",
+                            type: 'get',
+                            data: {
+                                BookingID: BookingID
+                            },
+                            success: function (responseData) {
+                                document.getElementById("result").innerHTML
+                                        = responseData;
+                            }
+                        });
+                    }
 
-    function closeForm() {
-        $("#myModal").modal('hide');
-    }
+                    function closeForm() {
+                        $("#myModal").modal('hide');
+                    }
 
-    var ConfirmDelete = function (EmployeeId) {
-        $("#hiddenEmployeeId").val(EmployeeId);
-        $("#myModal").modal('show');
-    }
+                    var ConfirmDelete = function (EmployeeId) {
+                        $("#hiddenEmployeeId").val(EmployeeId);
+                        $("#myModal").modal('show');
+                    }
 
-    var DeleteEmployee = function () {
+                    var DeleteEmployee = function () {
 
 
 
-        var empId = $("#hiddenEmployeeId").val();
-        var reason = $("#message-text").val();
+                        var empId = $("#hiddenEmployeeId").val();
+                        var reason = $("#message-text").val();
 
-        if (reason === '') {
+                        if (reason === '') {
 //                        reason = 'Không có lý do';
-            document.getElementById("message-text").classList.add("border");
-            document.getElementById("message-text").classList.add("border-danger");
-            $("#invalid-feedback").show();
-        } else {
-            $.ajax({
-                url: "${pageContext.request.contextPath}/owner/delete.do",
-                type: 'get',
-                data: {Id: empId,
-                    Reason: reason
-                },
-                success: function () {
-                    $("#myModal").modal("hide");
-                    document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
-                    $("#row_" + empId + "_info").remove();
-                    $("#row_" + empId + "_delete").remove();
-                }
+                            document.getElementById("message-text").classList.add("border");
+                            document.getElementById("message-text").classList.add("border-danger");
+                            $("#invalid-feedback").show();
+                        } else {
+                            $.ajax({
+                                url: "${pageContext.request.contextPath}/owner/delete.do",
+                                type: 'get',
+                                data: {Id: empId,
+                                    Reason: reason
+                                },
+                                success: function () {
+                                    $("#myModal").modal("hide");
+//                                    document.getElementById("row_" + empId + "_title").innerHTML = "<td>Chưa được đặt</td>";
+//                                    $("#row_" + empId + "_info").remove();
+                                    $("#row_" + empId).remove();
+                                }
 
-            });
-        }
-    }
-    
+                            });
+                        }
+                    }
+
 </script>
 

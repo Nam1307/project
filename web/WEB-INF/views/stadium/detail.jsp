@@ -65,7 +65,6 @@
                         </form>
                     </div>
                 </c:if>
-                ${pitch.pitchLocation}
             </div>
         </div>
 </section>

@@ -29,6 +29,7 @@
                                     <th>Tên</th>
                                     <th>Vai trò</th>
                                     <th>Xem thông tin người dùng</th>
+                                    <th>Số lần hủy sân</th>
                                     <th>Xử lý</th>
                                 </tr>
                             </thead>
@@ -42,6 +43,11 @@
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetBecomingOwnerInfo('${u.userID}')">
                                                 Xem thông tin
                                             </button>
+                                        </td>
+                                        <td>
+                                            <c:forEach var="c" items="${countCancel}">
+                                                <c:if test="${c.userID == u.userID}">${c.countCancel}</c:if>
+                                            </c:forEach>
                                         </td>
                                         <td>
                                             <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${u.userID}')"><i class="bi bi-x-circle-fill">Xóa tài khoản</i></a>
@@ -119,11 +125,11 @@
             },
             success: function (responseData) {
                 document.getElementById("result").innerHTML
-                                        = responseData;
+                        = responseData;
             }
-                });
+        });
     }
-    
+
     function closeForm() {
         $("#myModal").modal('hide');
     }
@@ -144,17 +150,17 @@
             $("#invalid-feedback").show();
         } else {
             $.ajax({
-            url: "${pageContext.request.contextPath}/admin/deleteUser.do",
-            type: 'get',
-            data: {Id: empId,
-                   Reason: reason
-            },
-            success: function () {
-                $("#myModal").modal("hide");
-                $("#row_" + empId).remove();
-            }
+                url: "${pageContext.request.contextPath}/admin/deleteUser.do",
+                type: 'get',
+                data: {Id: empId,
+                    Reason: reason
+                },
+                success: function () {
+                    $("#myModal").modal("hide");
+                    $("#row_" + empId).remove();
+                }
 
-        });
+            });
         }
     }
 </script>

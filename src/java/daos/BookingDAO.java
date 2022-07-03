@@ -39,6 +39,8 @@ public class BookingDAO {
     private static final String GET_USER_PLAYED_EQUAL_BEFORE = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd < ?";
     private static final String GET_USER_PLAYED_EQUAL_AFTER = "SELECT * FROM Booking LEFT JOIN tblTime ON Booking.TimeID = tblTime.TimeID WHERE UserID = ? AND BookingDate = ? AND TiemEnd > ?";
     private static final String DELETE_BOOKING = "UPDATE Booking SET StatusBooking = 0, ReasonContent = ?  WHERE BookingID = ?";
+    private static final String DELETE_BOOKING_BY_CHILDRENPITCH = "UPDATE Booking SET StatusBooking = 0, ReasonContent = ?  WHERE ChildrenPitchID = ?";
+
 
     public List<Booking> findTime(String ChildrenPitchID, Date BookingDate) throws SQLException {
         List<Booking> list = new ArrayList<>();
@@ -511,6 +513,30 @@ public class BookingDAO {
                 stm = conn.prepareStatement(DELETE_BOOKING);
                 stm.setString(1, reasonContent);
                 stm.setString(2, bookingID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    }
+    
+    public boolean deleteBookingByChildrenPitch(String childrenPitchID, String reasonContent) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(DELETE_BOOKING_BY_CHILDRENPITCH);
+                stm.setString(1, reasonContent);
+                stm.setString(2, childrenPitchID);
                 check = stm.executeUpdate() > 0 ? true : false;
             }
         } catch (Exception e) {

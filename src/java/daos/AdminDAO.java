@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import models.Booking;
 import models.User;
 import utils.DBUtils;
 
@@ -26,7 +27,9 @@ public class AdminDAO {
     private static final String GET_NUMBER_USER_BY_ROLE = " SELECT COUNT(*) AS total FROM tblUser WHERE RoleID = ? AND UserStatus=1";
     private static final String DELETE_USER = "UPDATE tblUser SET UserStatus = 0 WHERE UserID = ?";
     private static final String DELETE_COMMENT = "DELETE tblComment WHERE CommentID = ?";
-
+    private static final String COUNT_CANCEL = "  SELECT UserID, COUNT(*) AS CountCancel FROM Booking WHERE StatusBooking = 0 AND ReasonContent != N'Sân con đã bị xóa bởi chủ sân' GROUP BY UserID";
+    private static final String DELETE_COMMENT_BY_PITCHID = "DELETE tblComment WHERE PitchID = ?";
+    
     public List<User> getUserForBecomingOwner() throws SQLException {
         List<User> list = new ArrayList<>();
         Connection conn = null;
@@ -208,6 +211,61 @@ public class AdminDAO {
         }
         return check;
     } 
+    
+    public boolean deleteCommentByPitchID(String pitchID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(DELETE_COMMENT_BY_PITCHID);
+                stm.setString(1, pitchID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    } 
+    
+    public List<Booking> countCancel() throws SQLException {
+        List<Booking> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(COUNT_CANCEL);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String userID = rs.getString("UserID");
+                    int countCancel = rs.getInt("CountCancel");
+                    list.add(new Booking(userID, countCancel));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return list;
+    }
 
     public static void main(String[] args) throws SQLException {
         AdminDAO dao = new AdminDAO();

@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.AdminDAO;
 import daos.BookingDAO;
 import daos.ChildrenPitchDAO;
 import daos.OwnerDAO;
@@ -102,11 +103,6 @@ public class OwnerController extends HttpServlet {
                 childrenPitchManagement(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
                 break;
-            case "viewChildrenPitch":
-                //Xu ly
-                viewChildrenPitch(request, response);
-                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
-                break;
             case "viewEdit":
                 //Xu ly
                 viewEdit(request, response);
@@ -145,6 +141,25 @@ public class OwnerController extends HttpServlet {
                 //Xu ly
                 goToLoadPicture(request, response);
                 request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "createPitch":
+                //Xu ly
+                createPitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "goToLoadPictureCreate":
+                //Xu ly
+                goToLoadPictureCreate(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "createNewPitch":
+                //Xu ly
+                createNewPitch(request, response);
+                request.getRequestDispatcher("/WEB-INF/layouts/main.jsp").forward(request, response);
+                break;
+            case "deletePitch":
+                //Xu ly
+                deletePitch(request, response);
                 break;
             default:
                 request.setAttribute("action", "error");
@@ -185,8 +200,28 @@ public class OwnerController extends HttpServlet {
         try {
             String userID = request.getParameter("userID");
             OwnerDAO od = new OwnerDAO();
-            List<Pitch> listP = od.getPitch(userID);
+            BookingDAO bd = new BookingDAO();
+            PitchDAO pd = new PitchDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            Date dateNow = new Date();
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
+//            List<Pitch> listP = od.getPitch(userID);
+//            request.setAttribute("listP", listP);
+            List<Pitch> listP = pd.getAllPitch();
+            List<ChildrenPitch> listCP = cpd.getChildrenPitch();
+            List<Time> listT = bd.getTime();
+            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(dateNow, smt.format(dateNow));
+            List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(dateNow, smt.format(dateNow));
+//            List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(dateNow);
+//            List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(dateNow);
+
             request.setAttribute("listP", listP);
+            request.setAttribute("listCP", listCP);
+            request.setAttribute("listT", listT);
+//            request.setAttribute("listPlayedBefore", listPlayedBefore);
+//            request.setAttribute("listPlayedAfter", listPlayedAfter);
+            request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
+            request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
             request.setAttribute("userID", userID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
@@ -217,46 +252,52 @@ public class OwnerController extends HttpServlet {
             Date dateNow = new Date();
             OwnerDAO od = new OwnerDAO();
             BookingDAO bd = new BookingDAO();
-            String userID = request.getParameter("userID");
-            String pitchID = request.getParameter("pitchID");
-            String childrenPitchID = request.getParameter("childrenPitchID");
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+            PitchDAO pd = new PitchDAO();
+//            String userID = request.getParameter("userID");
+//            String pitchID = request.getParameter("pitchID");
+//            String childrenPitchID = request.getParameter("childrenPitchID");
             String bookingDate = request.getParameter("dateBooking");
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(bookingDate);
 
-            List<Pitch> listP = od.getPitch(userID);
-            List<ChildrenPitch> listCP = od.getChildrenPitch(pitchID);
-            List<Booking> listB = od.findTime(childrenPitchID, date);
+//            List<Pitch> listP = od.getPitch(userID);
+//            List<ChildrenPitch> listCP = od.getChildrenPitch(pitchID);
+//            List<Booking> listB = od.findTime(childrenPitchID, date);
+            List<Pitch> listP = pd.getAllPitch();
+            List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Time> listT = bd.getTime();
             if (bookingDate.equals(fmt.format(dateNow))) {
-                List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(childrenPitchID, date, smt.format(dateNow));
-                List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(childrenPitchID, date, smt.format(dateNow));
+                List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(date, smt.format(dateNow));
+                List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(date, smt.format(dateNow));
                 request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
                 request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
-            }
-            if (date.after(dateNow)) {
-                List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(childrenPitchID, date);
-                System.out.println(listPlayedAfter);
-                for (Booking booking : listPlayedAfter) {
-                    System.out.println(booking.getBookingID());
+            } else {
+                if (date.after(dateNow)) {
+                    List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(date);
+                    System.out.println(listPlayedAfter);
+                    for (Booking booking : listPlayedAfter) {
+                        System.out.println(booking.getBookingID());
+                    }
+                    request.setAttribute("listPlayedAfter", listPlayedAfter);
+                } else if (date.before(dateNow)) {
+                    List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(date);
+                    request.setAttribute("listPlayedBefore", listPlayedBefore);
                 }
-                request.setAttribute("listPlayedAfter", listPlayedAfter);
-            } else if (date.before(dateNow)) {
-                List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(childrenPitchID, date);
-                request.setAttribute("listPlayedBefore", listPlayedBefore);
             }
-
-            request.setAttribute("listB", listB);
-            request.setAttribute("listT", listT);
             request.setAttribute("listP", listP);
             request.setAttribute("listCP", listCP);
-            request.setAttribute("pitchID", pitchID);
-            request.setAttribute("cpID", childrenPitchID);
+//            request.setAttribute("listB", listB);
+            request.setAttribute("listT", listT);
+//            request.setAttribute("listP", listP);
+//            request.setAttribute("listCP", listCP);
+//            request.setAttribute("pitchID", pitchID);
+//            request.setAttribute("cpID", childrenPitchID);
             request.setAttribute("dateBooking", bookingDate);
-            request.setAttribute("userID", userID);
+//            request.setAttribute("userID", userID);
             request.setAttribute("action", "viewBooking");
-            System.out.println(pitchID);
-            System.out.println(childrenPitchID);
-            System.out.println(bookingDate);
+//            System.out.println(pitchID);
+//            System.out.println(childrenPitchID);
+//            System.out.println(bookingDate);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
@@ -332,34 +373,38 @@ public class OwnerController extends HttpServlet {
         try {
             String userID = request.getParameter("userID");
             OwnerDAO od = new OwnerDAO();
-            List<Pitch> listP = od.getPitch(userID);
+            PitchDAO pd = new PitchDAO();
 
-            request.setAttribute("listP", listP);
-            request.setAttribute("userID", userID);
-        } catch (SQLException ex) {
-            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+            List<ChildrenPitch> listCP = od.getChildrenPitchForOwner(userID);
+            List<Pitch> listP = pd.getAllPitch();
+//            List<Pitch> listP = od.getPitch(userID);
 
-    private void viewChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            OwnerDAO od = new OwnerDAO();
-
-            String userID = request.getParameter("userID");
-            String pitchID = request.getParameter("pitchID");
-            List<ChildrenPitch> listCP = od.getChildrenPitch(pitchID);
-            List<Pitch> listP = od.getPitch(userID);
-
-            request.setAttribute("pitchID", pitchID);
-            request.setAttribute("userID", userID);
             request.setAttribute("listP", listP);
             request.setAttribute("listCP", listCP);
-            request.setAttribute("action", "childrenPitchManagement");
+            request.setAttribute("userID", userID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+//    private void viewChildrenPitch(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            OwnerDAO od = new OwnerDAO();
+//
+//            String userID = request.getParameter("userID");
+//            String pitchID = request.getParameter("pitchID");
+////            List<ChildrenPitch> listCP = od.getChildrenPitch(pitchID);
+////            List<Pitch> listP = od.getPitch(userID);
+//
+//            request.setAttribute("pitchID", pitchID);
+//            request.setAttribute("userID", userID);
+//            request.setAttribute("listP", listP);
+//            request.setAttribute("listCP", listCP);
+//            request.setAttribute("action", "childrenPitchManagement");
+//        } catch (SQLException ex) {
+//            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void viewEdit(HttpServletRequest request, HttpServletResponse response) {
         PrintWriter out = null;
         try {
@@ -451,7 +496,7 @@ public class OwnerController extends HttpServlet {
             OwnerDAO od = new OwnerDAO();
             BookingDAO bd = new BookingDAO();
 
-            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(childrenPitchID, dateNow, smt.format(dateNow));
+            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfterForCP(childrenPitchID, dateNow, smt.format(dateNow));
             List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitchID, dateNow);
 
             for (Booking booking : listPlayedEqualAfter) {
@@ -554,7 +599,6 @@ public class OwnerController extends HttpServlet {
             request.setAttribute("listD", listD);
             request.setAttribute("listW", listW);
             request.setAttribute("p", pitch);
-            System.out.println(pitchID);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -571,29 +615,19 @@ public class OwnerController extends HttpServlet {
         String wardID = request.getParameter("ward");
         String pitchAddress = request.getParameter("address");
         String pitchDescription = request.getParameter("description");
-        Pitch pitch = new Pitch(pitchID, wardID, districtID, "", pitchName, pitchAddress, 0, pitchAddress, pitchDescription, true);
+        Pitch pitch = new Pitch(pitchID, wardID, districtID, "", pitchName, pitchAddress, 0, pitchDescription, true);
         System.out.println(pitchName + "-" + pitchDescription);
         session.setAttribute("pitchUpdate", pitch);
         request.setAttribute("pitchID", pitchID);
         request.setAttribute("action", "uploadPitchPicture");
     }
 
-//    private void updatePitch(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        try {
-//            String pitchName = request.getParameter("pitchName");
-//            Part part = request.getPart("link");
-//            System.out.println(pitchName);
-//            System.out.println(part);
-//            request.setAttribute("action", "editPitch");
-//        } catch (ServletException ex) {
-//            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     private void updatePitch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession();
             Pitch pitch = (Pitch) session.getAttribute("pitchUpdate");
             String pitchID = pitch.getPitchID();
+            System.out.println(pitch.getPitchID());
             OwnerDAO od = new OwnerDAO();
             DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -625,17 +659,20 @@ public class OwnerController extends HttpServlet {
                     } else {
                         Path path = Paths.get(filename);
                         String realPath = request.getServletContext().getInitParameter("file-upload");
-                        Path source = Paths.get(realPath + "/" + pitchID+ ".jpg");
+                        Path source = Paths.get(realPath + "/" + pitchID + ".jpg");
                         Files.move(source, source.resolveSibling(pitchID + "_d.jpg"));
-                        String fileName = Paths.get(path.getFileName().toString().replaceAll(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")), fields.get("pitchID"))).getFileName().toString();
-                        if (!Files.exists(Paths.get(realPath))) {
-                            Files.createDirectory(Paths.get(realPath));
+                        Files.delete(Paths.get(realPath + "/" + pitchID + "_d.jpg"));
+                        File f = new File(realPath + "/" + pitchID + ".jpg");
+                        if (!f.exists()) {
+                            String fileName = Paths.get(path.getFileName().toString().replaceAll(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")), fields.get("pitchID"))).getFileName().toString();
+                            if (!Files.exists(Paths.get(realPath))) {
+                                Files.createDirectory(Paths.get(realPath));
+                            }
+                            File uploadFile = new File(realPath + "/" + fileName);
+                            System.out.println(fileName);
+                            item.write(uploadFile);
+                            od.updatePitch(pitch.getWardID(), pitch.getDistrictID(), pitch.getPitchName(), pitch.getPitchAddress(), pitch.getPitchDescription(), pitch.getPitchID());
                         }
-                        File uploadFile = new File(realPath + "/" + fileName);
-                        System.out.println(fileName);
-                        item.write(uploadFile);
-                        Files.delete(Paths.get(realPath + "/" + pitchID+ "_d.jpg"));
-                        od.updatePitch(pitch.getWardID(), pitch.getDistrictID(), pitch.getPitchName(), pitch.getPitchAddress(), pitch.getPitchDescription(), pitch.getPitchID());
                     }
                 }
             }
@@ -646,6 +683,156 @@ public class OwnerController extends HttpServlet {
         } catch (FileUploadException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void createPitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            PitchDAO pd = new PitchDAO();
+
+            List<District> listD = pd.getDistrict();
+
+            request.setAttribute("listD", listD);
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void goToLoadPictureCreate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+            PitchDAO pd = new PitchDAO();
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            List<Pitch> list = pd.getAllPitch();
+
+            String pitchName = request.getParameter("pitchName");
+            String pitchID = raisePitchId(list);
+            String districtID = request.getParameter("districtID");
+            String wardID = request.getParameter("ward");
+            String pitchAddress = request.getParameter("address");
+            String pitchDescription = request.getParameter("description");
+            Pitch pitch = new Pitch(pitchID, wardID, districtID, user.getUserID(), pitchName, pitchAddress, 5, pitchDescription, true);
+
+            System.out.println(pitchName + "-" + pitchDescription + "-" + pitchID + "-" + districtID);
+            session.setAttribute("pitchCreate", pitch);
+            request.setAttribute("pitchID", pitchID);
+            request.setAttribute("action", "uploadPitchPictureCreate");
+        } catch (SQLException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private String raisePitchId(List<Pitch> arrayList) throws Exception {
+        try {
+            PitchDAO dao = new PitchDAO();
+            String result = "";
+            int maxIndex = 1;
+            if (arrayList == null) {
+                maxIndex = 1;
+                result = "P" + String.format("%02d", maxIndex);
+            } else {
+                maxIndex = arrayList.size() + 1;
+                result = "P" + String.format("%02d", maxIndex);
+                Pitch temp = dao.getAPitch(result);
+                while (temp != null) {
+                    maxIndex += 1;
+                    result = "C" + String.format("%02d", maxIndex);
+                    temp = dao.getAPitch(result);
+                }
+            }
+            return result;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
+    private void createNewPitch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            HttpSession session = request.getSession();
+            Pitch pitch = (Pitch) session.getAttribute("pitchCreate");
+            OwnerDAO od = new OwnerDAO();
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            ServletContext servletContext = this.getServletConfig().getServletContext();
+            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+            factory.setRepository(repository);
+
+            ServletFileUpload upload = new ServletFileUpload(factory);
+
+            List<FileItem> items = upload.parseRequest(request);
+
+            Iterator<FileItem> iter = items.iterator();
+
+            HashMap<String, String> fields = new HashMap<>();
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+
+                if (item.isFormField()) {
+                    fields.put(item.getFieldName(), item.getString());
+                } else {
+                    String filename = item.getName();
+                    System.out.println("filename: " + filename);
+                    if (filename == null || filename.equals("")) {
+                        od.updatePitch(pitch.getWardID(), pitch.getDistrictID(), pitch.getPitchName(), pitch.getPitchAddress(), pitch.getPitchDescription(), pitch.getPitchID());
+                    } else {
+                        Path path = Paths.get(filename);
+                        String realPath = request.getServletContext().getInitParameter("file-upload");
+                        String fileName = Paths.get(path.getFileName().toString().replaceAll(path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".")), pitch.getPitchID())).getFileName().toString();
+                        if (!Files.exists(Paths.get(realPath))) {
+                            Files.createDirectory(Paths.get(realPath));
+                        }
+                        File uploadFile = new File(realPath + "/" + fileName);
+                        System.out.println(fileName);
+                        item.write(uploadFile);
+                        od.insertPitch(pitch);
+                    }
+                }
+            }
+            request.setAttribute("success", "Thêm mới thành công");
+            session.removeAttribute("pitchCreate");
+            request.setAttribute("action", "uploadPitchPictureCreate");
+        } catch (FileUploadException ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void deletePitch(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
+            Date dateNow = new Date();
+            String pitchID = request.getParameter("Id");
+            System.out.println(pitchID);
+            AdminDAO ad = new AdminDAO();
+            OwnerDAO od = new OwnerDAO();
+            BookingDAO bd = new BookingDAO();
+            ChildrenPitchDAO cpd = new ChildrenPitchDAO();
+
+            if (ad.deleteCommentByPitchID(pitchID)) {
+                List<ChildrenPitch> listCP = cpd.getType(pitchID);
+                for (ChildrenPitch childrenPitch : listCP) {
+                    List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfterForCP(childrenPitch.getChildrenPitchID(), dateNow, smt.format(dateNow));
+                    for (Booking booking : listPlayedEqualAfter) {
+                        bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
+                    }
+                    List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitch.getChildrenPitchID(), dateNow);
+                    for (Booking booking : listPlayedAfter) {
+                        bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
+                    }
+                    od.deleteChildrenPitch(childrenPitch.getChildrenPitchID());
+                }
+            }
+            od.deletePitch(pitchID);
+
+        } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

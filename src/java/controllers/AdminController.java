@@ -21,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Booking;
 import models.Comment;
 import models.District;
 import models.SendEmail;
@@ -113,11 +114,13 @@ public class AdminController extends HttpServlet {
     private void userManagement(HttpServletRequest request, HttpServletResponse response) {
         try {
             AdminDAO ad = new AdminDAO();
+            List<Booking> countCancel = ad.countCancel();
             List<User> listU = ad.getUserActive();
             List<User> listNoAdmin = ad.getUserForBecomingOwner();
             request.setAttribute("listNoAdmin", listNoAdmin);
             request.setAttribute("countNoAdmin", listNoAdmin.size());
             request.setAttribute("listU", listU);
+            request.setAttribute("countCancel", countCancel);
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -286,13 +289,14 @@ public class AdminController extends HttpServlet {
                 for (int i = 0; i < sumRating.size(); i++) {
                     sum = sum + sumRating.get(i).getRating();
                 }
-                pitchRating = (sum  / (sumRating.size()));
+                pitchRating = (sum / (sumRating.size()));
                 pd.updatetEstimation(pitchRating, pitchID);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

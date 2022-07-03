@@ -22,6 +22,7 @@ public class Booking {
     private java.sql.Time timeEnd;
     private boolean status;
     private String reasonContent;
+    private int countCancel;
 
     public Booking() {
     }
@@ -56,7 +57,12 @@ public class Booking {
         this.reasonContent = reasonContent;
     }
 
+    public Booking(String userID, int countCancel) {
+        this.userID = userID;
+        this.countCancel = countCancel;
+    }
 
+    
     public String getBookingID() {
         return bookingID;
     }
@@ -128,5 +134,12 @@ public class Booking {
     public void setReasonContent(String reasonContent) {
         this.reasonContent = reasonContent;
     }
-    
+
+    public int getCountCancel() {
+        return countCancel;
+    }
+
+    public void setCountCancel(int countCancel) {
+        this.countCancel = countCancel;
+    }
 }

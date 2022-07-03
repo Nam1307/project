@@ -8,7 +8,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="card container mt-5 mb-5">
-    <table class="table table-hover shopping-cart-wrap">
+    <table class="table table-hover shopping-cart-wrap" id="example"
+           class="table table-striped data-table"
+           style="width: 100%">
         <thead class="text-muted" id="location">
             <tr>
                 <th scope="col">Sân</th>
@@ -48,7 +50,6 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
-                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
@@ -115,7 +116,6 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
-                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
@@ -182,7 +182,6 @@
                                             </dl>
                                         </figcaption>
                                     </figure> 
-                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
@@ -205,7 +204,7 @@
                                     </c:if>
                                 </td>
                                 <td class="text-right"> 
-                                    <c:if test="${b.status == true}">
+                                    <c:if test="${b.status == true && p.pitchStatus == true}">
                                         <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Đánh giá</a>
                                     </c:if>
                                 </td>
@@ -249,7 +248,6 @@
                                             </dl>
                                         </figcaption>
                                     </figure>
-                                    ${b.status}
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center"> 
                                     <input type="number" class="form-control" id="exampleInputEmail1" value="${cp.childrenPitchType}" disabled="">
@@ -272,7 +270,7 @@
                                     </c:if>
                                 </td>
                                 <td class="text-right"> 
-                                    <c:if test="${b.status == true}">
+                                    <c:if test="${b.status == true && p.pitchStatus == true}">
                                         <a href="${pageContext.request.contextPath}/user/goToComment.do?userID=${user.userID}&pitchID=${p.pitchID}" class="btn btn-outline-success"><i class="bi bi-pen-fill"></i> Đánh giá</a>
                                     </c:if>
                                 </td>
@@ -291,7 +289,7 @@
         </tbody>
     </table>
 </div> <!-- card.// -->
-</div> 
+
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -367,3 +365,7 @@
         }
     }
 </script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/script.css"></script>
