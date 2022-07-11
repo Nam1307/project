@@ -20,9 +20,9 @@
     <div class="row mt-5 d-flex justify-content-center">
         <div class="col-md-3 mb-3">
             <div class="card bg-primary text-white h-100">
-                <h5 class="mt-3">Số sân con</h5>
-                <div class="card-body py-5 fs-1 d-flex justify-content-center">${allChildrenPitch}</div>
-                <a href="${pageContext.request.contextPath}/owner/childrenPitchManagement.do?userID=${user.userID}" style="text-decoration: none; color: white">
+                <h5 class="mt-3">Số bình luận</h5>
+                <div class="card-body py-5 fs-1 d-flex justify-content-center">${listC.size()}</div>
+                <a href="${pageContext.request.contextPath}/admin/commentManagement.do" style="text-decoration: none; color: white">
                     <div class="card-footer d-flex">
                         Xem chi tiết
                         <span class="ms-auto">
@@ -34,9 +34,9 @@
         </div>
         <div class="col-md-3 mb-3">
             <div class="card bg-warning text-dark h-100">
-                <h5 class="mt-3">Số lịch đặt sân</h5>
-                <div class="card-body py-5 fs-1 d-flex justify-content-center">${allBooking}</div>
-                <a href="${pageContext.request.contextPath}/owner/viewBooking.do?userID=${user.userID}" style="text-decoration: none">
+                <h5 class="mt-3">Số yêu cầu trở thành chủ sân</h5>
+                <div class="card-body py-5 fs-1 d-flex justify-content-center">${countNoAdmin}</div>
+                <a href="${pageContext.request.contextPath}/admin/viewBecomingOwner.do" style="text-decoration: none">
                     <div class="card-footer d-flex text-dark">
                         Xem chi tiết
                         <span class="ms-auto">

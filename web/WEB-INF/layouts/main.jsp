@@ -49,7 +49,15 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/home/index.do">Start Bootstrap</a>
+                <c:if test="${user == null || user.roleID == 'US'}">
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/home/index.do">KING FOOTBALL</a>
+                </c:if>
+                <c:if test="${user.roleID == 'OW'}">
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/owner/index.do">KING FOOTBALL</a>
+                </c:if>
+                <c:if test="${user.roleID == 'AD'}">
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/index.do">KING FOOTBALL</a>
+                </c:if>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -383,7 +391,7 @@
                                 <div class="collapse" id="layouts">
                                     <ul class="navbar-nav ps-3">
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/admin/commentManagement.do?" class="nav-link px-3">
+                                            <a href="${pageContext.request.contextPath}/admin/commentManagement.do" class="nav-link px-3">
                                                 <span class="me-2"
                                                       ><i class="bi bi-speedometer2"></i
                                                     ></span>

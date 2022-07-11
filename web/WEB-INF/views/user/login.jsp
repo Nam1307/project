@@ -77,7 +77,6 @@
 
                     </div>
                     <div class="card-body p-4 p-sm-5">
-                        ${sessionScope.pitchID}
                         <h5 class="card-title text-center mb-5 fw-light fs-2">Đăng nhập</h5>
                         <form action="${pageContext.request.contextPath}/user/checkLogin.do" method="post" class="needs-validation" novalidate>
                             <c:if test="${error != null}">

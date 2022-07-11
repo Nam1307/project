@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,11 +96,14 @@ public class AdminController extends HttpServlet {
     private void index(HttpServletRequest request, HttpServletResponse response) {
         try {
             AdminDAO ad = new AdminDAO();
+            UserDAO ud = new UserDAO();
 
+            List<Comment> listC = ud.getAllComment();
             List<User> listNoAdmin = ad.getUserForBecomingOwner();
             int numUS = ad.getNumberOfUserByRole("US");
             int numOW = ad.getNumberOfUserByRole("OW");
 
+            request.setAttribute("listC", listC);
             request.setAttribute("listNoAdmin", listNoAdmin);
             request.setAttribute("countNoAdmin", listNoAdmin.size());
             request.setAttribute("numUS", numUS);
@@ -197,9 +199,7 @@ public class AdminController extends HttpServlet {
                         + "    </div>\n"
                         + "</form>");
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (SQLException | IOException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -232,9 +232,7 @@ public class AdminController extends HttpServlet {
             User user = ud.getUser(userID);
             SendEmail sm = new SendEmail();
             sm.sendEmailDenyOwner(user, reason);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (UnsupportedEncodingException | SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -255,9 +253,7 @@ public class AdminController extends HttpServlet {
             if (ad.deleteUser(userId)) {
                 se.sendEmailDeleteUser(user, reason);
             }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (UnsupportedEncodingException | SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

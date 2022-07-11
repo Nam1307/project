@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import models.Booking;
 import models.ChildrenPitch;
 import models.District;
@@ -171,7 +170,7 @@ public class OwnerController extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             OwnerDAO od = new OwnerDAO();
-
+            
             int june = od.getDataForChart("2022/06/01", "2022/06/30", user.getUserID());
             int july = od.getDataForChart("2022/07/01", "2022/07/31", user.getUserID());
             int august = od.getDataForChart("2022/08/01", "2022/08/31", user.getUserID());
@@ -181,6 +180,7 @@ public class OwnerController extends HttpServlet {
             int december = od.getDataForChart("2022/12/01", "2022/12/31", user.getUserID());
             int allChildrenPitch = od.getAllChildrenPitchForOwner(user.getUserID());
             int allBooking = od.getAllBookingForOwner(user.getUserID());
+            List<Pitch> listP = od.getPitch(user.getUserID());
 
             request.setAttribute("june", june);
             request.setAttribute("july", july);
@@ -191,6 +191,7 @@ public class OwnerController extends HttpServlet {
             request.setAttribute("december", december);
             request.setAttribute("allChildrenPitch", allChildrenPitch);
             request.setAttribute("allBooking", allBooking);
+            request.setAttribute("listP", listP);
         } catch (SQLException ex) {
             Logger.getLogger(OwnerController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -210,8 +211,8 @@ public class OwnerController extends HttpServlet {
             List<Pitch> listP = pd.getAllPitch();
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Time> listT = bd.getTime();
-            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(dateNow, smt.format(dateNow));
-            List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(dateNow, smt.format(dateNow));
+            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(dateNow, smt.format(dateNow),userID);
+            List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(dateNow, smt.format(dateNow), userID);
 //            List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(dateNow);
 //            List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(dateNow);
 
@@ -247,6 +248,7 @@ public class OwnerController extends HttpServlet {
 
     private void search(HttpServletRequest request, HttpServletResponse response) {
         try {
+            HttpSession session = request.getSession();
             SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             Date dateNow = new Date();
@@ -254,6 +256,7 @@ public class OwnerController extends HttpServlet {
             BookingDAO bd = new BookingDAO();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
             PitchDAO pd = new PitchDAO();
+            User user = (User) session.getAttribute("user");
 //            String userID = request.getParameter("userID");
 //            String pitchID = request.getParameter("pitchID");
 //            String childrenPitchID = request.getParameter("childrenPitchID");
@@ -267,20 +270,20 @@ public class OwnerController extends HttpServlet {
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Time> listT = bd.getTime();
             if (bookingDate.equals(fmt.format(dateNow))) {
-                List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(date, smt.format(dateNow));
-                List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(date, smt.format(dateNow));
+                List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(date, smt.format(dateNow), user.getUserID());
+                List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(date, smt.format(dateNow), user.getUserID());
                 request.setAttribute("listPlayedEqualAfter", listPlayedEqualAfter);
                 request.setAttribute("listPlayedEqualBefore", listPlayedEqualBefore);
             } else {
                 if (date.after(dateNow)) {
-                    List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(date);
+                    List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(date, user.getUserID());
                     System.out.println(listPlayedAfter);
                     for (Booking booking : listPlayedAfter) {
                         System.out.println(booking.getBookingID());
                     }
                     request.setAttribute("listPlayedAfter", listPlayedAfter);
                 } else if (date.before(dateNow)) {
-                    List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(date);
+                    List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(date, user.getUserID());
                     request.setAttribute("listPlayedBefore", listPlayedBefore);
                 }
             }

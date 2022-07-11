@@ -165,7 +165,7 @@
                             </c:if>
                             <c:if test="${user.roleID == 'AD' || user.roleID == 'OW'}">
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">Xem sân</a></div>
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${pageContext.request.contextPath}/stadium/detail.do?pitchID=${p.pitchID}">Xem bình luận</a></div>
                                 </div>
                             </c:if>
                         </div>

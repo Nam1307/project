@@ -41,28 +41,31 @@
                 </a>
             </div>
         </div>
-        <!--        <div class="col-md-3 mb-3">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body py-5">Success Card</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-dark h-100">
+                <h5 class="mt-3">Số sân chính</h5>
+                <div class="card-body py-5 fs-1 d-flex justify-content-center">${listP.size()}</div>
+                <a href="${pageContext.request.contextPath}/owner/pitchManagement.do?userID=${user.userID}" style="text-decoration: none">
+                    <div class="card-footer d-flex text-dark">
+                        Xem chi tiết
+                        <span class="ms-auto">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
                     </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body py-5">Danger Card</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>-->
+                </a>
+            </div>
+        </div>
+        <!--                <div class="col-md-3 mb-3">
+                            <div class="card bg-danger text-white h-100">
+                                <div class="card-body py-5">Danger Card</div>
+                                <div class="card-footer d-flex">
+                                    View Details
+                                    <span class="ms-auto">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>-->
     </div>
     <div class="card chart-container mt-5">
         <canvas id="chart"></canvas>
