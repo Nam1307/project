@@ -29,7 +29,10 @@
                         <input type="hidden" value="${pitchID}" name="pitchID"/>
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Tải file ảnh</label>
-                            <input class="form-control" type="file" id="formFile" name="link" accept="image/jpeg">
+                            <input class="form-control" type="file" id="formFile" name="link" accept="image/jpeg" required/>
+                            <div class="invalid-feedback">
+                                Vui lòng chọn ảnh.
+                            </div>
                         </div>
 
                         <img id="image" class="img-thumbnail" src="${pageContext.request.contextPath}/images/${pitchID}.jpg" alt="..." />
@@ -57,4 +60,24 @@
 // read the image file as a data URL.
         reader.readAsDataURL(this.files[0]);
     };
+
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
 </script>

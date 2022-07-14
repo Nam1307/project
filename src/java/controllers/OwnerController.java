@@ -170,7 +170,7 @@ public class OwnerController extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             OwnerDAO od = new OwnerDAO();
-            
+
             int june = od.getDataForChart("2022/06/01", "2022/06/30", user.getUserID());
             int july = od.getDataForChart("2022/07/01", "2022/07/31", user.getUserID());
             int august = od.getDataForChart("2022/08/01", "2022/08/31", user.getUserID());
@@ -211,7 +211,7 @@ public class OwnerController extends HttpServlet {
             List<Pitch> listP = pd.getAllPitch();
             List<ChildrenPitch> listCP = cpd.getChildrenPitch();
             List<Time> listT = bd.getTime();
-            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(dateNow, smt.format(dateNow),userID);
+            List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfter(dateNow, smt.format(dateNow), userID);
             List<Booking> listPlayedEqualBefore = od.getUserBookingPlayedEqualBefore(dateNow, smt.format(dateNow), userID);
 //            List<Booking> listPlayedAfter = od.getUserBookingPlayedAfter(dateNow);
 //            List<Booking> listPlayedBefore = od.getUserBookingPlayedBefore(dateNow);
@@ -819,19 +819,18 @@ public class OwnerController extends HttpServlet {
             BookingDAO bd = new BookingDAO();
             ChildrenPitchDAO cpd = new ChildrenPitchDAO();
 
-            if (ad.deleteCommentByPitchID(pitchID)) {
-                List<ChildrenPitch> listCP = cpd.getType(pitchID);
-                for (ChildrenPitch childrenPitch : listCP) {
-                    List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfterForCP(childrenPitch.getChildrenPitchID(), dateNow, smt.format(dateNow));
-                    for (Booking booking : listPlayedEqualAfter) {
-                        bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
-                    }
-                    List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitch.getChildrenPitchID(), dateNow);
-                    for (Booking booking : listPlayedAfter) {
-                        bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
-                    }
-                    od.deleteChildrenPitch(childrenPitch.getChildrenPitchID());
+            ad.deleteCommentByPitchID(pitchID);
+            List<ChildrenPitch> listCP = cpd.getType(pitchID);
+            for (ChildrenPitch childrenPitch : listCP) {
+                List<Booking> listPlayedEqualAfter = od.getUserBookingPlayedEqualAfterForCP(childrenPitch.getChildrenPitchID(), dateNow, smt.format(dateNow));
+                for (Booking booking : listPlayedEqualAfter) {
+                    bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
                 }
+                List<Booking> listPlayedAfter = od.getUserBookingPlayedAfterForCP(childrenPitch.getChildrenPitchID(), dateNow);
+                for (Booking booking : listPlayedAfter) {
+                    bd.deleteBooking(booking.getBookingID(), "Sân con đã bị xóa bởi chủ sân");
+                }
+                od.deleteChildrenPitch(childrenPitch.getChildrenPitchID());
             }
             od.deletePitch(pitchID);
 

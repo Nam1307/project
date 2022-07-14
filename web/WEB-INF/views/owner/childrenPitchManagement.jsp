@@ -64,7 +64,7 @@
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetEditInfo('${cp.childrenPitchID}')">
                                                         Điều chỉnh sân
                                                     </button>
-                                                    <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${cp.childrenPitchID}')"><i class="bi bi-x-circle-fill">Delete</i></a>
+                                                    <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${cp.childrenPitchID}')"><i class="bi bi-x-circle-fill"> Xóa sân</i></a>
                                                 </td>
                                             </tr>
                                         </c:if>
@@ -91,8 +91,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="EditChildrenPitch()">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="EditChildrenPitch()">Lưu thay đổi</button>
             </div>
         </div>
     </div>
@@ -102,11 +102,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Hủy đặt sân</h3>
+                <h3 class="modal-title">Xóa sân con</h3>
                 <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
             </div>
             <div class="modal-body">
-                <h4>Bạn có chắc hủy lịch đặt sân này của khách hàng không?</h4>
+                <h4>Bạn có chắc muốn xóa sân con này không?</h4>
             </div>
             <div class="modal-footer">
                 <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>

@@ -33,7 +33,7 @@
             <label for="floatingSelect">Ngày:</label>
         </div>
         <input type="hidden" name="userID" value="${userID}"/>
-        <button type="submit" class="btn btn-lg btn-outline-success col-3" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
+        <button type="submit" class="btn btn-lg btn-outline-success col-3" style="height: 70px"><i class="bi bi-search"></i> Tìm kiếm</button> 
     </form>
 </div>
 ${listB}
@@ -207,7 +207,7 @@ ${listB}
                                                         <td>${p.pitchName}</td>
                                                         <td>${cp.childrenPitchName}</td>
                                                         <td>
-                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b1.bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b1.bookingID}')"><i class="bi bi-x-circle-fill"></i> Hủy</a>
                                                         </td>
                                                     </tr>
                                                 </c:if>
@@ -230,7 +230,7 @@ ${listB}
                                                         <td>${p.pitchName}</td>
                                                         <td>${cp.childrenPitchName}</td>
                                                         <td>
-                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b.bookingID}')"><i class="bi bi-x-circle-fill"></i> Delete</a>
+                                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="ConfirmDelete('${b.bookingID}')"><i class="bi bi-x-circle-fill"></i> Hủy</a>
                                                         </td>
                                                     </tr>
                                                 </c:if>

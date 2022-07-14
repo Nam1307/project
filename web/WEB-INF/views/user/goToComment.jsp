@@ -151,7 +151,7 @@
 
                                     <div class="pull-right">
 
-                                        <button class="btn btn-success send btn-sm">Send <i class="fa fa-long-arrow-right ml-1"></i></button>      
+                                        <button class="btn btn-success send btn-sm">Gửi <i class="fa fa-long-arrow-right ml-1"></i></button>      
 
                                     </div>
 

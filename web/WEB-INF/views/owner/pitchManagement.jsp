@@ -37,8 +37,8 @@
                                         <td>${count.index + 1}</td>
                                         <td id="row_${p.pitchID}_name">${p.pitchName}</td>
                                         <td>
-                                            <a  class="btn btn-outline-danger btn-sm"href="${pageContext.request.contextPath}/owner/editPitch.do?PitchID=${p.pitchID}"><i class="bi bi-x-circle-fill">Chỉnh sửa sân</i></a>
-                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${p.pitchID}')"><i class="bi bi-x-circle-fill">Delete</i></a>
+                                            <a  class="btn btn-outline-success btn-sm"href="${pageContext.request.contextPath}/owner/editPitch.do?PitchID=${p.pitchID}"><i class="bi bi-pen-fill"></i> Chỉnh sửa sân</i></a>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${p.pitchID}')"><i class="bi bi-x-circle-fill"> Xóa sân</i></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
