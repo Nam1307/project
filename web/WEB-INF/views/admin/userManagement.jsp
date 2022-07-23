@@ -90,7 +90,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Xóa tài khoản người dùng</h3>
-                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()" style="text-decoration: none">X</a>
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc muốn xóa người dùng không?</h4>

@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,6 @@ public class BookingDAO {
     private static final String DELETE_BOOKING = "UPDATE Booking SET StatusBooking = 0, ReasonContent = ?  WHERE BookingID = ?";
     private static final String DELETE_BOOKING_BY_CHILDRENPITCH = "UPDATE Booking SET StatusBooking = 0, ReasonContent = ?  WHERE ChildrenPitchID = ?";
 
-
     public List<Booking> findTime(String ChildrenPitchID, Date BookingDate) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -63,7 +64,7 @@ public class BookingDAO {
                     String timeID = rs.getString("TimeID");
                     java.sql.Time timeStart = rs.getTime("TimeStart");
                     java.sql.Time timeEnd = rs.getTime("TiemEnd");
-                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart,timeEnd));
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd));
                 }
             }
         } catch (Exception e) {
@@ -335,7 +336,7 @@ public class BookingDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedAfter(String UserID, Date dateNow) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -359,7 +360,7 @@ public class BookingDAO {
                     java.sql.Time timeEnd = rs.getTime("TiemEnd");
                     boolean status = rs.getBoolean("StatusBooking");
                     String reasonContent = rs.getString("ReasonContent");
-                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status,reasonContent));
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status, reasonContent));
                 }
             }
         } catch (Exception e) {
@@ -377,7 +378,7 @@ public class BookingDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedEqualBefore(String UserID, Date dateNow, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -402,7 +403,7 @@ public class BookingDAO {
                     java.sql.Time timeEnd = rs.getTime("TiemEnd");
                     boolean status = rs.getBoolean("StatusBooking");
                     String reasonContent = rs.getString("ReasonContent");
-                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status,reasonContent));
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status, reasonContent));
                 }
             }
         } catch (Exception e) {
@@ -420,7 +421,7 @@ public class BookingDAO {
         }
         return list;
     }
-    
+
     public List<Booking> getUserBookingPlayedEqualAfter(String UserID, Date dateNow, String Time) throws SQLException {
         List<Booking> list = new ArrayList<>();
         Connection conn = null;
@@ -445,7 +446,7 @@ public class BookingDAO {
                     java.sql.Time timeEnd = rs.getTime("TiemEnd");
                     boolean status = rs.getBoolean("StatusBooking");
                     String reasonContent = rs.getString("ReasonContent");
-                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status,reasonContent));
+                    list.add(new Booking(bookingID, childrenPitchID, userID, bookingDate, timeID, timeStart, timeEnd, status, reasonContent));
                 }
             }
         } catch (Exception e) {
@@ -502,7 +503,7 @@ public class BookingDAO {
 //        }
 //        return list;
 //    }
-    
+
     public boolean deleteBooking(String bookingID, String reasonContent) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -526,7 +527,7 @@ public class BookingDAO {
         }
         return check;
     }
-    
+
     public boolean deleteBookingByChildrenPitch(String childrenPitchID, String reasonContent) throws SQLException {
         boolean check = false;
         Connection conn = null;
@@ -552,13 +553,10 @@ public class BookingDAO {
     }
 
     public static void main(String[] args) throws SQLException, ParseException {
-        BookingDAO dao = new BookingDAO();
-        Date date = new Date();
-        SimpleDateFormat smt = new SimpleDateFormat("HH:mm:ss");
-        List<Booking> list = dao.getUserBookingPlayedAfter("U03", date);
-        for (Booking booking : list) {
-            System.out.println(booking.getBookingID());
-            System.out.println(booking.isStatus());
-        }
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate d = java.time.LocalDate.now();
+        Date dateNow = Date.from(d.atStartOfDay(defaultZoneId).toInstant());
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2022-07-19");
+        System.out.println(date.equals(dateNow));
     }
 }

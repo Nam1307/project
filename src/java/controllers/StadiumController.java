@@ -15,6 +15,10 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -92,19 +96,19 @@ public class StadiumController extends HttpServlet {
             List<Pitch> listP1 = pd.getAllPitch();
             List<User> listU = ud.getAllUser();
             List<Comment> listCO = ud.getComment(pitchID);
-            if(user != null){
-                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date),true);
+            if (user != null) {
+                List<Booking> listN = bd.getNotification(user.getUserID(), date, smt.format(date), true);
                 request.setAttribute("listNo", listN);
                 request.setAttribute("countN", listN.size());
             }
-            
+
             List<ChildrenPitch> listCP1 = cpd.getChildrenPitch();
             request.setAttribute("listD", listD);
             request.setAttribute("listW", listW);
             request.setAttribute("pitch", pitch);
             request.setAttribute("listCP", listCP);
             request.setAttribute("listP1", listP1);
-            request.setAttribute("listCP1", listCP1);   
+            request.setAttribute("listCP1", listCP1);
             request.setAttribute("listU", listU);
             request.setAttribute("listCO", listCO);
             System.out.println(pitchID);
@@ -115,6 +119,8 @@ public class StadiumController extends HttpServlet {
 
     private void findDate(HttpServletRequest request, HttpServletResponse response) {
         try {
+            SimpleDateFormat parser = new SimpleDateFormat("HH:mm:ss");
+            ZoneId defaultZoneId = ZoneId.systemDefault();
             SimpleDateFormat smt = new SimpleDateFormat("HH:mm");
             PrintWriter out = response.getWriter();
             BookingDAO bd = new BookingDAO();
@@ -122,6 +128,9 @@ public class StadiumController extends HttpServlet {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
             List<Booking> bookingTime = bd.findTime(childrenPitchID, date);
             List<Time> time = bd.getFreeTime(childrenPitchID, date);
+            LocalDateTime localDateTime = java.time.LocalDateTime.now();
+            LocalTime timeNow = localDateTime.toLocalTime();
+            Date dateNow = Date.from(localDateTime.toLocalDate().atStartOfDay(defaultZoneId).toInstant());
             if (!bookingTime.isEmpty()) {
                 out.print("<p class=\"lead mt-2 fst-italic\">Đã được đặt</p>");
             }
@@ -134,11 +143,23 @@ public class StadiumController extends HttpServlet {
             if (!time.isEmpty()) {
                 out.print("<p class=\"lead mt-2 fst-italic\">Chưa được đặt</p>");
             }
-            for (Time time1 : time) {
-                out.print("<a href=\"#\" style=\"text-decoration: none\">\n"
-                        + "<button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
-                        + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + smt.format(time1.getTimeStart()) + "-" + smt.format(time1.getTimeEnd()) + "h" + "</button>\n"
-                        + "</a>");
+            if (date.after((dateNow))) {
+                for (Time time1 : time) {
+                    out.print("<a href=\"#\" style=\"text-decoration: none\">\n"
+                            + "<button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
+                            + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + smt.format(time1.getTimeStart()) + "-" + smt.format(time1.getTimeEnd()) + "h" + "</button>\n"
+                            + "</a>");
+                }
+            } else if (date.equals(dateNow)) {
+                for (Time time1 : time) {
+                    LocalTime localTimeObj = LocalTime.parse(time1.getTimeStart().toString());
+                    if(localTimeObj.compareTo(timeNow) >= 0){
+                        out.print("<a href=\"#\" style=\"text-decoration: none\">\n"
+                            + "<button type=\"submit\" class=\"btn btn-outline-success btn-lg mt-2 mb-2 me-2\" "
+                            + "style=\"width: 150px\" name=\"op\" value=\"" + time1.getTimeID() + "\"><i class=\"bi bi-calendar\"></i> " + smt.format(time1.getTimeStart()) + "-" + smt.format(time1.getTimeEnd()) + "h" + "</button>\n"
+                            + "</a>");
+                    }
+                }
             }
         } catch (ParseException ex) {
             Logger.getLogger(StadiumController.class.getName()).log(Level.SEVERE, null, ex);

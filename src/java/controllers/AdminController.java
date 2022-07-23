@@ -282,17 +282,20 @@ public class AdminController extends HttpServlet {
                 int sum = 0;
                 int pitchRating = 0;
                 List<Comment> sumRating = ud.getComment(pitchID);
-                for (int i = 0; i < sumRating.size(); i++) {
-                    sum = sum + sumRating.get(i).getRating();
+                if (sumRating.size() > 1) {
+                    for (int i = 0; i < sumRating.size(); i++) {
+                        sum = sum + sumRating.get(i).getRating();
+                    }
+                    pitchRating = (sum / (sumRating.size())); 
+                }else{
+                    pitchRating = 5;
                 }
-                pitchRating = (sum / (sumRating.size()));
                 pd.updatetEstimation(pitchRating, pitchID);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -38,7 +38,7 @@
                         <img id="image" class="img-thumbnail" src="${pageContext.request.contextPath}/images/${pitchID}.jpg" alt="..." />
 
                         <div class="d-grid mb-2 mt-3">
-                            <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Cập nhật</button>
+                            <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Tạo sân</button>
                         </div>
 
                         <hr class="my-4">

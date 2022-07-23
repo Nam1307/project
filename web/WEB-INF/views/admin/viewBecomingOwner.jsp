@@ -60,14 +60,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thông tin người đặt sân</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin người đăng ký trở thành chủ sân</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="result">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -78,7 +78,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Xác nhận trở thành chủ sân</h3>
-                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()" style="text-decoration: none">X</a>
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc xác nhận cho người này trở thành chủ sân không?</h4>
@@ -97,7 +97,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Từ chối trở thành chủ sân</h3>
-                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm1()">X</a>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm1()" style="text-decoration: none">X</a>
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc từ chối cho người này trở thành chủ sân không?</h4>

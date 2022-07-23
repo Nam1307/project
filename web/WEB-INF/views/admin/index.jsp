@@ -46,28 +46,6 @@
                 </a>
             </div>
         </div>
-        <!--        <div class="col-md-3 mb-3">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body py-5">Success Card</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body py-5">Danger Card</div>
-                        <div class="card-footer d-flex">
-                            View Details
-                            <span class="ms-auto">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>-->
     </div>
     <div class="card chart-container mt-5">
         <canvas id="chart"></canvas>
@@ -81,29 +59,29 @@
         }
     </style>
     <script>
-      const ctx = document.getElementById("chart").getContext('2d');
-      const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ["Chủ sân", "Khách hàng"],
-          datasets: [{
-            label: 'người',
-            backgroundColor: 'rgba(161, 198, 247, 1)',
-            borderColor: 'rgb(47, 128, 237)',
-            data: [${numOW}, ${numUS}],
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true,
-              }
-            }]
-          }
-        },
-      });
-</script>
+        const ctx = document.getElementById("chart").getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Chủ sân", "Khách hàng"],
+                datasets: [{
+                        label: 'người',
+                        backgroundColor: 'rgba(161, 198, 247, 1)',
+                        borderColor: 'rgb(47, 128, 237)',
+                        data: [${numOW}, ${numUS}],
+                    }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }]
+                }
+            },
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>

@@ -424,10 +424,12 @@
                     <!-- Section: CTA -->
                     <section class="">
                         <p class="d-flex justify-content-center align-items-center">
-                            <span class="me-3">Register for booking</span>
-                            <button type="button" class="btn btn-outline-light btn-rounded">
-                                Sign up!
-                            </button>
+                            <span class="me-3">Đăng ký để đặt sân</span>
+                            <a class="d-block text-center mt-2 small" href="${pageContext.request.contextPath}/user/register.do">
+                                <button type="button" class="btn btn-outline-light btn-rounded">
+                                    Đăng ký
+                                </button>
+                            </a>
                         </p>
                     </section>
                     <!-- Section: CTA -->

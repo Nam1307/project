@@ -99,7 +99,7 @@
                 </select>
                 <label for="floatingSelect">Phường:</label>
             </div>
-            <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Search</button> 
+            <button type="submit" class="btn btn-lg btn-outline-success col-2" style="height: 70px"><i class="bi bi-search"></i> Tìm kiếm</button> 
         </form>
     </c:if>
 </div>
