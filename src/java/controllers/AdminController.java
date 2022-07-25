@@ -228,10 +228,13 @@ public class AdminController extends HttpServlet {
             String userID = request.getParameter("Id");
             String reason = request.getParameter("Reason");
             UserDAO ud = new UserDAO();
+            AdminDAO ad = new AdminDAO();
 
             User user = ud.getUser(userID);
             SendEmail sm = new SendEmail();
-            sm.sendEmailDenyOwner(user, reason);
+            if(ad.denyConfirmOwner(userID)){
+                sm.sendEmailDenyOwner(user, reason);
+            }
         } catch (UnsupportedEncodingException | SQLException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }

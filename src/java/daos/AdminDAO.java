@@ -23,6 +23,7 @@ public class AdminDAO {
 
     private static final String GET_USER_FOR_BECOMING_OWNER = "SELECT * FROM tblUser where OwnerStatus=1";
     private static final String UPDATE_CONFIRM_OWNER = "UPDATE tblUser SET OwnerStatus = 0, UserStatus = 1 WHERE UserID = ?";
+    private static final String DENY_CONFIRM_OWNER = "DELETE FROM tblUser WHERE UserID = ?";
     private static final String GET_USER_ACTIVE = "  SELECT * FROM tblUser where UserStatus=1 AND (RoleID = 'US' OR RoleID = 'OW')";
     private static final String GET_NUMBER_USER_BY_ROLE = " SELECT COUNT(*) AS total FROM tblUser WHERE RoleID = ? AND UserStatus=1";
     private static final String DELETE_USER = "UPDATE tblUser SET UserStatus = 0 WHERE UserID = ?";
@@ -266,6 +267,29 @@ public class AdminDAO {
         }
         return list;
     }
+    
+    public boolean denyConfirmOwner(String userID) throws SQLException {
+        boolean check = false;
+        Connection conn = null;
+        PreparedStatement stm = null;
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(DENY_CONFIRM_OWNER);
+                stm.setString(1, userID);
+                check = stm.executeUpdate() > 0 ? true : false;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return check;
+    } 
 
     public static void main(String[] args) throws SQLException {
         AdminDAO dao = new AdminDAO();

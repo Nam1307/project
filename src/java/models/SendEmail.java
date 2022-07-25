@@ -62,7 +62,7 @@ public class SendEmail {
             mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 
             //set email subject
-            mess.setSubject("Confirm Register");
+            mess.setSubject("CONFIRM REGISTER");
 
             String message = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n "
@@ -133,7 +133,7 @@ public class SendEmail {
             mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 
             //set email subject
-            mess.setSubject("Delete Booking");
+            mess.setSubject("DELETE BOOKING");
 
             String message = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n "
@@ -207,7 +207,7 @@ public class SendEmail {
             mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 
             //set email subject
-            mess.setSubject("Delete Booking");
+            mess.setSubject("CONFIRM OWNER SUCCESSFULLY");
 
             String message = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n "
@@ -279,7 +279,7 @@ public class SendEmail {
             mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 
             //set email subject
-            mess.setSubject("Delete Booking");
+            mess.setSubject("DENY BECOMING OWNER");
 
             String message = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n "
@@ -351,7 +351,7 @@ public class SendEmail {
             mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 
             //set email subject
-            mess.setSubject("Delete User");
+            mess.setSubject("DELETE USER ACCOUNT");
 
             String message = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n "
