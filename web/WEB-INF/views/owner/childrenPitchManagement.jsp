@@ -31,7 +31,7 @@
             <a class="btn btn-outline-success btn-lg mt-5 mb-5" href="${pageContext.request.contextPath}/owner/createChildrenPitch.do?userID=${user.userID}"><i class="bi bi-plus-circle"></i> Tạo mới sân con</a>
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu sân con
+                    <span><i class="bi bi-table me-2"></i></span> Danh sách sân con
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -45,7 +45,7 @@
                                     <th>#</th>
                                     <th>Tên</th>
                                     <th>Sân chính</th>
-                                    <th>Số người</th>
+                                    <th>Loại sân</th>
                                     <th style="text-align: right">Giá</th>
                                     <th>Xử lý</th>
                                 </tr>

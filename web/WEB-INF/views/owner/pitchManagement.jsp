@@ -15,7 +15,7 @@
             <a class="btn btn-outline-success btn-lg mt-5 mb-5" href="${pageContext.request.contextPath}/owner/createPitch.do"><i class="bi bi-plus-circle"></i> Tạo mới sân chính</a>
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu sân chính
+                    <span><i class="bi bi-table me-2"></i></span> Danh sách sân chính
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

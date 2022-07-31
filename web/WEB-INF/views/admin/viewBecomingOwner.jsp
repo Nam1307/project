@@ -13,7 +13,7 @@
         <div class="col-md-12 mb-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu đăng ký
+                    <span><i class="bi bi-table me-2"></i></span> Danh sách đăng ký
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -41,8 +41,8 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <a  class="btn btn-outline-success btn-sm"href="#" onclick="ConfirmBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Xác nhận</i></a>
-                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill">Từ chối</i></a>
+                                            <a  class="btn btn-outline-success btn-sm"href="#" onclick="ConfirmBecomingOwner('${u.userID}')"><i class="bi bi-check-circle"> Xác nhận</i></a>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="DenyBecomingOwner('${u.userID}')"><i class="bi bi-x-circle-fill"> Từ chối</i></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -84,7 +84,7 @@
                 <h4>Bạn có chắc xác nhận cho người này trở thành chủ sân không?</h4>
             </div>
             <div class="modal-footer">
-                <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()">Hủy</a>
+                <a href="#location" class="btn btn-default" data-dismiss="modal" onclick="closeForm()" style="text-decoration: none">Hủy</a>
                 <a href="#location" class="btn btn-success" onclick="Confirm()">Xác nhận</a>
             </div>
 
@@ -104,7 +104,7 @@
             </div>
             <form>
                 <div class="mb-3">
-                    <label for="message-text" class="col-form-label">Lý do hủy sân:</label>
+                    <label for="message-text" class="col-form-label">Lý do từ chối:</label>
                     <textarea class="form-control" id="message-text"></textarea>
                     <div class="invalid-feedback" id="invalid-feedback">
                         Vui lòng điền lý do.

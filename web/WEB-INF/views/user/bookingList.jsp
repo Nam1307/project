@@ -14,7 +14,7 @@
         <thead class="text-muted" id="location">
             <tr>
                 <th scope="col">Sân</th>
-                <th scope="col" width="120">Số lượng người</th>
+                <th scope="col" width="120">Loại sân</th>
                 <th scope="col" width="200" class="text-right">Giá</th>
                 <th scope="col" width="120">Tình trạng</th>
                 <th scope="col" width="200" class="text-right">Xử lý</th>

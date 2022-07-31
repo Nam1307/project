@@ -14,7 +14,7 @@
         <div class="col-md-12 mb-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu người dùng
+                    <span><i class="bi bi-table me-2"></i></span> Dánh sách người dùng
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -50,7 +50,7 @@
                                             </c:forEach>
                                         </td>
                                         <td>
-                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${u.userID}')"><i class="bi bi-x-circle-fill">Xóa tài khoản</i></a>
+                                            <a  class="btn btn-outline-danger btn-sm"href="#" onclick="ConfirmDelete('${u.userID}')"><i class="bi bi-x-circle-fill"></i> Xóa tài khoản</i></a>
                                         </td>
                                     </tr>
                                 </c:forEach>

@@ -89,7 +89,7 @@
                     </c:if>
                     <c:if test="${user == null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/user/goToBecomingOwnerPage.do">Đăng ký trờ thành chủ sân</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/user/goToBecomingOwnerPage.do">Đăng ký trở thành chủ sân</a>
                         </li>
                     </c:if>
                     <c:if test="${user != null && user.roleID == 'US'}">

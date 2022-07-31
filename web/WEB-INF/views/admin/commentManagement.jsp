@@ -14,7 +14,7 @@
         <div class="col-md-12 mb-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Dữ liệu bình luận
+                    <span><i class="bi bi-table me-2"></i></span> Danh sách bình luận
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -71,7 +71,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Xóa bình luận</h3>
-                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()">X</a>
+                <a href="#location" class="close" data-dismiss="modal" onclick="closeForm()" style="text-decoration: none">X</a>
             </div>
             <div class="modal-body">
                 <h4>Bạn có chắc muốn xóa bình luận này không?</h4>
